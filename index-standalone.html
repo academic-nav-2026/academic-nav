@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学术公众号导航</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .update-indicator {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .update-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #48bb78;
+        }
+
+        .status-dot.updating {
+            background: #ecc94b;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .refresh-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .refresh-btn:disabled {
+            background: #e2e8f0;
+            color: #a0aec0;
+            cursor: not-allowed;
+        }
+
+        .home-title {
+            text-align: center;
+            margin: 40px 0 30px;
+        }
+
+        .home-title h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .home-title p {
+            color: #718096;
+            font-size: 16px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .card-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+
+        .card-desc {
+            color: #718096;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: opacity 0.3s;
+        }
+
+        .card-btn:hover {
+            opacity: 0.9;
+        }
+
+        .search-bar {
+            margin-bottom: 24px;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 16px 16px 50px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: #a0aec0;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .content-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            color: #2d3748;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .category-list {
+            list-style: none;
+        }
+
+        .category-item {
+            margin-bottom: 8px;
+        }
+
+        .category-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .category-btn:hover {
+            background: #f7fafc;
+        }
+
+        .category-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .category-count {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            background: #e2e8f0;
+            color: #718096;
+        }
+
+        .category-btn.active .category-count {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .article-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .article-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s;
+        }
+
+        .article-card:hover {
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .article-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .article-title {
+            flex: 1;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2d3748;
+            line-height: 1.4;
+        }
+
+        .journal-badge {
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .journal-nature {
+            background: #ebf8ff;
+            color: #3182ce;
+        }
+
+        .journal-cell {
+            background: #f0fff4;
+            color: #38a169;
+        }
+
+        .journal-science {
+            background: #fff5f5;
+            color: #e53e3e;
+        }
+
+        .journal-default {
+            background: #edf2f7;
+            color: #718096;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 20px;
+            color: #718096;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .article-abstract {
+            color: #4a5568;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .article-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            color: #667eea;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .read-more-btn {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .read-more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            color: #764ba2;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #a0aec0;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e2e8f0;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .content-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">学术公众号导航</div>
+            <button class="nav-btn" onclick="goHome()">首页</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="update-indicator">
+            <div class="update-status">
+                <div class="status-dot" id="statusDot"></div>
+                <span id="updateStatus">正在检查更新...</span>
+            </div>
+            <button class="refresh-btn" onclick="forceUpdate()">立即更新</button>
+        </div>
+
+        <div id="app"></div>
+    </div>
+
+    <script>
+        // 模拟数据
+        const officialAccounts = [
+            { id: 1, name: 'X-MOL资讯', description: '专注于化学、材料科学领域的前沿科研资讯', icon: '🧪', color: '#3b82f6' },
+            { id: 2, name: '纳米人', description: '纳米科学与技术领域的专业平台', icon: '🔬', color: '#8b5cf6' },
+            { id: 3, name: '研之成理', description: '化学、材料科学理论计算与实验研究', icon: '⚗️', color: '#10b981' },
+            { id: 4, name: 'WeeChem微观化', description: '微观世界化学探索与发现', icon: '🔍', color: '#06b6d4' },
+            { id: 5, name: 'CellPress全学科', description: 'Cell Press旗下多学科期刊资讯', icon: '📚', color: '#ef4444' },
+            { id: 6, name: 'BioArt', description: '生物艺术与生命科学前沿', icon: '🧬', color: '#ec4899' },
+            { id: 7, name: '自然系列', description: 'Nature Portfolio官方资讯平台', icon: '🌿', color: '#22c55e' }
+        ];
+
+        const articles = [
+            // 自然系列 文章
+            { id: 1, title: '"超级老人"80岁大脑仍在生成神经元 | 基因或影响生男生女概率 | 干细胞治疗对衰弱症初现潜力 | 自然每周简报', author: 'Nature Portfolio', journal: 'Nature', abstract: '本周自然简报精选了以下热点科研事件：1. 干细胞治疗衰弱：研究显示，一剂高剂量干细胞注射能帮助70至85岁的衰弱症受试者显著提升耐力。2. 乙酸增强雌性记忆：乙酸能增强雌性小鼠的长期记忆力，但对雄性小鼠无效。3. "自私"基因影响性别：研究发现某种基因导致家族中出生的男孩数量约为女孩的两倍。4. "超级老人"大脑神经元再生：80岁以上且记忆力卓越的"超级老人"，其大脑仍能持续生成高水平的神经元。5. 宝可梦与科学：在宝可梦诞生30周年之际，《自然》回顾了这一虚构世界如何作为灵感源泉。6. 地球构造运动早期证据：对古老锆石晶体的分析表明，地球的构造板块运动早在33亿年前就已经开始。', accountId: 7, publishDate: '2026-03-11', tags: ['神经科学', '干细胞', '性别比例', '古地质'], url: 'https://mp.weixin.qq.com/s/gaNQiPd6fpC01XsDQfC9jw' },
+
+            // 研之成理 文章
+            { id: 2, title: '麻省理工，NATURE！', author: 'Qian Xu, Yichen Nie, Alison E. Wendlandt', journal: 'Nature', abstract: '本文报道了一种新的分子编辑方法，能够实现常见醇基官能团向邻近位点的迁移，并具有可预测的立体选择性和区域化学结果。该反应在激发态十钨酸盐阴离子催化的可逆氢原子转移条件下进行，通过1,2-酰氧基自由基迁移步骤实现形式上的醇基迁移。这一工具在合成后期阶段的应用可实现醇基官能团的精准重定位。', accountId: 3, publishDate: '2026-03-11', tags: ['分子编辑', '催化剂', '有机合成'], url: 'https://mp.weixin.qq.com/s/2Z1ymo6mAHDajJ5Oi5tdZg' },
+
+            // 纳米人 文章
+            { id: 3, title: '一维COF，南开大学，最新Nature Synthesis！', author: 'Wang, T., Hao, L., Wu, S. et al.', journal: 'Nature Synthesis', abstract: '本研究针对一维共价有机框架（1D COF）单晶生长困难以及理论模拟与实验现实存在偏差的问题，南开大学张振杰、陈瑶等人开发了一个通用且系统的协议来生长高质量的1D COF晶体。研究通过连续旋转电子衍射技术，清楚地解析了六种具有高孔隙率的1D COFs的晶体结构，并定位了所有非氢原子。', accountId: 2, publishDate: '2026-03-11', tags: ['COF', '单晶', '多孔材料'], url: 'https://mp.weixin.qq.com/s/OsnO5pM4bRh3oGPeqTuItg' },
+            { id: 4, title: 'JOULE：自推进三相界面发电机，传统火力发电的有益补充！', author: '程鹏, 邹洋, 李舟', journal: 'Joule', abstract: '这项研究提出了一种基于亚稳态莱顿弗罗斯特效应的协同能量收集装置。针对火电厂大量流失的低品位废热和水蒸气资源，该装置利用棘轮结构表面液滴的亚稳态莱顿弗罗斯特效应，在液滴和棘轮之间形成了连续的动态固-液-气三相界面。单个30 μL液滴可连续产生超过100个直流脉冲信号，峰值电压达到1.552 V。', accountId: 2, publishDate: '2026-03-11', tags: ['能量收集', '发电', '废热利用'], url: 'https://mp.weixin.qq.com/s/vjF7HisAScjI5WBTRaL8CQ' },
+
+            // CellPress全学科 文章
+            { id: 5, title: '成都中医药大学黎胜红/刘燕团队综述丨植物源抗癌药物紫杉醇可持续性生产的合成生物学路线图', author: '谭春林, 黎胜红, 刘燕', journal: 'Trends in Biotechnology', abstract: '紫杉醇作为一种从红豆杉中提取的广谱抗癌药物，在乳腺癌、卵巢癌等治疗中具有不可替代的地位。然而，传统生产方式依赖天然红豆杉资源，提取效率极低。为此，成都中医药大学黎胜红/刘燕团队在Trends in Biotechnology发表综述文章，系统总结了紫杉醇生物合成领域的最新研究进展，并提出了基于合成生物学技术的紫杉醇"从头合成"技术框架图。', accountId: 5, publishDate: '2026-03-08', tags: ['紫杉醇', '合成生物学', '抗癌药物'], url: 'https://mp.weixin.qq.com/s/GeZHem8yInjracegL2VLxw' },
+
+            // Weechem微观化 文章
+            { id: 6, title: '单硅原子嵌入苯并呋喃骨架：镍催化骨架编辑开辟氧杂硅环构建新路径', author: 'Qiuling Yan, Hongxia Song, Hong Lu, Hao Wei', journal: 'JACS', abstract: '本文报道了一种将苯并呋喃直接扩环转化为氧杂硅环的镍催化新方法。该方法利用二氢硅烷作为硅源，通过C–H键硅化与后续重排相结合的路径，实现了单硅原子插入。该反应对多种取代基具有较好的兼容性，且适用于复杂荧光分子的后期修饰。所得氧杂硅环产物可作为合成平台，进一步转化为氧杂硼环、香豆素、苯并氧杂䓬等多种骨架。', accountId: 4, publishDate: '2026-03-11', tags: ['镍催化', '骨架编辑', '有机合成'], url: 'https://mp.weixin.qq.com/s/GtfMunr8-DGIKorQxZCvrQ' },
+
+            // BioArt 文章
+            { id: 7, title: 'CELL | 刘悦晨等利用古DNA揭示现代人类定居远大洋洲新路径', author: '刘悦晨, Joanne Eakin, Ron Pinhasi, David Reich', journal: 'Cell', abstract: '该研究通过分析帕劳群岛出土的21例史前人类古基因组，揭示了现代人类定居远大洋洲的新路径。研究发现，帕劳群岛最早的居民就已经具备约60%的东亚成分和40%的新几内亚巴布亚成分。基因混合时间推算显示，南岛语族与巴布亚人群的融合发生在约3900至3200年前，修正了以往认为南岛语族早期扩散未与巴布亚人群混合的"快车模型"。', accountId: 6, publishDate: '2026-03-10', tags: ['古DNA', '人类迁徙', '太平洋'], url: 'https://mp.weixin.qq.com/s/YSLmsQfzW28mAKMzfrgnbA' },
+            { id: 8, title: 'Neuron | 孙疏影团队揭示DCPS通过P小体调控RNA降解引发TDP-43介导的神经毒性的新机制', author: '孙疏影, 叶英枝, 张喆', journal: 'Neuron', abstract: '该研究通过CRISPRi筛选，首次揭示了清道夫脱帽酶（DCPS）是TDP-43功能缺失（LOF）介导神经毒性的关键调控因子。研究发现，TDP-43 LOF会导致P小体异常增大，进而引起大量神经元功能相关的mRNA与P小体结合增强、半衰期缩短，导致全局性RNA代谢失调。降低DCPS的表达或使用抑制剂可以逆转上述异常。', accountId: 6, publishDate: '2026-03-11', tags: ['神经退行性疾病', 'RNA降解', 'ALS'], url: 'https://mp.weixin.qq.com/s/lASCmNBlYGJxLbU7y2kpXw' },
+            { id: 9, title: 'NAT SUSTAIN | 高翔/王元元/杨琛团队创建人工光合工程细胞', author: '高翔, 王元元, 杨琛, 郭明明, 孔新珂', journal: 'Nature Sustainability', abstract: '针对天然光合生物效率低、非光合生物无法直接利用光能的问题，中国科学院深圳先进技术研究院高翔团队联合南京大学王元元团队及上海交通大学杨琛团队，开发了一种新型人工光合工程细胞。该研究突破了传统杂合体系中无机材料与微生物界面适配性差及胞内电子传递机制不清晰的瓶颈，实现了光能在细胞内的精准分配与高效利用。其中BDO合成过程中的太阳能到化学品转化效率达到2.83%。', accountId: 6, publishDate: '2026-03-10', tags: ['人工光合', '生物制造', '太阳能'], url: 'https://mp.weixin.qq.com/s/pK-Ujlrd-oPjUYbc8vyPjQ' },
+            { id: 10, title: 'Cell | 王霆/傅源/向嵩/余秋景合作揭示NAD水解酶SelO作为线粒体代谢压力"安全阀门"维持线粒体稳态', author: '王霆, 傅源, 向嵩, 余秋景, 贾晓凡, 张腾, 杨晨曦', journal: 'Cell', abstract: '本研究首次揭示了线粒体基质中的NAD水解酶SelO，阐明了其将NAD水解为NMN和AMP的机制。研究发现，SelO活性随线粒体基质pH升高而增强，通过降解NAD反馈抑制产能代谢，防止pH过高造成的损伤；同时，SelO还能优先抑制脂肪酸氧化（FAO）。在肝脏中，SelO的高表达起到了关键的线粒体保护作用。', accountId: 6, publishDate: '2026-03-10', tags: ['线粒体', 'NAD代谢', 'SelO'], url: 'https://mp.weixin.qq.com/s/jZAWEFTH_lJ3ZxmTfk0wDQ' },
+
+            // X-MOL资讯 文章
+            { id: 11, title: '【有机】大连化物所陈庆安/郑浩团队JACS：酯转位诱导烯烃的选择性远程双卤化', author: '刘倡辉, 郑浩, 陈庆安', journal: 'JACS', abstract: '针对烯烃远程选择性双卤化反应领域存在的研究空白，大连化物所陈庆安/郑浩团队开发了一种无需导向基团的膦酰二胺催化策略。该策略利用易得的烯基酯为底物，通过催化剂与NBS/SOCI2协同作用生成活性卤化中间体，诱导酯基发生转位，从而在温和条件下实现了烯烃的1,3-、1,4-和2,3-远程双卤化。克级制备及多样化的衍生化反应进一步证实了该策略在复杂分子组装和药物合成中的应用潜力。', accountId: 1, publishDate: '2026-03-11', tags: ['远程双卤化', '烯烃', '催化'], url: 'https://mp.weixin.qq.com/s/lO1ytjmCEaGEzgLSrlETeQ' },
+            { id: 12, title: '【材料】苏州纳米所王强斌课题组JACS：微米级二维抗体阵列的构建及其HER2信号通路阻断与癌症治疗应用', author: '杜明明, 王强斌, 姜江, 陈光村', journal: 'JACS', abstract: '中国科学院苏州纳米技术与纳米仿生研究所王强斌研究员团队创新性地设计出RhuA-P双功能蛋白质模块，它能精准地组装成结构规整、高度有序的微米尺度二维蛋白阵列。通过在RhuA-P的C端融合Protein G，二维RhuA-P阵列表面可规则排布Protein G位点。体内外实验证实，高密度排列的TmAb阵列展现出优异的HER2信号阻断能力，能将细胞膜上的HER2受体牢牢"锁定"并聚集成"微米级无活性簇"。', accountId: 1, publishDate: '2026-03-11', tags: ['抗体阵列', 'HER2', '癌症治疗'], url: 'https://mp.weixin.qq.com/s/WGCO54V_RtbqoDR-SzhkYA' },
+            { id: 13, title: '应变离域化策略实现水系储镁负极材料7.5万周次超长循环寿命', author: 'Yu Wu, Shunning Li, Bowen Jin, Yusen Yang, 潘锋, 李舜宁, 段雪, 邵明飞, 靳博文', journal: 'JACS', abstract: '该研究针对水系镁离子电池中因Mg2+/H2O共嵌入导致层状电极结构退化、循环稳定性差的问题，提出了一种应变离域化策略。研究团队通过Ta掺杂MoO3构筑了MoTaO_x层状电极。Ta掺杂引入的氧空位能锚定并部分解离层间H2O分子。最终，MoTaO_x电极在水系镁电解质中实现了约75,000次的超长循环寿命，累积容量高达7.2 kAh g−1。', accountId: 1, publishDate: '2026-03-07', tags: ['水系电池', '镁离子电池', '超长循环'], url: 'https://mp.weixin.qq.com/s/8_HFfYJSCJRBliT2VZgF2w' },
+            { id: 14, title: '【分析】东南大学张春阳教授团队JACS：同步三维DNA步行驱动双色RNA适配体点亮技术用于乳腺癌中多种环状RNA的无标记和阿摩尔水平精准分析', author: '王施, 张春阳', journal: 'JACS', abstract: '东南大学张春阳教授团队开发了一种基于同步三维DNA步行驱动的双色RNA适配体点亮策略，用于乳腺癌相关多种环状RNA的无标记、阿摩尔级超灵敏检测。该技术利用特异性捕获探针与挂锁探针识别靶标circRNA，启动双链特异性核酸内切酶驱动的三维DNA行走。该传感器对靶标的检出限分别低至10.96 aM和17.78 aM，在乳腺癌早期诊断准确率达91.1%，晚期达99.4%。', accountId: 1, publishDate: '2026-03-11', tags: ['DNA步行', '环状RNA', '癌症诊断'], url: 'https://mp.weixin.qq.com/s/a3kX99piUKMOrPwNxFjA6A' },
+            { id: 15, title: 'Nature：如果非要给这份记忆加一个期限，我希望是……一万年', author: '小希', journal: 'Nature', abstract: '微软研究院Project Silica团队在Nature期刊发表研究，展示了一种基于飞秒激光直写的玻璃存储技术。该技术通过在玻璃内部刻写微纳尺度的三维结构，实现了数据的可靠写入与读取。在一块边长120 mm、厚2 mm的玻璃中，研究团队构建了301层存储结构，实现了1.59 Gbit mm−3的数据密度和4.8 TB的总容量。实验表明，这种玻璃存储介质具有优异的热稳定性和化学稳定性，数据保存寿命预测可超过一万年。', accountId: 1, publishDate: '2026-03-02', tags: ['数据存储', '玻璃存储', '长期保存'], url: 'https://mp.weixin.qq.com/s/GgN2gPGws9SAdc8mgejisw' },
+
+            // 新增文章 2026-03-12
+            { id: 16, title: '大连化物所，Nature Materials！质子穿梭辅助的三重态能量转移', author: 'Zhaolong Wang, Kaifeng Wu', journal: 'Nature Materials', abstract: '本研究首次发现并命名了一种全新的能量转移机制——质子穿梭辅助的三重态能量转移。研究构建了由 ZnSe/ZnS 核壳量子点和表面锚定的酚-吡啶二元分子受体组成的给体-受体体系，利用超快光谱学手段揭示了激发态相互作用的完整动力学过程。这一发现填补了电子-质子耦合过程图谱中关于三重态能量转移的空白，为提升光子上转换、三重态光催化等领域中三重态形成的效率提供了全新的分子工程策略。', accountId: 3, publishDate: '2026-03-12', tags: ['能量转移', '量子点', '质子耦合', '光催化'], url: 'https://mp.weixin.qq.com/s/gzJmlSfWgyBNPV5AiHEvzg' },
+
+            { id: 17, title: '苏州大学，Nature Energy！双面隧道氧化物钝化接触太阳能电池', author: 'K. Gao, J. Mao, Z. Yang, 张晓宏, 杨新波, 杨洁, 张昕宇', journal: 'Nature Energy', abstract: '高效晶体硅太阳能电池主要依赖于隧道氧化物钝化接触 (TOPCon) 技术，但传统 TOPCon 电池因正面硼扩散发射极导致的复合损失，效率提升受限。本研究通过模拟分析确定了指状接触型（Finger TOPCon）架构具有最高潜力。团队成功展示了全尺寸双面 TOPCon 电池，采用图案化正面 n 型指状 TOPCon 和全背面双层 p 型 TOPCon 接触结构，并通过控制多晶硅结晶度、掺杂浓度及优化银浆，实现了 26.34% 的认证效率。进一步将该底电池与宽带隙钙钛矿顶电池集成，制备出的单片钙钛矿/TOPCon 叠层电池认证效率高达 32.73%。', accountId: 2, publishDate: '2026-03-12', tags: ['太阳能电池', 'TOPCon', '叠层电池', '钙钛矿'], url: 'https://mp.weixin.qq.com/s/mp_2Y5BrOGGpJkuFmOM-Zg' },
+
+            { id: 18, title: '上海交通大学，NATURE ENERGY！吸附驱动溶解制冷循环', author: 'Si Wu, Kaiyue Tang, Ruzhu Wang, Tingxian Li', journal: 'Nature Energy', abstract: '本研究提出了一种具有可扩展蓄热功能的吸附驱动溶解制冷循环。理论和实验结果表明，利用中低品位热能（80–150℃）作为驱动能源，该循环能产生比固态热效应更大的绝热温度变化。实验验证了该系统的可行性，数据显示绝热温度变化达37K，最低制冷温度可达-25.4℃。此外，吸附过程可实现热能存储和冷热灵活供应，以适应多样复杂的应用场景。这项研究为利用可再生能源（如太阳能热、工业废热）实现高效制冷和供暖开辟了新途径。', accountId: 3, publishDate: '2026-03-12', tags: ['制冷循环', '吸附驱动', '热能存储', '可再生能源'], url: 'https://mp.weixin.qq.com/s/DGPwNvo2AZe29Fd97G3lcw' },
+
+            { id: 19, title: '对映选择性铜催化烯烃氢羟胺化反应', author: 'James A. Law, Binh Khanh Mai, Hsuan-Min Hung, Tobianna Hendon, Yuyang Dong, Yu Zhang, Peng Liu, Stephen L. Buchwald', journal: 'JACS', abstract: '手性羟胺是一类兼具合成价值与应用潜力的重要含氮化合物，在药物分子构建、功能分子修饰以及进一步转化为手性胺等过程中都具有较高的使用价值。这项研究建立了一种以乙烯基杂芳烃和硝基烷烃为原料、通过铜氢催化实现不对称氢羟胺化的新方法。作者通过系统考察底物适用范围，发现多类乙烯基杂芳烃如苯并噻吩、苯并呋喃、噁唑、噻唑、呋喃和噻吩衍生物都能够顺利参与反应。结合对照实验与DFT计算，证明关键的C–N键形成更倾向于由手性烷基铜中间体直接进攻硝基完成。', accountId: 4, publishDate: '2026-03-12', tags: ['铜催化', '不对称合成', '羟胺', '氢羟胺化'], url: 'https://mp.weixin.qq.com/s/yU9aB-e0mesr_Aw7TDDmpQ' },
+
+            { id: 20, title: '孙勤利等开发快速建立体内免疫耐受新方法', author: '孙勤利, K. Christopher Garcia, 姜华', journal: 'Nature', abstract: '本研究针对体内高效建立免疫耐受这一核心难题，开发了一种基于白细胞介素-2（IL-2）和转化生长因子-β（TGF-β）双激动剂的新策略。研究团队设计并构建了一种"顺式双激动剂"，将低亲和力TGF-β激动剂与IL-2融合。该分子能够精准将TGF-β信号递送至表达IL-2受体的T细胞，并在同一细胞内协同激活TGF-β-SMAD2/3与IL-2-STAT5信号通路。实验结果显示，该策略在两种抗原模型中，均能安全、快速且高效地诱导抗原特异性外周调节性T细胞的分化，效率最高可达80%。', accountId: 6, publishDate: '2026-03-11', tags: ['免疫耐受', 'IL-2', 'TGF-β', '调节性T细胞'], url: 'https://mp.weixin.qq.com/s/bOdb9S4hj3GAbw2gI1c28Q' },
+
+            { id: 21, title: '郭兴团队揭示渐冻症的致病枢纽：PGAM5驱动的线粒体逆行信号', author: '郭兴, 刘妍, 陈盼盼, 郑志隆, 杨王菊, 陈震, 陶梦丹', journal: 'Neuron', abstract: '肌萎缩侧索硬化（ALS）即渐冻症，是一种致死性中枢神经系统退行性疾病，目前缺乏有效治疗手段，核心挑战在于其高度的遗传与临床亚型异质性。南京医科大学郭兴团队在Neuron杂志发表研究，首次揭示磷酸甘油酸变位酶5（PGAM5）驱动的线粒体整合应激反应（mtISR）是ALS的共性致病通路。机制研究发现，ALS相关的VCP突变会抑制VCP对PGAM5的降解，导致PGAM5异常积累。PGAM5通过去磷酸化激活线粒体蛋白酶OMA1，进而激活OMA1-DELE1-HRI-eIF2α轴，引发mtISR异常激活。', accountId: 6, publishDate: '2026-03-11', tags: ['ALS', '渐冻症', '线粒体应激', 'PGAM5'], url: 'https://mp.weixin.qq.com/s/DbQ1kzBoSSvsqPCPIrCKmw' }
+        ];
+
+        // 根据实际文章动态生成期刊分类
+        function getJournalCategories(accountArticles) {
+            const journalMap = new Map();
+            
+            accountArticles.forEach(article => {
+                const journal = article.journal;
+                journalMap.set(journal, (journalMap.get(journal) || 0) + 1);
+            });
+
+            const categories = [
+                { id: 'all', name: '全部', count: accountArticles.length }
+            ];
+
+            // 添加各个期刊分类
+            journalMap.forEach((count, journal) => {
+                categories.push({ id: journal, name: journal, count });
+            });
+
+            // 如果有多个Nature期刊，添加Nature系列分类
+            const natureJournals = Array.from(journalMap.keys()).filter(j => j.includes('Nature'));
+            if (natureJournals.length > 1) {
+                const natureCount = natureJournals.reduce((sum, j) => sum + journalMap.get(j), 0);
+                categories.push({ id: 'Nature Series', name: 'Nature系列期刊', count: natureCount });
+            }
+
+            // 如果有多个Cell期刊，添加Cell系列分类
+            const cellJournals = Array.from(journalMap.keys()).filter(j => j.includes('Cell'));
+            if (cellJournals.length > 1) {
+                const cellCount = cellJournals.reduce((sum, j) => sum + journalMap.get(j), 0);
+                categories.push({ id: 'Cell Series', name: 'Cell系列期刊', count: cellCount });
+            }
+
+            return categories;
+        }
+
+        // 状态管理
+        let currentView = 'home';
+        let selectedAccountId = null;
+        let activeCategory = 'all';
+        let searchQuery = '';
+        let globalSearchQuery = '';
+        let lastUpdateTime = null;
+        let isUpdating = false;
+        let updateInterval = null;
+        let journalCategories = [];
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            render();
+            startAutoUpdate();
+            document.addEventListener('visibilitychange', handleVisibilityChange);
+        });
+
+        // 渲染函数
+        function render() {
+            const app = document.getElementById('app');
+            if (currentView === 'home') {
+                app.innerHTML = renderHome();
+            } else {
+                app.innerHTML = renderArticles();
+            }
+        }
+
+        // 渲染首页
+        function renderHome() {
+            return `
+                <div class="home-title">
+                    <h1>学术公众号导航</h1>
+                    <p>探索前沿科研资讯，助力学术研究</p>
+                </div>
+                
+                <div class="search-bar">
+                    <div class="search-input-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input 
+                            type="text" 
+                            class="search-input" 
+                            placeholder="搜索所有文章标题、作者、期刊名称或摘要..."
+                            value="${globalSearchQuery}"
+                            oninput="handleGlobalSearch(this.value)"
+                        >
+                        <button class="search-btn" onclick="handleGlobalSearch(globalSearchQuery)">搜索</button>
+                    </div>
+                </div>
+
+                ${globalSearchQuery.trim() ? renderGlobalSearchResults() : `
+                <div class="cards-grid">
+                    ${officialAccounts.map(account => `
+                        <div class="card">
+                            <div class="card-icon" style="background: ${account.color}">
+                                ${account.icon}
+                            </div>
+                            <h3 class="card-title">${account.name}</h3>
+                            <p class="card-desc">${account.description}</p>
+                            <button class="card-btn" onclick="viewContent(${account.id})">查看内容</button>
+                        </div>
+                    `).join('')}
+                </div>
+                `}
+            `;
+        }
+
+        // 渲染全局搜索结果
+        function renderGlobalSearchResults() {
+            const query = globalSearchQuery.toLowerCase().trim();
+            if (!query) return '';
+
+            const results = articles.filter(article => 
+                article.title.toLowerCase().includes(query) ||
+                article.author.toLowerCase().includes(query) ||
+                article.journal.toLowerCase().includes(query) ||
+                article.abstract.toLowerCase().includes(query)
+            );
+
+            if (results.length === 0) {
+                return `
+                    <div class="empty-state">
+                        <div class="empty-icon">📄</div>
+                        <p>未找到匹配的文章</p>
+                        <button class="nav-btn" onclick="clearGlobalSearch()" style="margin-top: 20px;">清除搜索</button>
+                    </div>
+                `;
+            }
+
+            return `
+                <div style="margin-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 style="color: #2d3748;">搜索结果：找到 ${results.length} 篇文章</h2>
+                        <button class="nav-btn" onclick="clearGlobalSearch()">清除搜索</button>
+                    </div>
+                    <div class="article-list">
+                        ${results.map(article => {
+                            const account = officialAccounts.find(a => a.id === article.accountId);
+                            return `
+                            <div class="article-card">
+                                <div class="article-header">
+                                    <h3 class="article-title">${article.title}</h3>
+                                    <span class="journal-badge ${getJournalBadgeClass(article.journal)}">${article.journal}</span>
+                                </div>
+                                <div class="article-meta">
+                                    <span>👤 ${article.author}</span>
+                                    <span>📅 ${article.publishDate}</span>
+                                    <span>📰 ${account ? account.name : '未知'}</span>
+                                </div>
+                                <p class="article-abstract">${article.abstract}</p>
+                                <div class="article-tags">
+                                    ${article.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                                </div>
+                                <div style="display: flex; gap: 10px; margin-top: 12px;">
+                                    <a href="${article.url}" target="_blank" class="read-more-btn">阅读全文 →</a>
+                                    <button class="nav-btn" onclick="viewContent(${article.accountId})" style="padding: 8px 16px;">查看更多</button>
+                                </div>
+                            </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 渲染文章列表
+        function renderArticles() {
+            const filteredArticles = filterArticles();
+            const account = officialAccounts.find(a => a.id === selectedAccountId);
+            
+            // 动态生成期刊分类
+            const accountArticles = articles.filter(a => a.accountId === selectedAccountId);
+            journalCategories = getJournalCategories(accountArticles);
+
+            return `
+                <button class="back-btn" onclick="goHome()">
+                    ← 返回首页
+                </button>
+
+                <div class="search-bar">
+                    <div class="search-input-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input 
+                            type="text" 
+                            class="search-input" 
+                            placeholder="搜索文章标题、作者、期刊名称或摘要..."
+                            value="${searchQuery}"
+                            oninput="handleSearch(this.value)"
+                        >
+                        <button class="search-btn" onclick="handleSearch(searchQuery)">搜索</button>
+                    </div>
+                </div>
+
+                <div class="content-layout">
+                    <div class="sidebar">
+                        <h2 class="sidebar-title">期刊分类</h2>
+                        <ul class="category-list">
+                            ${journalCategories.map(cat => `
+                                <li class="category-item">
+                                    <button 
+                                        class="category-btn ${activeCategory === cat.id ? 'active' : ''}"
+                                        onclick="selectCategory('${cat.id}')"
+                                    >
+                                        <span>${cat.name}</span>
+                                        <span class="category-count">${cat.count}</span>
+                                    </button>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="article-list">
+                        ${filteredArticles.length === 0 ? `
+                            <div class="empty-state">
+                                <div class="empty-icon">📄</div>
+                                <p>暂无相关文章</p>
+                            </div>
+                        ` : filteredArticles.map(article => `
+                            <div class="article-card">
+                                <div class="article-header">
+                                    <h3 class="article-title">${article.title}</h3>
+                                    <span class="journal-badge ${getJournalBadgeClass(article.journal)}">${article.journal}</span>
+                                </div>
+                                <div class="article-meta">
+                                    <span>👤 ${article.author}</span>
+                                    <span>📅 ${article.publishDate}</span>
+                                </div>
+                                <p class="article-abstract">${article.abstract}</p>
+                                <div class="article-tags">
+                                    ${article.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                                </div>
+                                <a href="${article.url}" target="_blank" class="read-more-btn">阅读全文 →</a>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 获取期刊徽章样式
+        function getJournalBadgeClass(journal) {
+            if (journal.includes('Nature')) return 'journal-nature';
+            if (journal.includes('Cell')) return 'journal-cell';
+            if (journal === 'Science') return 'journal-science';
+            return 'journal-default';
+        }
+
+        // 过滤文章
+        function filterArticles() {
+            let result = articles;
+
+            // 按公众号过滤
+            if (selectedAccountId) {
+                result = result.filter(a => a.accountId === selectedAccountId);
+            }
+
+            // 按分类过滤
+            if (activeCategory !== 'all') {
+                if (activeCategory === 'Nature Series') {
+                    result = result.filter(a => a.journal.includes('Nature'));
+                } else if (activeCategory === 'Cell Series') {
+                    result = result.filter(a => a.journal.includes('Cell'));
+                } else {
+                    result = result.filter(a => a.journal === activeCategory);
+                }
+            }
+
+            // 搜索过滤
+            if (searchQuery.trim()) {
+                const query = searchQuery.toLowerCase();
+                result = result.filter(a => 
+                    a.title.toLowerCase().includes(query) ||
+                    a.author.toLowerCase().includes(query) ||
+                    a.journal.toLowerCase().includes(query) ||
+                    a.abstract.toLowerCase().includes(query)
+                );
+            }
+
+            return result;
+        }
+
+        // 事件处理
+        function viewContent(accountId) {
+            selectedAccountId = accountId;
+            activeCategory = 'all';
+            searchQuery = '';
+            globalSearchQuery = '';
+            currentView = 'articles';
+            render();
+        }
+
+        function goHome() {
+            selectedAccountId = null;
+            activeCategory = 'all';
+            searchQuery = '';
+            globalSearchQuery = '';
+            currentView = 'home';
+            render();
+        }
+
+        function clearGlobalSearch() {
+            globalSearchQuery = '';
+            render();
+        }
+
+        function handleGlobalSearch(query) {
+            globalSearchQuery = query;
+            render();
+        }
+
+        function selectCategory(categoryId) {
+            activeCategory = categoryId;
+            render();
+        }
+
+        function handleSearch(query) {
+            searchQuery = query;
+            render();
+        }
+
+        // 自动更新功能
+        function startAutoUpdate() {
+            updateData();
+            updateInterval = setInterval(updateData, 5 * 60 * 1000); // 5分钟
+        }
+
+        function updateData() {
+            if (isUpdating) return;
+
+            isUpdating = true;
+            updateStatusDisplay(true);
+
+            // 模拟API请求延迟
+            setTimeout(() => {
+                isUpdating = false;
+                lastUpdateTime = new Date();
+                updateStatusDisplay(false);
+                
+                // 如果在文章列表页面，刷新显示
+                if (currentView === 'articles') {
+                    render();
+                }
+            }, 1000);
+        }
+
+        function forceUpdate() {
+            updateData();
+        }
+
+        function handleVisibilityChange() {
+            if (document.visibilityState === 'visible') {
+                updateData();
+            }
+        }
+
+        function updateStatusDisplay(updating) {
+            const dot = document.getElementById('statusDot');
+            const status = document.getElementById('updateStatus');
+            
+            if (updating) {
+                dot.classList.add('updating');
+                status.textContent = '正在更新数据...';
+            } else {
+                dot.classList.remove('updating');
+                if (lastUpdateTime) {
+                    const diff = Math.floor((new Date() - lastUpdateTime) / 1000);
+                    if (diff < 60) {
+                        status.textContent = '刚刚更新';
+                    } else if (diff < 3600) {
+                        status.textContent = `${Math.floor(diff / 60)}分钟前更新`;
+                    } else if (diff < 86400) {
+                        status.textContent = `${Math.floor(diff / 3600)}小时前更新`;
+                    } else {
+                        status.textContent = `${Math.floor(diff / 86400)}天前更新`;
+                    }
+                } else {
+                    status.textContent = '未更新';
+                }
+            }
+        }
+
+        // 清理定时器
+        window.addEventListener('beforeunload', () => {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+            }
+        });
+    </script>
+</body>
+</html>
