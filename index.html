@@ -239,6 +239,17 @@
             border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
+            transition: transform 0.2s;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .search-match-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .content-layout {
@@ -617,6 +628,7 @@
         let isUpdating = false;
         let updateInterval = null;
         let journalCategories = [];
+        let searchDebounceTimer = null; // 搜索防抖定时器
 
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
@@ -679,12 +691,37 @@
             const query = globalSearchQuery.toLowerCase().trim();
             if (!query) return '';
 
-            const results = articles.filter(article => 
-                article.title.toLowerCase().includes(query) ||
-                article.author.toLowerCase().includes(query) ||
-                article.journal.toLowerCase().includes(query) ||
-                article.abstract.toLowerCase().includes(query)
-            );
+            // 搜索并添加匹配分数
+            const results = articles.map(article => {
+                let score = 0;
+                let matchFields = [];
+
+                // 标题匹配（权重最高）
+                if (article.title.toLowerCase().includes(query)) {
+                    score += 100;
+                    matchFields.push('标题');
+                }
+
+                // 期刊匹配（权重次高）
+                if (article.journal.toLowerCase().includes(query)) {
+                    score += 50;
+                    matchFields.push('期刊');
+                }
+
+                // 作者匹配（权重中等）
+                if (article.author.toLowerCase().includes(query)) {
+                    score += 30;
+                    matchFields.push('作者');
+                }
+
+                // 摘要匹配（权重最低）
+                if (article.abstract.toLowerCase().includes(query)) {
+                    score += 10;
+                    matchFields.push('摘要');
+                }
+
+                return { article, score, matchFields };
+            }).filter(item => item.score > 0); // 只保留有匹配的结果
 
             if (results.length === 0) {
                 return `
@@ -696,6 +733,9 @@
                 `;
             }
 
+            // 按分数降序排序
+            results.sort((a, b) => b.score - a.score);
+
             return `
                 <div style="margin-top: 20px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -703,8 +743,11 @@
                         <button class="nav-btn" onclick="clearGlobalSearch()">清除搜索</button>
                     </div>
                     <div class="article-list">
-                        ${results.map(article => {
+                        ${results.map(item => {
+                            const article = item.article;
                             const account = officialAccounts.find(a => a.id === article.accountId);
+                            const matchFields = item.matchFields;
+
                             return `
                             <div class="article-card">
                                 <div class="article-header">
@@ -719,6 +762,10 @@
                                 <p class="article-abstract">${article.abstract}</p>
                                 <div class="article-tags">
                                     ${article.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                                </div>
+                                <div class="search-match-indicator" style="margin-top: 12px; padding: 8px 12px; background: #f7fafc; border-radius: 6px; font-size: 13px; color: #718096;">
+                                    <span style="color: #667eea;">🎯 匹配字段：</span>
+                                    ${matchFields.join('、')}
                                 </div>
                                 <div style="display: flex; gap: 10px; margin-top: 12px;">
                                     <a href="${article.url}" target="_blank" class="read-more-btn">阅读全文 →</a>
@@ -834,15 +881,36 @@
                 }
             }
 
-            // 搜索过滤
+            // 搜索过滤（带优先级）
             if (searchQuery.trim()) {
                 const query = searchQuery.toLowerCase();
-                result = result.filter(a => 
-                    a.title.toLowerCase().includes(query) ||
-                    a.author.toLowerCase().includes(query) ||
-                    a.journal.toLowerCase().includes(query) ||
-                    a.abstract.toLowerCase().includes(query)
-                );
+                result = result.map(article => {
+                    let score = 0;
+
+                    // 标题匹配（权重最高）
+                    if (article.title.toLowerCase().includes(query)) {
+                        score += 100;
+                    }
+
+                    // 期刊匹配（权重次高）
+                    if (article.journal.toLowerCase().includes(query)) {
+                        score += 50;
+                    }
+
+                    // 作者匹配（权重中等）
+                    if (article.author.toLowerCase().includes(query)) {
+                        score += 30;
+                    }
+
+                    // 摘要匹配（权重最低）
+                    if (article.abstract.toLowerCase().includes(query)) {
+                        score += 10;
+                    }
+
+                    return { article, score };
+                }).filter(item => item.score > 0) // 只保留有匹配的结果
+                  .sort((a, b) => b.score - a.score) // 按分数降序排序
+                  .map(item => item.article); // 返回文章对象
             }
 
             return result;
@@ -874,7 +942,12 @@
 
         function handleGlobalSearch(query) {
             globalSearchQuery = query;
-            render();
+
+            // 防抖：延迟 300ms 后再渲染，避免频繁渲染导致输入框失去焦点
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => {
+                render();
+            }, 300);
         }
 
         function selectCategory(categoryId) {
@@ -884,7 +957,12 @@
 
         function handleSearch(query) {
             searchQuery = query;
-            render();
+
+            // 防抖：延迟 300ms 后再渲染，避免频繁渲染导致输入框失去焦点
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => {
+                render();
+            }, 300);
         }
 
         // 自动更新功能
@@ -957,5 +1035,8 @@
     </script>
 </body>
 </html>
+
+</html>
+
 
 
