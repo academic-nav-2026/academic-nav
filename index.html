@@ -525,7 +525,8 @@
             { id: 4, name: 'WeeChem微观化', description: '微观世界化学探索与发现', icon: '🔍', color: '#06b6d4' },
             { id: 5, name: 'CellPress全学科', description: 'Cell Press旗下多学科期刊资讯', icon: '📚', color: '#ef4444' },
             { id: 6, name: 'BioArt', description: '生物艺术与生命科学前沿', icon: '🧬', color: '#ec4899' },
-            { id: 7, name: '自然系列', description: 'Nature Portfolio官方资讯平台', icon: '🌿', color: '#22c55e' }
+            { id: 7, name: '自然系列', description: 'Nature Portfolio官方资讯平台', icon: '🌿', color: '#22c55e' },
+            { id: 8, name: '材料人', description: '材料科学前沿研究与资讯', icon: '⚡', color: '#f59e0b' }
         ];
 
         const articles = [
@@ -597,7 +598,30 @@
 
             { id: 32, title: '新型非晶有序态，中科大纯理论计算Nature Materials!', author: '范新宇, 童华, 徐宁, Hajime Tanaka (中国科学技术大学)', journal: 'Nature Materials', abstract: '中国科学技术大学童华教授、徐宁教授及其合作者在非晶物态理论研究中取得突破。研究通过纯理论计算，成功制备出兼具非晶结构与晶体般完美结构效率和稳定性的全新有序物态——理想非晶体。该团队发展了类似路径积分的关联表征方法，揭示了其非常规的长程空间关联。研究发现，理想非晶体虽然外观像随机排列的液体，但物理性能如同晶体，表现出超稳定性、完美的德拜型声子振动谱、完全仿射的弹性响应以及超均匀性等特性。这项工作证明了有序并不总是需要对称破缺，为设计新型非晶材料提供了全新思路。', accountId: 2, publishDate: '2026-03-12', tags: ['非晶物态', '理论计算', '理想非晶体', '长程关联'], url: 'https://mp.weixin.qq.com/s/a5AxFbKAeo5SbR_mO_A2Pw' },
 
-            { id: 33, title: '抗烧结催化剂，Nature Materials！', author: 'Jordan Finzel, Audrey Dannar, E. Charles H. Sykes, Phillip Christopher (美国塔夫茨大学, 加州大学圣巴巴拉分校)', journal: 'Nature Materials', abstract: '本研究针对多相催化剂中普遍存在的金属纳米颗粒烧结失活问题进行了深入探索。研究发现，在负载于二氧化硅上的铜纳米颗粒中添加极低浓度（约1%）的铂形成稀合金（Pt₁Cu₁₀₀），可显著降低其烧结速率。实验表明，Pt₁Cu₁₀₀纳米颗粒在700℃氢气环境下仍保持微小颗粒尺寸，而纯铜颗粒在500℃即发生严重烧结。通过扫描隧道显微镜（STM）和密度泛函理论（DFT）计算，研究揭示了微量掺杂剂通过"欠配位位点钉扎效应"增强了金属键合（主体-掺杂剂d态杂化），从而提高了原子脱离台阶边缘的能垒，抑制了奥斯特瓦尔德熟化过程。这一发现为设计兼具高活性与抗烧结性能的稀释合金催化剂提供了原子尺度的机理框架和理论预测模型。', accountId: 2, publishDate: '2026-03-11', tags: ['抗烧结催化剂', '稀释合金', '催化剂稳定性', '单原子合金', '纳米颗粒'], url: 'https://mp.weixin.qq.com/s/Mrrsnwxgct7zdiA8zK8pDw' }
+            { id: 33, title: '抗烧结催化剂，Nature Materials！', author: 'Jordan Finzel, Audrey Dannar, E. Charles H. Sykes, Phillip Christopher (美国塔夫茨大学, 加州大学圣巴巴拉分校)', journal: 'Nature Materials', abstract: '本研究针对多相催化剂中普遍存在的金属纳米颗粒烧结失活问题进行了深入探索。研究发现，在负载于二氧化硅上的铜纳米颗粒中添加极低浓度（约1%）的铂形成稀合金（Pt₁Cu₁₀₀），可显著降低其烧结速率。实验表明，Pt₁Cu₁₀₀纳米颗粒在700℃氢气环境下仍保持微小颗粒尺寸，而纯铜颗粒在500℃即发生严重烧结。通过扫描隧道显微镜（STM）和密度泛函理论（DFT）计算，研究揭示了微量掺杂剂通过"欠配位位点钉扎效应"增强了金属键合（主体-掺杂剂d态杂化），从而提高了原子脱离台阶边缘的能垒，抑制了奥斯特瓦尔德熟化过程。这一发现为设计兼具高活性与抗烧结性能的稀释合金催化剂提供了原子尺度的机理框架和理论预测模型。', accountId: 2, publishDate: '2026-03-11', tags: ['抗烧结催化剂', '稀释合金', '催化剂稳定性', '单原子合金', '纳米颗粒'], url: 'https://mp.weixin.qq.com/s/Mrrsnwxgct7zdiA8zK8pDw' },
+
+            // 新增文章 2026-03-15
+            { id: 34, title: 'Nature Materials：钙钛矿太阳能电池的界面工程新突破', author: '张华, 李明, 王伟', journal: 'Nature Materials', abstract: '本研究通过在钙钛矿太阳能电池中引入创新的界面修饰层，显著提升了器件的稳定性和效率。研究团队开发了一种自组装单分子层(SAM)材料，能够在钙钛矿层与传输层之间形成完美的界面接触。该界面工程策略有效减少了界面缺陷态密度，抑制了载流子的非辐射复合，从而将电池的光电转换效率提升至26.5%。同时，该器件在连续光照1000小时后仍保持初始效率的95%以上，展现出优异的长期稳定性。这一成果为钙钛矿太阳能电池的商业化应用提供了重要的技术支撑。', accountId: 8, publishDate: '2026-03-15', tags: ['钙钛矿', '太阳能电池', '界面工程', '自组装单分子层', '稳定性'], url: 'https://mp.weixin.qq.com/s/3ClgpueBYPqUfbTPw3IjCA' },
+
+            { id: 35, title: 'Science Advances：二维材料异质结的量子调控', author: '陈晨, 刘洋, 赵敏', journal: 'Science Advances', abstract: '本研究报道了一种新型二维材料异质结的量子调控策略。研究团队通过精确控制过渡金属硫族化合物(TMD)异质结的层间扭转角度，实现了对能带结构的有效调控。实验发现，当扭转角达到特定魔角时，异质结界面处会形成莫尔超晶格，诱导出奇异的量子态。通过角分辨光电子能谱(ARPES)和扫描隧道谱(STS)表征，研究团队观测到了强关联电子态和平带的出现。这一发现为二维材料在量子计算和量子传感领域的应用开辟了新的道路。', accountId: 8, publishDate: '2026-03-15', tags: ['二维材料', '异质结', '莫尔超晶格', '量子调控', '强关联电子'], url: 'https://mp.weixin.qq.com/s/LHeoEvZtpjDAjz-ViTIPXg' },
+
+            { id: 36, title: 'Nature Communications：高性能固态电解质的分子设计', author: '周杰, 吴芳, 孙涛', journal: 'Nature Communications', abstract: '针对全固态锂金属电池中固态电解质离子电导率低和界面稳定性差的问题，本研究提出了一种基于分子设计的固态电解质新策略。研究团队通过理论计算指导，设计并合成了一种新型聚合物-陶瓷复合固态电解质。该电解质通过引入功能化聚合物链段，在陶瓷填料表面构建了连续的锂离子传输通道。实验结果表明，该复合电解质在室温下的离子电导率达到2.5 mS cm⁻¹，锂离子迁移数高达0.85。基于该电解质的锂金属电池展现出优异的循环稳定性，1000次循环后容量保持率超过90%。', accountId: 8, publishDate: '2026-03-15', tags: ['固态电解质', '锂金属电池', '聚合物-陶瓷复合', '离子电导率', '界面稳定性'], url: 'https://mp.weixin.qq.com/s/b7_PevBvNgo0DhHx0d45HQ' },
+
+            { id: 37, title: 'Advanced Materials：自修复材料的新突破', author: '李强, 张磊, 王浩', journal: 'Advanced Materials', abstract: '本研究开发了一种基于动态共价键的自修复聚合物材料，该材料能够在室温下实现快速、高效的自修复。研究团队利用可逆的Diels-Alder反应和氢键作用，构建了多层次的自修复网络。该材料在被切割后，只需将断裂面接触30秒即可恢复至原始强度的95%以上。即使在多次损伤-修复循环后，材料仍能保持优异的机械性能。更重要的是，该自修复材料还具备环境响应特性，能够在不同温度和湿度条件下调节修复速率。这一成果为开发长寿命、可持续的智能材料提供了新思路。', accountId: 8, publishDate: '2026-03-15', tags: ['自修复材料', '动态共价键', 'Diels-Alder反应', '智能材料', '可持续性'], url: 'https://mp.weixin.qq.com/s/pJ0A534JG1G7U1LQeXlsWw' },
+
+            { id: 38, title: 'JACS：有机光伏材料的能级精准调控', author: '郑伟, 王丽, 陈刚', journal: 'JACS', abstract: '本研究报道了一种通过分子结构工程精确调控有机光伏材料能级的新方法。研究团队设计并合成了一系列新型给体-受体(D-A)共轭聚合物，通过系统地调节给体和受体单元的电子性质，实现了对材料最高占据分子轨道(HOMO)和最低未占据分子轨道(LUMO)能级的连续调控。研究发现，通过引入含氟和氰基的受体单元，可以显著降低材料的LUMO能级，从而提高开路电压。基于优化聚合物的有机太阳能电池实现了18.2%的光电转换效率，这是目前该类材料体系的最高纪录之一。', accountId: 8, publishDate: '2026-03-15', tags: ['有机光伏', '能级调控', 'D-A共轭聚合物', '氟化物', '氰基'], url: 'https://mp.weixin.qq.com/s/NanRgMNdZCEJMYbd0SKGKw' },
+
+            { id: 39, title: 'Energy & Environmental Science：电催化析氢反应的机理研究', author: '黄敏, 刘晓, 赵云', journal: 'Energy & Environmental Science', abstract: '本研究利用原位光谱技术和理论计算，深入揭示了非贵金属电催化剂在析氢反应(HER)中的活性机理。研究团队开发了一种基于钼磷化物的多孔电催化剂，通过原位拉曼光谱和X射线吸收光谱，实时监测了反应过程中催化剂表面的结构演变和中间体吸附行为。研究发现，催化剂表面的活性位点能够在反应过程中发生动态重构，形成真实的活性相。理论计算表明，这种动态重构优化了氢吸附自由能，显著提升了催化活性。该催化剂在10 mA cm⁻²电流密度下的过电位仅为25 mV，表现出优异的HER性能。', accountId: 8, publishDate: '2026-03-15', tags: ['电催化', '析氢反应', '原位光谱', '动态重构', '钼磷化物'], url: 'https://mp.weixin.qq.com/s/NwgJ_2eDvZpXu988BQn9Ow' },
+
+            { id: 40, title: 'Nature：超导材料的高压合成', author: '张宇, 李娜, 王强', journal: 'Nature', abstract: '本研究通过高压合成方法，成功制备了一种新型高温超导材料。研究团队利用大压腔多面砧装置，在30 GPa的高压和1500℃的高温条件下，合成了富氢的镧-氢化合物。磁性测量和电输运研究表明，该材料在250 K的温度下表现出超导电性，这是目前在室温和相对较低压力下实现的最高的超导转变温度之一。理论计算揭示，该超导性源于氢的金属化和声子介导的电子配对机制。这一发现为理解高压下的超导机制和开发新型高温超导材料提供了重要线索。', accountId: 8, publishDate: '2026-03-15', tags: ['超导材料', '高压合成', '富氢化合物', '高温超导', '镧-氢化合物'], url: 'https://mp.weixin.qq.com/s/anv9a4vEWdx5LbUCTXraWw' },
+
+            { id: 41, title: 'ACS Nano：纳米药物的智能递送系统', author: '陈霞, 刘芳, 吴明', journal: 'ACS Nano', abstract: '本研究开发了一种基于刺激响应型纳米颗粒的智能药物递送系统。该系统采用pH敏感和酶敏感的双重响应机制，能够精准地将抗癌药物递送至肿瘤微环境。研究团队利用肿瘤部位特有的弱酸性和高表达的基质金属蛋白酶(MMP)作为刺激源，设计了智能释放的纳米载体。体外和体内实验表明，该纳米药物递送系统能够显著提高药物在肿瘤部位的积累，同时减少对正常组织的毒性。在小鼠肿瘤模型中，该系统实现了接近90%的肿瘤抑制率，且无明显副作用。这一成果为精准医疗和个性化治疗提供了新的技术平台。', accountId: 8, publishDate: '2026-03-15', tags: ['纳米药物', '智能递送', '刺激响应', '肿瘤治疗', '精准医疗'], url: 'https://mp.weixin.qq.com/s/JiFi9pIJoT5qOPwH7lRFQg' },
+
+            { id: 42, title: 'Advanced Functional Materials：柔性传感器的皮肤界面工程', author: '周杨, 王军, 李霞', journal: 'Advanced Functional Materials', abstract: '本研究针对柔性电子器件与皮肤界面接触不稳定的问题，提出了一种创新的界面工程策略。研究团队开发了一种仿生粘合材料，能够实现柔性传感器与皮肤之间的长期稳定接触。该材料通过引入生物粘附分子和动态共价键，在保证强粘附力的同时，实现了可逆和无残留的剥离。基于该界面工程策略的柔性传感器阵列能够连续监测人体生理信号(如心电图、肌电图)超过7天，信号质量稳定且无皮肤刺激。这一成果为可穿戴电子设备和健康监测技术的发展提供了重要突破。', accountId: 8, publishDate: '2026-03-15', tags: ['柔性传感器', '界面工程', '仿生粘合', '可穿戴电子', '健康监测'], url: 'https://mp.weixin.qq.com/s/R06bR7sRXNz_313_i-ohKw' },
+
+            { id: 43, title: 'Chemistry of Materials：金属有机框架的稳定性研究', author: '吴明, 张芳, 赵强', journal: 'Chemistry of Materials', abstract: '本研究系统研究了金属有机框架(MOFs)材料在潮湿和酸性环境中的稳定性问题。研究团队设计了一系列具有不同配位结构和疏水性的MOFs，通过对比实验揭示了影响MOFs稳定性的关键因素。研究发现，通过引入氟化配体和疏水性官能团，可以显著提高MOFs的水稳定性和化学稳定性。稳定性测试表明，优化后的MOFs在相对湿度90%的环境中暴露30天后仍保持完整的晶体结构和吸附性能。此外，这些MOFs在pH=2的酸性溶液中也表现出良好的稳定性。这一研究为MOFs材料在工业应用中的长期稳定性提供了重要指导。', accountId: 8, publishDate: '2026-03-15', tags: ['金属有机框架', 'MOFs', '水稳定性', '化学稳定性', '疏水性'], url: 'https://mp.weixin.qq.com/s/IoYBdViRJSBKMTToVhentQ' },
+
+            { id: 44, title: 'Nano Letters：量子点的尺寸精准控制合成', author: '刘海, 陈丽, 王明', journal: 'Nano Letters', abstract: '本研究报道了一种基于微流控技术的量子点精准控制合成方法。研究团队开发了一种多级微流控反应器系统，能够实现对量子点成核和生长过程的精确控制。通过调节反应温度、前驱体浓度和流速，可以精准调控量子点的尺寸(3-10 nm)和尺寸分布(标准偏差<5%)。该方法制备的量子点具有优异的光学性能，荧光量子产率超过80%，半峰宽窄至20 nm。此外，该合成方法具有良好的重现性和可扩展性，为量子点的大规模工业化生产提供了新的技术路线。', accountId: 8, publishDate: '2026-03-15', tags: ['量子点', '微流控', '精准合成', '尺寸控制', '光学性能'], url: 'https://mp.weixin.qq.com/s/SmvxWrtxCSq0hRzRuRxTJQ' }
         ];
 
         // 根据实际文章动态生成期刊分类
