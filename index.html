@@ -663,10 +663,65 @@
             return categories;
         }
 
+        // 根据所有文章生成首页期刊分类
+        function getHomeJournalCategories() {
+            const journalMap = new Map();
+
+            articles.forEach(article => {
+                const journal = article.journal;
+                journalMap.set(journal, (journalMap.get(journal) || 0) + 1);
+            });
+
+            const categories = [
+                { id: 'all', name: '全部文章', count: articles.length }
+            ];
+
+            // 按照用户要求的顺序添加期刊系列
+            // JACS
+            if (journalMap.has('JACS')) {
+                categories.push({ id: 'JACS', name: 'JACS', count: journalMap.get('JACS') });
+            }
+
+            // Angew
+            if (journalMap.has('Angew')) {
+                categories.push({ id: 'Angew', name: 'Angew', count: journalMap.get('Angew') });
+            }
+
+            // Advanced Materials
+            if (journalMap.has('Advanced Materials') || journalMap.has('Adv. Materials')) {
+                const count = (journalMap.get('Advanced Materials') || 0) + (journalMap.get('Adv. Materials') || 0);
+                categories.push({ id: 'Advanced Materials', name: 'Advanced Materials', count });
+            }
+
+            // Nature系列(包括Nature和Nature子刊,期刊名通常为Nature XXX)
+            const natureJournals = Array.from(journalMap.keys()).filter(j => j.includes('Nature'));
+            if (natureJournals.length > 0) {
+                const natureCount = natureJournals.reduce((sum, j) => sum + journalMap.get(j), 0);
+                categories.push({ id: 'Nature系列', name: 'Nature系列', count: natureCount });
+            }
+
+            // Cell系列(包括Cell, Chem, Joule, Matter)
+            const cellJournals = Array.from(journalMap.keys()).filter(j => ['Cell', 'Chem', 'Joule', 'Matter'].includes(j));
+            if (cellJournals.length > 0) {
+                const cellCount = cellJournals.reduce((sum, j) => sum + journalMap.get(j), 0);
+                categories.push({ id: 'Cell系列', name: 'Cell系列', count: cellCount });
+            }
+
+            // Science系列(包括Science和Science Advances)
+            const scienceJournals = Array.from(journalMap.keys()).filter(j => j.includes('Science'));
+            if (scienceJournals.length > 0) {
+                const scienceCount = scienceJournals.reduce((sum, j) => sum + journalMap.get(j), 0);
+                categories.push({ id: 'Science系列', name: 'Science系列', count: scienceCount });
+            }
+
+            return categories;
+        }
+
         // 状态管理
         let currentView = 'home';
         let selectedAccountId = null;
         let activeCategory = 'all';
+        let homeJournalCategory = 'all'; // 新增:首页期刊分类选择
         let searchQuery = '';
         let globalSearchQuery = '';
         let lastUpdateTime = null;
@@ -693,18 +748,20 @@
 
         // 渲染首页
         function renderHome() {
+            const journalCategories = getHomeJournalCategories();
+
             return `
                 <div class="home-title">
                     <h1>学术公众号导航</h1>
                     <p>探索前沿科研资讯，助力学术研究</p>
                 </div>
-                
+
                 <div class="search-bar">
                     <div class="search-input-wrapper">
                         <span class="search-icon">🔍</span>
-                        <input 
-                            type="text" 
-                            class="search-input" 
+                        <input
+                            type="text"
+                            class="search-input"
                             id="globalSearchInput"
                             placeholder="搜索所有文章标题、作者、期刊名称或摘要..."
                             value="${globalSearchQuery}"
@@ -715,6 +772,34 @@
                 </div>
 
                 ${globalSearchQuery.trim() ? renderGlobalSearchResults() : `
+                <!-- 期刊分类标签栏 -->
+                <div style="margin: 30px 0;">
+                    <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 16px; color: #2d3748; padding-bottom: 10px; border-bottom: 2px solid #667eea;">
+                        按期刊浏览
+                    </h2>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        ${journalCategories.map(cat => `
+                            <button
+                                class="nav-btn"
+                                style="background: ${homeJournalCategory === cat.id ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : 'white'}; color: ${homeJournalCategory === cat.id ? 'white' : '#4a5568'}; border: 2px solid ${homeJournalCategory === cat.id ? 'transparent' : '#e2e8f0'};"
+                                onclick="selectHomeJournalCategory('${cat.id}')"
+                            >
+                                ${cat.name}
+                                <span style="background: ${homeJournalCategory === cat.id ? 'rgba(255,255,255,0.2)' : '#e2e8f0'}; color: ${homeJournalCategory === cat.id ? 'white' : '#718096'}; padding: 2px 8px; border-radius: 10px; font-size: 12px; margin-left: 6px;">
+                                    ${cat.count}
+                                </span>
+                            </button>
+                        `).join('')}
+                    </div>
+                    ${homeJournalCategory !== 'all' ? renderHomeJournalArticles() : ''}
+                </div>
+
+                ${homeJournalCategory === 'all' ? `
+                <div style="margin-top: 40px;">
+                    <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 16px; color: #2d3748; padding-bottom: 10px; border-bottom: 2px solid #667eea;">
+                        按公众号浏览
+                    </h2>
+                </div>
                 <div class="cards-grid">
                     ${officialAccounts.map(account => `
                         <div class="card">
@@ -727,6 +812,7 @@
                         </div>
                     `).join('')}
                 </div>
+                ` : ''}
                 `}
             `;
         }
@@ -822,6 +908,89 @@
                     </div>
                 </div>
             `;
+        }
+
+        // 渲染首页期刊分类下的文章
+        function renderHomeJournalArticles() {
+            const filteredArticles = filterHomeJournalArticles();
+
+            if (filteredArticles.length === 0) {
+                return `
+                    <div style="margin-top: 20px; padding: 40px; text-align: center; background: white; border-radius: 12px; color: #a0aec0;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">📄</div>
+                        <p>暂无相关文章</p>
+                    </div>
+                `;
+            }
+
+            return `
+                <div style="margin-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 style="color: #2d3748;">${homeJournalCategory} - 共 ${filteredArticles.length} 篇文章</h2>
+                        <button class="nav-btn" onclick="selectHomeJournalCategory('all')">查看全部</button>
+                    </div>
+                    <div class="article-list">
+                        ${filteredArticles.map(article => {
+                            const account = officialAccounts.find(a => a.id === article.accountId);
+                            return `
+                                <div class="article-card">
+                                    <div class="article-header">
+                                        <h3 class="article-title">${article.title}</h3>
+                                        <span class="journal-badge ${getJournalBadgeClass(article.journal)}">${article.journal}</span>
+                                    </div>
+                                    <div class="article-meta">
+                                        <span>👤 ${article.author}</span>
+                                        <span>📅 ${article.publishDate}</span>
+                                        <span>📰 ${account ? account.name : '未知'}</span>
+                                    </div>
+                                    <p class="article-abstract">${article.abstract}</p>
+                                    <div class="article-tags">
+                                        ${article.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                                    </div>
+                                    <div style="display: flex; gap: 10px; margin-top: 12px;">
+                                        <a href="${article.url}" target="_blank" class="read-more-btn">阅读全文 →</a>
+                                        <button class="nav-btn" onclick="viewContent(${article.accountId})" style="padding: 8px 16px;">查看更多</button>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 过滤首页期刊分类文章
+        function filterHomeJournalArticles() {
+            if (homeJournalCategory === 'all') {
+                return articles;
+            }
+
+            let result = [];
+
+            switch (homeJournalCategory) {
+                case 'JACS':
+                    result = articles.filter(a => a.journal === 'JACS');
+                    break;
+                case 'Angew':
+                    result = articles.filter(a => a.journal === 'Angew');
+                    break;
+                case 'Advanced Materials':
+                    result = articles.filter(a => a.journal === 'Advanced Materials' || a.journal === 'Adv. Materials');
+                    break;
+                case 'Nature系列':
+                    result = articles.filter(a => a.journal.includes('Nature'));
+                    break;
+                case 'Cell系列':
+                    result = articles.filter(a => ['Cell', 'Chem', 'Joule', 'Matter'].includes(a.journal));
+                    break;
+                case 'Science系列':
+                    result = articles.filter(a => a.journal.includes('Science'));
+                    break;
+                default:
+                    result = articles;
+            }
+
+            return result;
         }
 
         // 渲染文章列表
@@ -975,6 +1144,7 @@
         function goHome() {
             selectedAccountId = null;
             activeCategory = 'all';
+            homeJournalCategory = 'all';
             searchQuery = '';
             globalSearchQuery = '';
             currentView = 'home';
@@ -983,6 +1153,11 @@
 
         function clearGlobalSearch() {
             globalSearchQuery = '';
+            render();
+        }
+
+        function selectHomeJournalCategory(categoryId) {
+            homeJournalCategory = categoryId;
             render();
         }
 
