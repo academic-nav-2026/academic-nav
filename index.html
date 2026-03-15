@@ -672,7 +672,6 @@
         let isUpdating = false;
         let updateInterval = null;
         let journalCategories = [];
-        let searchDebounceTimer = null; // 搜索防抖定时器
 
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
@@ -705,9 +704,10 @@
                         <input 
                             type="text" 
                             class="search-input" 
+                            id="globalSearchInput"
                             placeholder="搜索所有文章标题、作者、期刊名称或摘要..."
                             value="${globalSearchQuery}"
-                            oninput="handleGlobalSearch(this.value)"
+                            onkeydown="handleGlobalSearchKeydown(event)"
                         >
                         <button class="search-btn" onclick="handleGlobalSearch(globalSearchQuery)">搜索</button>
                     </div>
@@ -843,9 +843,10 @@
                         <input 
                             type="text" 
                             class="search-input" 
+                            id="articleSearchInput"
                             placeholder="搜索文章标题、作者、期刊名称或摘要..."
                             value="${searchQuery}"
-                            oninput="handleSearch(this.value)"
+                            onkeydown="handleSearchKeydown(event)"
                         >
                         <button class="search-btn" onclick="handleSearch(searchQuery)">搜索</button>
                     </div>
@@ -986,12 +987,14 @@
 
         function handleGlobalSearch(query) {
             globalSearchQuery = query;
+            render();
+        }
 
-            // 防抖：延迟 300ms 后再渲染，避免频繁渲染导致输入框失去焦点
-            clearTimeout(searchDebounceTimer);
-            searchDebounceTimer = setTimeout(() => {
-                render();
-            }, 300);
+        function handleGlobalSearchKeydown(event) {
+            if (event.key === 'Enter') {
+                const input = document.getElementById('globalSearchInput');
+                handleGlobalSearch(input.value);
+            }
         }
 
         function selectCategory(categoryId) {
@@ -1001,12 +1004,14 @@
 
         function handleSearch(query) {
             searchQuery = query;
+            render();
+        }
 
-            // 防抖：延迟 300ms 后再渲染，避免频繁渲染导致输入框失去焦点
-            clearTimeout(searchDebounceTimer);
-            searchDebounceTimer = setTimeout(() => {
-                render();
-            }, 300);
+        function handleSearchKeydown(event) {
+            if (event.key === 'Enter') {
+                const input = document.getElementById('articleSearchInput');
+                handleSearch(input.value);
+            }
         }
 
         // 自动更新功能
