@@ -5,1314 +5,2516 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>学术公众号导航</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .nav-btn {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: transform 0.3s;
-        }
-
-        .nav-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .update-indicator {
-            background: white;
-            border-radius: 10px;
-            padding: 15px 20px;
-            margin: 20px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .update-status {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #48bb78;
-        }
-
-        .status-dot.updating {
-            background: #ecc94b;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .refresh-btn {
-            padding: 8px 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        .refresh-btn:disabled {
-            background: #e2e8f0;
-            color: #a0aec0;
-            cursor: not-allowed;
-        }
-
-        .home-title {
-            text-align: center;
-            margin: 40px 0 30px;
-        }
-
-        .home-title h1 {
-            font-size: 36px;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .home-title p {
-            color: #718096;
-            font-size: 16px;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            padding: 20px 0;
-        }
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-        }
-
-        .card-icon {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            margin-bottom: 16px;
-        }
-
-        .card-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #2d3748;
-        }
-
-        .card-desc {
-            color: #718096;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 16px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .card-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: opacity 0.3s;
-        }
-
-        .card-btn:hover {
-            opacity: 0.9;
-        }
-
-        .search-bar {
-            margin-bottom: 24px;
-        }
-
-        .search-input-wrapper {
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 16px 16px 16px 50px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 15px;
-            transition: border-color 0.3s;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 20px;
-            color: #a0aec0;
-        }
-
-        .search-btn {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: transform 0.2s;
-        }
-
-        .search-btn:hover {
-            transform: translateY(-50%) scale(1.05);
-        }
-
-        .search-match-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .content-layout {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 24px;
-        }
-
-        .sidebar {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 100px;
-            height: fit-content;
-        }
-
-        .sidebar-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 16px;
-            color: #2d3748;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #667eea;
-        }
-
-        .category-list {
-            list-style: none;
-        }
-
-        .category-item {
-            margin-bottom: 8px;
-        }
-
-        .category-btn {
-            width: 100%;
-            padding: 12px 16px;
-            background: none;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: left;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s;
-            color: #4a5568;
-            font-size: 14px;
-        }
-
-        .category-btn:hover {
-            background: #f7fafc;
-        }
-
-        .category-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .category-count {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            background: #e2e8f0;
-            color: #718096;
-        }
-
-        .category-btn.active .category-count {
-            background: rgba(255,255,255,0.2);
-            color: white;
-        }
-
-        .article-list {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .article-card {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            transition: box-shadow 0.3s;
-        }
-
-        .article-card:hover {
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
-
-        .article-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .article-title {
-            flex: 1;
-            font-size: 20px;
-            font-weight: bold;
-            color: #2d3748;
-            line-height: 1.4;
-        }
-
-        .journal-badge {
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
-            white-space: nowrap;
-        }
-
-        .journal-nature {
-            background: #ebf8ff;
-            color: #3182ce;
-        }
-
-        .journal-cell {
-            background: #f0fff4;
-            color: #38a169;
-        }
-
-        .journal-science {
-            background: #fff5f5;
-            color: #e53e3e;
-        }
-
-        .journal-default {
-            background: #edf2f7;
-            color: #718096;
-        }
-
-        .article-meta {
-            display: flex;
-            gap: 20px;
-            color: #718096;
-            font-size: 13px;
-            margin-bottom: 12px;
-        }
-
-        .article-abstract {
-            color: #4a5568;
-            line-height: 1.6;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .article-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .tag {
-            padding: 4px 10px;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-            color: #667eea;
-            border-radius: 12px;
-            font-size: 12px;
-        }
-
-        .read-more-btn {
-            display: inline-block;
-            margin-top: 12px;
-            padding: 8px 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .read-more-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
-
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: none;
-            border: none;
-            color: #667eea;
-            cursor: pointer;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .back-btn:hover {
-            color: #764ba2;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #a0aec0;
-        }
-
-        .empty-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-        }
-
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 60px;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #e2e8f0;
-            border-top-color: #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 768px) {
-            .content-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                position: static;
-            }
-
-            .cards-grid {
-                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            }
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --success-color: #27ae60;
+    --warning-color: #f39c12;
+    --light-gray: #ecf0f1;
+    --medium-gray: #95a5a6;
+    --dark-gray: #7f8c8d;
+    --white: #ffffff;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+.container {
+    display: flex;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--white);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 左侧边栏 */
+.sidebar {
+    width: 280px;
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 30px 0;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+}
+
+.sidebar-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.journal-nav {
+    padding: 0 10px;
+}
+
+.journal-category {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    margin: 8px 0;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.journal-category:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.journal-category.active {
+    background: var(--secondary-color);
+    box-shadow: var(--shadow);
+}
+
+.journal-name {
+    font-weight: 500;
+    flex: 1;
+}
+
+.journal-count {
+    background: var(--accent-color);
+    color: var(--white);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* 主内容区 */
+.main-content {
+    margin-left: 280px;
+    flex: 1;
+    padding: 40px;
+}
+
+/* 顶部标题栏 */
+.top-header {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.top-header h1 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.btn-secondary {
+    padding: 10px 20px;
+    background: var(--success-color);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-secondary:hover {
+    background: #27ae60;
+    transform: translateY(-2px);
+}
+
+#searchInput {
+    flex: 1;
+    padding: 12px 20px;
+    border: 2px solid var(--light-gray);
+    border-radius: 25px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+#searchInput:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+}
+
+#searchBtn {
+    padding: 12px 30px;
+    background: var(--secondary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#searchBtn:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+}
+
+#searchBtn:active {
+    transform: translateY(0);
+}
+
+/* 公众号部分 */
+.account-section {
+    margin-bottom: 50px;
+}
+
+.account-section h2 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.account-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.account-card {
+    background: var(--white);
+    border: 2px solid var(--light-gray);
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow);
+}
+
+.account-card:hover {
+    border-color: var(--secondary-color);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.account-card h3 {
+    font-size: 1.3rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.account-card p {
+    color: var(--dark-gray);
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+}
+
+.view-btn {
+    display: inline-block;
+    padding: 8px 20px;
+    background: var(--secondary-color);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.view-btn:hover {
+    background: #2980b9;
+}
+
+/* 文章部分 */
+.articles-section {
+    margin-top: 50px;
+}
+
+.articles-section h2 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.tip-hint {
+    font-size: 0.9rem;
+    color: var(--medium-gray);
+    font-weight: normal;
+    margin-left: 10px;
+}
+
+.articles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.article-card {
+    background: var(--white);
+    border-left: 4px solid var(--secondary-color);
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.article-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateX(5px);
+}
+
+.article-header {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.account-badge {
+    background: var(--secondary-color);
+    color: var(--white);
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.journal-badge {
+    background: var(--success-color);
+    color: var(--white);
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.article-title {
+    font-size: 1.3rem;
+    color: var(--primary-color);
+    margin-bottom: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.article-meta {
+    display: flex;
+    gap: 20px;
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.author, .date, .read-count {
+    display: inline-flex;
+    align-items: center;
+}
+
+.read-count {
+    color: var(--accent-color);
+    font-weight: 500;
+}
+
+.article-summary {
+    color: var(--dark-gray);
+    line-height: 1.8;
+    margin-bottom: 15px;
+}
+
+.article-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.article-link {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    background: rgba(52, 152, 219, 0.1);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.article-link:hover {
+    color: #2980b9;
+    background: rgba(52, 152, 219, 0.2);
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+.website-link {
+    color: var(--success-color);
+    background: rgba(39, 174, 96, 0.1);
+}
+
+.website-link:hover {
+    color: #27ae60;
+    background: rgba(39, 174, 96, 0.2);
+}
+
+.read-status {
+    cursor: pointer;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-left: auto;
+}
+
+.read-status:hover {
+    transform: scale(1.1);
+}
+
+.article-card.read {
+    opacity: 0.6;
+    border-left-color: var(--success-color);
+}
+
+.article-card.read .article-title {
+    text-decoration: line-through;
+    color: var(--dark-gray);
+}
+
+/* 无文章和错误提示 */
+.no-articles, .error {
+    text-align: center;
+    padding: 40px;
+    color: var(--medium-gray);
+    font-size: 1.1rem;
+}
+
+.error {
+    color: var(--accent-color);
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 220px;
+    }
+    
+    .main-content {
+        margin-left: 220px;
+        padding: 30px;
+    }
+    
+    .top-header h1 {
+        font-size: 2rem;
+    }
+    
+    .account-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding: 20px 0;
+    }
+    
+    .sidebar-header h2 {
+        font-size: 1.2rem;
+    }
+    
+    .journal-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .journal-category {
+        flex: 1 1 45%;
+        margin: 5px;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+    
+    .top-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .search-box {
+        flex-direction: column;
+    }
+    
+    .account-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .article-header {
+        flex-direction: column;
+    }
+}
+
+/* 滚动条样式 */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* 加载动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.article-card {
+    animation: fadeIn 0.5s ease;
+}
+
+.account-card {
+    animation: fadeIn 0.5s ease;
+}
+
     </style>
 </head>
 <body>
-    <header>
-        <div class="container header-content">
-            <div class="logo">学术公众号导航</div>
-            <button class="nav-btn" onclick="goHome()">首页</button>
-        </div>
-    </header>
-
     <div class="container">
-        <div class="update-indicator">
-            <div class="update-status">
-                <div class="status-dot" id="statusDot"></div>
-                <span id="updateStatus">正在检查更新...</span>
+        <!-- 左侧工具栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>期刊分类</h2>
             </div>
-            <button class="refresh-btn" onclick="forceUpdate()">立即更新</button>
-        </div>
+            <nav class="journal-nav">
+                <div class="journal-category" data-journal="all">
+                    <span class="journal-name">全部</span>
+                    <span class="journal-count">0</span>
+                </div>
+                <div class="journal-category" data-journal="JACS">
+                    <span class="journal-name">JACS</span>
+                    <span class="journal-count">0</span>
+                </div>
+                <div class="journal-category" data-journal="Angew">
+                    <span class="journal-name">Angew</span>
+                    <span class="journal-count">0</span>
+                </div>
+                <div class="journal-category" data-journal="Advanced Materials">
+                    <span class="journal-name">Advanced Materials</span>
+                    <span class="journal-count">0</span>
+                </div>
+                <div class="journal-category" data-journal="Nature">
+                    <span class="journal-name">Nature</span>
+                    <span class="journal-count">0</span>
+                </div>
+                <div class="journal-category" data-journal="Science">
+                    <span class="journal-name">Science</span>
+                    <span class="journal-count">0</span>
+                </div>
+                <div class="journal-category" data-journal="Cell">
+                    <span class="journal-name">Cell</span>
+                    <span class="journal-count">0</span>
+                </div>
+                <div class="journal-category" data-journal="Nature Series">
+                    <span class="journal-name">Nature系列</span>
+                    <span class="journal-count">0</span>
+                </div>
+                <div class="journal-category" data-journal="Cell Series">
+                    <span class="journal-name">Cell系列</span>
+                    <span class="journal-count">0</span>
+                </div>
+            </nav>
+        </aside>
 
-        <div id="app"></div>
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部搜索栏 -->
+            <header class="top-header">
+                <h1>学术公众号导航</h1>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="搜索文章标题、作者或期刊...">
+                    <button id="searchBtn">搜索</button>
+                </div>
+
+            </header>
+
+            <!-- 公众号导航卡片 -->
+            <section class="account-section">
+                <h2>公众号推荐 <span class="tip-hint">💡 点击卡片可查看该公众号的文章</span></h2>
+                <div class="account-grid">
+                    <div class="account-card" data-account="xmol">
+                        <h3>X-Mol</h3>
+                        <p>专注于化学材料领域的学术资讯</p>
+                        <a href="#" class="view-btn" onclick="loadAccountContent('xmol'); return false;">查看内容</a>
+                    </div>
+                    <div class="account-card" data-account="namiren">
+                        <h3>纳米人</h3>
+                        <p>纳米科学与技术前沿资讯</p>
+                        <a href="#" class="view-btn" onclick="loadAccountContent('namiren'); return false;">查看内容</a>
+                    </div>
+                    <div class="account-card" data-account="yanzhichengli">
+                        <h3>研之成理</h3>
+                        <p>科研理论与方法解析</p>
+                        <a href="#" class="view-btn" onclick="loadAccountContent('yanzhichengli'); return false;">查看内容</a>
+                    </div>
+                    <div class="account-card" data-account="weechem">
+                        <h3>Weechem微观化</h3>
+                        <p>微观化学世界探索</p>
+                        <a href="#" class="view-btn" onclick="loadAccountContent('weechem'); return false;">查看内容</a>
+                    </div>
+                    <div class="account-card" data-account="cellpress">
+                        <h3>CellPress全学科</h3>
+                        <p>Cell Press全学科期刊资讯</p>
+                        <a href="#" class="view-btn" onclick="loadAccountContent('cellpress'); return false;">查看内容</a>
+                    </div>
+                    <div class="account-card" data-account="bioart">
+                        <h3>BioArt</h3>
+                        <p>生物艺术与生命科学前沿资讯</p>
+                        <a href="#" class="view-btn" onclick="loadAccountContent('bioart'); return false;">查看内容</a>
+                    </div>
+                    <div class="account-card" data-account="nature">
+                        <h3>自然系列</h3>
+                        <p>Nature Portfolio期刊资讯</p>
+                        <a href="#" class="view-btn" onclick="loadAccountContent('nature'); return false;">查看内容</a>
+                    </div>
+                    <div class="account-card" data-account="energist">
+                        <h3>能源学人</h3>
+                        <p>能源科学与技术领域资讯</p>
+                        <a href="#" class="view-btn" onclick="loadAccountContent('energist'); return false;">查看内容</a>
+                    </div>
+                    <div class="account-card" data-account="materialist">
+                        <h3>材料人</h3>
+                        <p>材料科学领域的专业资讯平台</p>
+                        <a href="#" class="view-btn" onclick="loadAccountContent('materialist'); return false;">查看内容</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 文章内容展示区 -->
+            <section class="articles-section" id="articlesSection">
+                <h2 id="sectionTitle">最新文章 <span class="tip-hint">💡 点击文章标题可跳转阅读</span></h2>
+                <div id="articlesList" class="articles-list">
+                    <!-- 文章列表将通过JavaScript动态加载 -->
+                </div>
+            </section>
+        </main>
     </div>
 
     <script>
-        // 模拟数据
-        const officialAccounts = [
-            { id: 1, name: 'X-MOL资讯', description: '专注于化学、材料科学领域的前沿科研资讯', icon: '🧪', color: '#3b82f6' },
-            { id: 2, name: '纳米人', description: '纳米科学与技术领域的专业平台', icon: '🔬', color: '#8b5cf6' },
-            { id: 3, name: '研之成理', description: '化学、材料科学理论计算与实验研究', icon: '⚗️', color: '#10b981' },
-            { id: 4, name: 'WeeChem微观化', description: '微观世界化学探索与发现', icon: '🔍', color: '#06b6d4' },
-            { id: 5, name: 'CellPress全学科', description: 'Cell Press旗下多学科期刊资讯', icon: '📚', color: '#ef4444' },
-            { id: 6, name: 'BioArt', description: '生物艺术与生命科学前沿', icon: '🧬', color: '#ec4899' },
-            { id: 7, name: '自然系列', description: 'Nature Portfolio官方资讯平台', icon: '🌿', color: '#22c55e' },
-            { id: 8, name: '能源学人', description: '能源科学与技术前沿研究', icon: '⚡', color: '#f59e0b' },
-            { id: 9, name: '材料人', description: '材料科学前沿研究与资讯', icon: '🔧', color: '#8b5cf6' }
-        ];
-
-        const articles = [
-            // 自然系列 文章
-            { id: 1, title: '"超级老人"80岁大脑仍在生成神经元 | 基因或影响生男生女概率 | 干细胞治疗对衰弱症初现潜力 | 自然每周简报', author: 'Nature Portfolio', journal: 'Nature', abstract: '本周自然简报精选了以下热点科研事件：1. 干细胞治疗衰弱：研究显示，一剂高剂量干细胞注射能帮助70至85岁的衰弱症受试者显著提升耐力。2. 乙酸增强雌性记忆：乙酸能增强雌性小鼠的长期记忆力，但对雄性小鼠无效。3. "自私"基因影响性别：研究发现某种基因导致家族中出生的男孩数量约为女孩的两倍。4. "超级老人"大脑神经元再生：80岁以上且记忆力卓越的"超级老人"，其大脑仍能持续生成高水平的神经元。5. 宝可梦与科学：在宝可梦诞生30周年之际，《自然》回顾了这一虚构世界如何作为灵感源泉。6. 地球构造运动早期证据：对古老锆石晶体的分析表明，地球的构造板块运动早在33亿年前就已经开始。', accountId: 7, publishDate: '2026-03-11', tags: ['神经科学', '干细胞', '性别比例', '古地质'], url: 'https://mp.weixin.qq.com/s/gaNQiPd6fpC01XsDQfC9jw' },
-
-            // 研之成理 文章
-            { id: 2, title: '麻省理工，NATURE！', author: 'Qian Xu, Yichen Nie, Alison E. Wendlandt', journal: 'Nature', abstract: '本文报道了一种新的分子编辑方法，能够实现常见醇基官能团向邻近位点的迁移，并具有可预测的立体选择性和区域化学结果。该反应在激发态十钨酸盐阴离子催化的可逆氢原子转移条件下进行，通过1,2-酰氧基自由基迁移步骤实现形式上的醇基迁移。这一工具在合成后期阶段的应用可实现醇基官能团的精准重定位。', accountId: 3, publishDate: '2026-03-11', tags: ['分子编辑', '催化剂', '有机合成'], url: 'https://mp.weixin.qq.com/s/2Z1ymo6mAHDajJ5Oi5tdZg' },
-
-            // 纳米人 文章
-            { id: 3, title: '一维COF，南开大学，最新Nature Synthesis！', author: 'Wang, T., Hao, L., Wu, S. et al.', journal: 'Nature Synthesis', abstract: '本研究针对一维共价有机框架（1D COF）单晶生长困难以及理论模拟与实验现实存在偏差的问题，南开大学张振杰、陈瑶等人开发了一个通用且系统的协议来生长高质量的1D COF晶体。研究通过连续旋转电子衍射技术，清楚地解析了六种具有高孔隙率的1D COFs的晶体结构，并定位了所有非氢原子。', accountId: 2, publishDate: '2026-03-11', tags: ['COF', '单晶', '多孔材料'], url: 'https://mp.weixin.qq.com/s/OsnO5pM4bRh3oGPeqTuItg' },
-            { id: 4, title: 'JOULE：自推进三相界面发电机，传统火力发电的有益补充！', author: '程鹏, 邹洋, 李舟', journal: 'Joule', abstract: '这项研究提出了一种基于亚稳态莱顿弗罗斯特效应的协同能量收集装置。针对火电厂大量流失的低品位废热和水蒸气资源，该装置利用棘轮结构表面液滴的亚稳态莱顿弗罗斯特效应，在液滴和棘轮之间形成了连续的动态固-液-气三相界面。单个30 μL液滴可连续产生超过100个直流脉冲信号，峰值电压达到1.552 V。', accountId: 2, publishDate: '2026-03-11', tags: ['能量收集', '发电', '废热利用'], url: 'https://mp.weixin.qq.com/s/vjF7HisAScjI5WBTRaL8CQ' },
-
-            // CellPress全学科 文章
-            { id: 5, title: '成都中医药大学黎胜红/刘燕团队综述丨植物源抗癌药物紫杉醇可持续性生产的合成生物学路线图', author: '谭春林, 黎胜红, 刘燕', journal: 'Trends in Biotechnology', abstract: '紫杉醇作为一种从红豆杉中提取的广谱抗癌药物，在乳腺癌、卵巢癌等治疗中具有不可替代的地位。然而，传统生产方式依赖天然红豆杉资源，提取效率极低。为此，成都中医药大学黎胜红/刘燕团队在Trends in Biotechnology发表综述文章，系统总结了紫杉醇生物合成领域的最新研究进展，并提出了基于合成生物学技术的紫杉醇"从头合成"技术框架图。', accountId: 5, publishDate: '2026-03-08', tags: ['紫杉醇', '合成生物学', '抗癌药物'], url: 'https://mp.weixin.qq.com/s/GeZHem8yInjracegL2VLxw' },
-
-            // Weechem微观化 文章
-            { id: 6, title: '单硅原子嵌入苯并呋喃骨架：镍催化骨架编辑开辟氧杂硅环构建新路径', author: 'Qiuling Yan, Hongxia Song, Hong Lu, Hao Wei', journal: 'JACS', abstract: '本文报道了一种将苯并呋喃直接扩环转化为氧杂硅环的镍催化新方法。该方法利用二氢硅烷作为硅源，通过C–H键硅化与后续重排相结合的路径，实现了单硅原子插入。该反应对多种取代基具有较好的兼容性，且适用于复杂荧光分子的后期修饰。所得氧杂硅环产物可作为合成平台，进一步转化为氧杂硼环、香豆素、苯并氧杂䓬等多种骨架。', accountId: 4, publishDate: '2026-03-11', tags: ['镍催化', '骨架编辑', '有机合成'], url: 'https://mp.weixin.qq.com/s/GtfMunr8-DGIKorQxZCvrQ' },
-
-            // BioArt 文章
-            { id: 7, title: 'CELL | 刘悦晨等利用古DNA揭示现代人类定居远大洋洲新路径', author: '刘悦晨, Joanne Eakin, Ron Pinhasi, David Reich', journal: 'Cell', abstract: '该研究通过分析帕劳群岛出土的21例史前人类古基因组，揭示了现代人类定居远大洋洲的新路径。研究发现，帕劳群岛最早的居民就已经具备约60%的东亚成分和40%的新几内亚巴布亚成分。基因混合时间推算显示，南岛语族与巴布亚人群的融合发生在约3900至3200年前，修正了以往认为南岛语族早期扩散未与巴布亚人群混合的"快车模型"。', accountId: 6, publishDate: '2026-03-10', tags: ['古DNA', '人类迁徙', '太平洋'], url: 'https://mp.weixin.qq.com/s/YSLmsQfzW28mAKMzfrgnbA' },
-            { id: 8, title: 'Neuron | 孙疏影团队揭示DCPS通过P小体调控RNA降解引发TDP-43介导的神经毒性的新机制', author: '孙疏影, 叶英枝, 张喆', journal: 'Neuron', abstract: '该研究通过CRISPRi筛选，首次揭示了清道夫脱帽酶（DCPS）是TDP-43功能缺失（LOF）介导神经毒性的关键调控因子。研究发现，TDP-43 LOF会导致P小体异常增大，进而引起大量神经元功能相关的mRNA与P小体结合增强、半衰期缩短，导致全局性RNA代谢失调。降低DCPS的表达或使用抑制剂可以逆转上述异常。', accountId: 6, publishDate: '2026-03-11', tags: ['神经退行性疾病', 'RNA降解', 'ALS'], url: 'https://mp.weixin.qq.com/s/lASCmNBlYGJxLbU7y2kpXw' },
-            { id: 9, title: 'NAT SUSTAIN | 高翔/王元元/杨琛团队创建人工光合工程细胞', author: '高翔, 王元元, 杨琛, 郭明明, 孔新珂', journal: 'Nature Sustainability', abstract: '针对天然光合生物效率低、非光合生物无法直接利用光能的问题，中国科学院深圳先进技术研究院高翔团队联合南京大学王元元团队及上海交通大学杨琛团队，开发了一种新型人工光合工程细胞。该研究突破了传统杂合体系中无机材料与微生物界面适配性差及胞内电子传递机制不清晰的瓶颈，实现了光能在细胞内的精准分配与高效利用。其中BDO合成过程中的太阳能到化学品转化效率达到2.83%。', accountId: 6, publishDate: '2026-03-10', tags: ['人工光合', '生物制造', '太阳能'], url: 'https://mp.weixin.qq.com/s/pK-Ujlrd-oPjUYbc8vyPjQ' },
-            { id: 10, title: 'Cell | 王霆/傅源/向嵩/余秋景合作揭示NAD水解酶SelO作为线粒体代谢压力"安全阀门"维持线粒体稳态', author: '王霆, 傅源, 向嵩, 余秋景, 贾晓凡, 张腾, 杨晨曦', journal: 'Cell', abstract: '本研究首次揭示了线粒体基质中的NAD水解酶SelO，阐明了其将NAD水解为NMN和AMP的机制。研究发现，SelO活性随线粒体基质pH升高而增强，通过降解NAD反馈抑制产能代谢，防止pH过高造成的损伤；同时，SelO还能优先抑制脂肪酸氧化（FAO）。在肝脏中，SelO的高表达起到了关键的线粒体保护作用。', accountId: 6, publishDate: '2026-03-10', tags: ['线粒体', 'NAD代谢', 'SelO'], url: 'https://mp.weixin.qq.com/s/jZAWEFTH_lJ3ZxmTfk0wDQ' },
-
-            // X-MOL资讯 文章
-            { id: 11, title: '【有机】大连化物所陈庆安/郑浩团队JACS：酯转位诱导烯烃的选择性远程双卤化', author: '刘倡辉, 郑浩, 陈庆安', journal: 'JACS', abstract: '针对烯烃远程选择性双卤化反应领域存在的研究空白，大连化物所陈庆安/郑浩团队开发了一种无需导向基团的膦酰二胺催化策略。该策略利用易得的烯基酯为底物，通过催化剂与NBS/SOCI2协同作用生成活性卤化中间体，诱导酯基发生转位，从而在温和条件下实现了烯烃的1,3-、1,4-和2,3-远程双卤化。克级制备及多样化的衍生化反应进一步证实了该策略在复杂分子组装和药物合成中的应用潜力。', accountId: 1, publishDate: '2026-03-11', tags: ['远程双卤化', '烯烃', '催化'], url: 'https://mp.weixin.qq.com/s/lO1ytjmCEaGEzgLSrlETeQ' },
-            { id: 12, title: '【材料】苏州纳米所王强斌课题组JACS：微米级二维抗体阵列的构建及其HER2信号通路阻断与癌症治疗应用', author: '杜明明, 王强斌, 姜江, 陈光村', journal: 'JACS', abstract: '中国科学院苏州纳米技术与纳米仿生研究所王强斌研究员团队创新性地设计出RhuA-P双功能蛋白质模块，它能精准地组装成结构规整、高度有序的微米尺度二维蛋白阵列。通过在RhuA-P的C端融合Protein G，二维RhuA-P阵列表面可规则排布Protein G位点。体内外实验证实，高密度排列的TmAb阵列展现出优异的HER2信号阻断能力，能将细胞膜上的HER2受体牢牢"锁定"并聚集成"微米级无活性簇"。', accountId: 1, publishDate: '2026-03-11', tags: ['抗体阵列', 'HER2', '癌症治疗'], url: 'https://mp.weixin.qq.com/s/WGCO54V_RtbqoDR-SzhkYA' },
-            { id: 13, title: '应变离域化策略实现水系储镁负极材料7.5万周次超长循环寿命', author: 'Yu Wu, Shunning Li, Bowen Jin, Yusen Yang, 潘锋, 李舜宁, 段雪, 邵明飞, 靳博文', journal: 'JACS', abstract: '该研究针对水系镁离子电池中因Mg2+/H2O共嵌入导致层状电极结构退化、循环稳定性差的问题，提出了一种应变离域化策略。研究团队通过Ta掺杂MoO3构筑了MoTaO_x层状电极。Ta掺杂引入的氧空位能锚定并部分解离层间H2O分子。最终，MoTaO_x电极在水系镁电解质中实现了约75,000次的超长循环寿命，累积容量高达7.2 kAh g−1。', accountId: 1, publishDate: '2026-03-07', tags: ['水系电池', '镁离子电池', '超长循环'], url: 'https://mp.weixin.qq.com/s/8_HFfYJSCJRBliT2VZgF2w' },
-            { id: 14, title: '【分析】东南大学张春阳教授团队JACS：同步三维DNA步行驱动双色RNA适配体点亮技术用于乳腺癌中多种环状RNA的无标记和阿摩尔水平精准分析', author: '王施, 张春阳', journal: 'JACS', abstract: '东南大学张春阳教授团队开发了一种基于同步三维DNA步行驱动的双色RNA适配体点亮策略，用于乳腺癌相关多种环状RNA的无标记、阿摩尔级超灵敏检测。该技术利用特异性捕获探针与挂锁探针识别靶标circRNA，启动双链特异性核酸内切酶驱动的三维DNA行走。该传感器对靶标的检出限分别低至10.96 aM和17.78 aM，在乳腺癌早期诊断准确率达91.1%，晚期达99.4%。', accountId: 1, publishDate: '2026-03-11', tags: ['DNA步行', '环状RNA', '癌症诊断'], url: 'https://mp.weixin.qq.com/s/a3kX99piUKMOrPwNxFjA6A' },
-            { id: 15, title: 'Nature：如果非要给这份记忆加一个期限，我希望是……一万年', author: '小希', journal: 'Nature', abstract: '微软研究院Project Silica团队在Nature期刊发表研究，展示了一种基于飞秒激光直写的玻璃存储技术。该技术通过在玻璃内部刻写微纳尺度的三维结构，实现了数据的可靠写入与读取。在一块边长120 mm、厚2 mm的玻璃中，研究团队构建了301层存储结构，实现了1.59 Gbit mm−3的数据密度和4.8 TB的总容量。实验表明，这种玻璃存储介质具有优异的热稳定性和化学稳定性，数据保存寿命预测可超过一万年。', accountId: 1, publishDate: '2026-03-02', tags: ['数据存储', '玻璃存储', '长期保存'], url: 'https://mp.weixin.qq.com/s/GgN2gPGws9SAdc8mgejisw' },
-
-            // 新增文章 2026-03-12
-            { id: 16, title: '大连化物所，Nature Materials！质子穿梭辅助的三重态能量转移', author: 'Zhaolong Wang, Kaifeng Wu', journal: 'Nature Materials', abstract: '本研究首次发现并命名了一种全新的能量转移机制——质子穿梭辅助的三重态能量转移。研究构建了由 ZnSe/ZnS 核壳量子点和表面锚定的酚-吡啶二元分子受体组成的给体-受体体系，利用超快光谱学手段揭示了激发态相互作用的完整动力学过程。这一发现填补了电子-质子耦合过程图谱中关于三重态能量转移的空白，为提升光子上转换、三重态光催化等领域中三重态形成的效率提供了全新的分子工程策略。', accountId: 3, publishDate: '2026-03-12', tags: ['能量转移', '量子点', '质子耦合', '光催化'], url: 'https://mp.weixin.qq.com/s/gzJmlSfWgyBNPV5AiHEvzg' },
-
-            { id: 17, title: '苏州大学，Nature Energy！双面隧道氧化物钝化接触太阳能电池', author: 'K. Gao, J. Mao, Z. Yang, 张晓宏, 杨新波, 杨洁, 张昕宇', journal: 'Nature Energy', abstract: '高效晶体硅太阳能电池主要依赖于隧道氧化物钝化接触 (TOPCon) 技术，但传统 TOPCon 电池因正面硼扩散发射极导致的复合损失，效率提升受限。本研究通过模拟分析确定了指状接触型（Finger TOPCon）架构具有最高潜力。团队成功展示了全尺寸双面 TOPCon 电池，采用图案化正面 n 型指状 TOPCon 和全背面双层 p 型 TOPCon 接触结构，并通过控制多晶硅结晶度、掺杂浓度及优化银浆，实现了 26.34% 的认证效率。进一步将该底电池与宽带隙钙钛矿顶电池集成，制备出的单片钙钛矿/TOPCon 叠层电池认证效率高达 32.73%。', accountId: 2, publishDate: '2026-03-12', tags: ['太阳能电池', 'TOPCon', '叠层电池', '钙钛矿'], url: 'https://mp.weixin.qq.com/s/mp_2Y5BrOGGpJkuFmOM-Zg' },
-
-            { id: 18, title: '上海交通大学，NATURE ENERGY！吸附驱动溶解制冷循环', author: 'Si Wu, Kaiyue Tang, Ruzhu Wang, Tingxian Li', journal: 'Nature Energy', abstract: '本研究提出了一种具有可扩展蓄热功能的吸附驱动溶解制冷循环。理论和实验结果表明，利用中低品位热能（80–150℃）作为驱动能源，该循环能产生比固态热效应更大的绝热温度变化。实验验证了该系统的可行性，数据显示绝热温度变化达37K，最低制冷温度可达-25.4℃。此外，吸附过程可实现热能存储和冷热灵活供应，以适应多样复杂的应用场景。这项研究为利用可再生能源（如太阳能热、工业废热）实现高效制冷和供暖开辟了新途径。', accountId: 3, publishDate: '2026-03-12', tags: ['制冷循环', '吸附驱动', '热能存储', '可再生能源'], url: 'https://mp.weixin.qq.com/s/DGPwNvo2AZe29Fd97G3lcw' },
-
-            { id: 19, title: '对映选择性铜催化烯烃氢羟胺化反应', author: 'James A. Law, Binh Khanh Mai, Hsuan-Min Hung, Tobianna Hendon, Yuyang Dong, Yu Zhang, Peng Liu, Stephen L. Buchwald', journal: 'JACS', abstract: '手性羟胺是一类兼具合成价值与应用潜力的重要含氮化合物，在药物分子构建、功能分子修饰以及进一步转化为手性胺等过程中都具有较高的使用价值。这项研究建立了一种以乙烯基杂芳烃和硝基烷烃为原料、通过铜氢催化实现不对称氢羟胺化的新方法。作者通过系统考察底物适用范围，发现多类乙烯基杂芳烃如苯并噻吩、苯并呋喃、噁唑、噻唑、呋喃和噻吩衍生物都能够顺利参与反应。结合对照实验与DFT计算，证明关键的C–N键形成更倾向于由手性烷基铜中间体直接进攻硝基完成。', accountId: 4, publishDate: '2026-03-12', tags: ['铜催化', '不对称合成', '羟胺', '氢羟胺化'], url: 'https://mp.weixin.qq.com/s/yU9aB-e0mesr_Aw7TDDmpQ' },
-
-            { id: 20, title: '孙勤利等开发快速建立体内免疫耐受新方法', author: '孙勤利, K. Christopher Garcia, 姜华', journal: 'Nature', abstract: '本研究针对体内高效建立免疫耐受这一核心难题，开发了一种基于白细胞介素-2（IL-2）和转化生长因子-β（TGF-β）双激动剂的新策略。研究团队设计并构建了一种"顺式双激动剂"，将低亲和力TGF-β激动剂与IL-2融合。该分子能够精准将TGF-β信号递送至表达IL-2受体的T细胞，并在同一细胞内协同激活TGF-β-SMAD2/3与IL-2-STAT5信号通路。实验结果显示，该策略在两种抗原模型中，均能安全、快速且高效地诱导抗原特异性外周调节性T细胞的分化，效率最高可达80%。', accountId: 6, publishDate: '2026-03-11', tags: ['免疫耐受', 'IL-2', 'TGF-β', '调节性T细胞'], url: 'https://mp.weixin.qq.com/s/bOdb9S4hj3GAbw2gI1c28Q' },
-
-            { id: 21, title: '郭兴团队揭示渐冻症的致病枢纽：PGAM5驱动的线粒体逆行信号', author: '郭兴, 刘妍, 陈盼盼, 郑志隆, 杨王菊, 陈震, 陶梦丹', journal: 'Neuron', abstract: '肌萎缩侧索硬化（ALS）即渐冻症，是一种致死性中枢神经系统退行性疾病，目前缺乏有效治疗手段，核心挑战在于其高度的遗传与临床亚型异质性。南京医科大学郭兴团队在Neuron杂志发表研究，首次揭示磷酸甘油酸变位酶5（PGAM5）驱动的线粒体整合应激反应（mtISR）是ALS的共性致病通路。机制研究发现，ALS相关的VCP突变会抑制VCP对PGAM5的降解，导致PGAM5异常积累。PGAM5通过去磷酸化激活线粒体蛋白酶OMA1，进而激活OMA1-DELE1-HRI-eIF2α轴，引发mtISR异常激活。', accountId: 6, publishDate: '2026-03-11', tags: ['ALS', '渐冻症', '线粒体应激', 'PGAM5'], url: 'https://mp.weixin.qq.com/s/DbQ1kzBoSSvsqPCPIrCKmw' },
-
-            // 新增文章 2026-03-13
-            { id: 22, title: 'Nature Water：一石二鸟，把"永久污染物"变成提锂原料！', author: '程熠, James M. Tour', journal: 'Nature Water', abstract: '针对新能源技术发展中锂资源需求攀升及环境中PFAS（全氟和多氟烷基物质）难以降解的双重问题，美国莱斯大学James M. Tour院士和程熠博士团队提出了一种创新策略。该研究利用吸附PFAS的活性炭中富含的氟元素作为反应来源，基于闪速焦耳热技术，在降解污染物的同时实现盐湖卤水中的锂分离。通过高温电热处理，PFAS中的有机氟被矿化为无机氟化物，并利用不同金属氟化物在溶解度和沸点上的差异，实现了锂离子的选择性分离与高纯度氟化锂的回收。', accountId: 2, publishDate: '2026-03-13', tags: ['PFAS', '提锂', '闪速焦耳热', '污染治理'], url: 'https://mp.weixin.qq.com/s/efZv9vWmXcJLnvK0Jwyt0Q' },
-
-            { id: 23, title: '具有电压可控磁序的室温二维多铁金属', author: 'D. Tian, S. Zhong, J. Dong, et al.', journal: 'Nature Materials', abstract: '本研究报告了一种具有本征室温多铁性的空气稳定双层CrTe2。研究揭示了一种交替的铁磁和反铁磁双层架构，该架构由层间电荷转移自发打破反演对称性并产生可切换的面外铁电极化所驱动。通过扫描探针显微镜，研究确认了利用电场对磁化状态的非易失性控制，实现了电写磁读功能。这一机制根植于层间电荷转移，而非传统的自旋轨道耦合，为工程化层状系统的多铁性奠定了基础。', accountId: 2, publishDate: '2026-03-13', tags: ['多铁性', '二维材料', '磁电耦合', 'CrTe2'], url: 'https://mp.weixin.qq.com/s/kcynNAP-REpcaYmfqtmAiA' },
-
-            { id: 24, title: 'AND logic nanoparticle for precision immunotherapy of metastatic cancers', author: 'Ye, S., Chen, S., Basava, V., 高金明', journal: 'Nature Nanotechnology', abstract: '该研究介绍了一种针对肿瘤微环境（TME）的pH和缺氧双重响应的聚合物纳米颗粒，采用"与"门逻辑设计，用于转移性癌症的全身免疫治疗。该纳米颗粒通过pH敏感聚合物和缺氧敏感连接子偶联STING激动剂，确保药物仅在同时暴露于酸性和缺氧条件时才释放。在转移性肺癌和乳腺癌模型中，这种双重刺激响应纳米颗粒展现了优越的治疗疗效，显著减少了转移性肺结节，同时最小化了全身毒性。它能诱导免疫"冷"肿瘤转化为"热"肿瘤，增加CD8+ T细胞浸润并产生持久的全身抗肿瘤免疫记忆。', accountId: 2, publishDate: '2026-03-13', tags: ['纳米颗粒', '免疫治疗', '转移性癌症', 'STING激动剂'], url: 'https://mp.weixin.qq.com/s/wSmeDxBcEeAiL_fgoac4wQ' },
-
-            { id: 25, title: 'JACS：沸石限域，Pt活性提高20倍！', author: 'Tao Wang, Sheng Dai, Tian Ke, Qingju Wang, Kevin Siniard', journal: 'JACS', abstract: '美国橡树岭国家实验室的Tao Wang和Sheng Dai研究团队提出了一种非传统策略，利用具有布朗斯特酸位的超微孔HZSM5沸石与大体积有机碱四丁基氢氧化铵（TBAOH）电解质结合，在强碱性环境中构建了局域酸性微环境。通过尺寸排阻效应，TBA+阳离子被阻挡在沸石孔道外，水分子进入孔内与布朗斯特酸位点相互作用形成稳定的水合质子。基于此设计的HZSM5-炭黑/Pt复合催化剂，在碱性析氢反应（HER）中表现出显著性能提升：过电位降低19-25%，Pt质量活性提高20倍。', accountId: 2, publishDate: '2026-03-13', tags: ['沸石', '析氢反应', '催化剂', '碱性环境'], url: 'https://mp.weixin.qq.com/s/Q1J_yXrZ2s9ebZ4vHRFslA' },
-
-            { id: 26, title: '古老的砷化学开"新花"，南京大学最新Nature Chemistry!', author: 'Yandong Wang, Frank Glorius, 史壮志', journal: 'Nature Chemistry', abstract: '本研究开创性地提出了一种"矿物到分子"的合成新范式，利用可见光光氧化还原催化技术，直接将天然砷硫化物矿物（特别是雌黄，As2S3）转化为结构多样的有机砷化合物。该方法成功绕过了传统合成路线中需要使用高毒性、易挥发砷试剂（如AsCl3）的关键瓶颈，在温和条件下实现了有机砷的一步高效构建。研究展示了该策略广泛的底物适用性，能兼容芳基、杂芳基及烷基碘化物，高效合成相应的三级砷或砷硫化物。这一成果不仅为有机砷化学提供了一条安全、可持续的合成路径，更在地球化学与合成化学之间架起了一座桥梁。', accountId: 2, publishDate: '2026-03-13', tags: ['光催化', '矿物化学', '砷化合物', '绿色合成'], url: 'https://mp.weixin.qq.com/s/eww_otCXQ_hxcEjXkEw2JA' },
-
-            // 新增文章 2026-03-14
-            { id: 27, title: '聚合物链段介导的溶剂化调控构筑宽温域、可回收凝胶电解质', author: 'Xinyang Yue, Zheng Liang (上海交通大学梁正团队)', journal: 'Science Advances', abstract: '针对锂金属电池（LMBs）中传统液态电解质界面稳定性差、工作温域窄及环境可持续性差的问题，上海交通大学梁正团队设计了一种基于动态氟化聚氨酯网络的"持续氢键"凝胶聚合物电解质（PHB-GPE）。该材料通过在聚合物骨架中引入氟化端基，诱导形成了能够实现N-H…O=C与N-H…F-C相互作用的动态切换的独特网络结构。这种结构赋予了电解质在低温下的高离子电导率和在高温下的结构稳定性。得益于该网络对锂离子溶剂化结构与界面化学的协同调控，基于F8PU-GPE的锂金属电池在-60至100℃的宽温域内实现了稳定运行，锂对称电池循环寿命超过6000小时，Li||LiFePO4电池在1.0 C倍率下循环2000次后仍保持80.9%的容量。此外，该电解质基于可逆氢键作用，可通过解聚实现高效回收与再利用，为下一代兼具宽温域适应性和高可持续性的锂金属电池提供了新的设计思路。', accountId: 8, publishDate: '2026-03-14', tags: ['锂金属电池', '凝胶聚合物电解质', '宽温域', '可回收', '氢键网络'], url: 'https://mp.weixin.qq.com/s/fAFnT2FJASFTr4QIfazn-w' },
-
-            { id: 28, title: 'Chem封面：张浩可/张鉴予/唐本忠团队报道基于动态空间共轭实现超高不对称因子的圆偏振发光', author: '熊祖平, 张浩可, 张鉴予, 唐本忠', journal: 'Chem', abstract: '浙江大学高分子科学与工程系张浩可、张鉴予团队联合香港中文大学（深圳）唐本忠团队，报道了一种实现强圆偏振发光（CPL）的新策略。该研究基于前期发现的孤对电子间超强空间共轭（TSC），提出通过激发态光致异构形成孤对电子之间的动态n-n空间共轭。这一策略在无需依赖超分子自组装的情况下，实现了小分子体系中的稳定红光CPL（610 nm），并将不对称因子gCPL动态放大至约0.20，刷新了非组装有机小分子体系的纪录。该工作利用飞秒瞬态吸收光谱等手段验证了激发态的动态变化机制，为可编程光学材料和动态手性器件的设计提供了新范式。', accountId: 5, publishDate: '2026-03-14', tags: ['圆偏振发光', '空间共轭', '聚集诱导发光', '超高不对称因子', '光致异构'], url: 'https://mp.weixin.qq.com/s/ipAtJbk_W--oTYdbCEQxzQ' },
-
-            { id: 29, title: 'Science：揭示"死锂"新路径！"软"锂不"软"！', author: '楼峻, 高华健 (莱斯大学)', journal: 'Science', abstract: '该研究由莱斯大学楼峻教授、新加坡科技研究局高华健教授等人合作完成，通过开发无空气原位力学测试协议，对纳米级锂枝晶的力学性能进行了定量测量。研究颠覆了锂是极软金属的传统观点，发现纳米锂枝晶具有高强度（断裂应力>150 MPa）和脆性（延伸率仅3%）的"又硬又脆"特性。冷冻电镜和力学建模表明，这一特性源于枝晶的单晶核心结构导致的位错匮乏以及固体电解质界面（SEI）层的约束作用。该发现阐明了枝晶刺穿固态电解质导致短路的物理机制，并为"死锂"的形成（脆性碎裂而非电化学溶解）提供了新的解释，对设计更安全的锂金属电池具有重要指导意义。', accountId: 2, publishDate: '2026-03-13', tags: ['锂金属负极', '锂枝晶', '固态电解质', '原位力学测试', '死锂'], url: 'https://mp.weixin.qq.com/s/N77rBAmCkRfHZKQQSkaQDg' },
-
-            { id: 30, title: '手性膦有机催化开辟硫手性构筑新路径：S(IV)-手性亚磺酰胺的不对称合成', author: 'Chenxiao Qian, Yuyang Chen, Baocheng Wang, Tao Wang, Chaoshen Zhang, Zhenyang Lin, Jianwei Sun', journal: 'Nature Chemistry', abstract: '本文报道了一种基于新型手性二烷基膦催化剂QianPhos催化的不对称C-S键构筑反应，用于高效合成环状乙烯基亚磺酰胺，实现了对硫中心手性的精准控制。该方法利用MBH加合物与亚磺酰亚胺偶联，无需过渡金属参与，克服了传统方法依赖手性辅基或金属/手性配体协同控制的局限。QianPhos催化剂不仅具有优异的催化性能和对映选择性，还兼具良好的空气稳定性。研究通过机理实验和理论计算阐明了反应路径，证实了该方法的底物适用范围广且易于放大。所得产物可作为合成平台进一步衍生，且在生物活性方向展现出潜在应用价值，为硫手性化学和有机膦催化剂设计提供了新思路。', accountId: 4, publishDate: '2026-03-13', tags: ['有机催化', '手性亚磺酰胺', '不对称合成', 'QianPhos'], url: 'https://mp.weixin.qq.com/s/hWDrQNcwAGIio5bqaY4JvQ' },
-
-            // 研之成理 文章
-
-            { id: 31, title: '基于动态ctDNA监测的鼻咽癌风险适应性治疗策略', author: '孙颖, 马骏, 周冠群, 李济宾 (中山大学肿瘤防治中心)', journal: 'Nature', abstract: '该研究由中山大学肿瘤防治中心孙颖、吕佳蔚团队完成，以鼻咽癌作为疾病模型，首次提出并验证了基于动态液体活检的"风险适应性治疗"新策略。研究通过利用诱导化疗带来的"机会窗"，根据血浆游离EB病毒DNA（cfEBV DNA）的动态清除规律，将患者分为低、中、高三个风险等级。团队结合不同风险组在化疗后呈现的肿瘤微环境重塑特征（如干性肿瘤细胞富集或T细胞耗竭），对中高风险患者"因地制宜"地调整后续治疗方案（如加入节拍卡培他滨或PD-1免疫治疗）。结果显示，该策略显著降低了患者的疾病进展或死亡风险（降低59%），3年无失败生存率达89.1%，且具有良好的安全性和卫生经济学效益。该研究入选ASCO口头报告，并被Nature杂志同期以临床简报形式重点报道。', accountId: 3, publishDate: '2026-03-12', tags: ['中山大学', '鼻咽癌', '精准医疗', 'ctDNA', '肿瘤防治'], url: 'https://mp.weixin.qq.com/s/_WmQJrDPfXCY49lk_G_G6w' },
-
-            { id: 32, title: '新型非晶有序态，中科大纯理论计算Nature Materials!', author: '范新宇, 童华, 徐宁, Hajime Tanaka (中国科学技术大学)', journal: 'Nature Materials', abstract: '中国科学技术大学童华教授、徐宁教授及其合作者在非晶物态理论研究中取得突破。研究通过纯理论计算，成功制备出兼具非晶结构与晶体般完美结构效率和稳定性的全新有序物态——理想非晶体。该团队发展了类似路径积分的关联表征方法，揭示了其非常规的长程空间关联。研究发现，理想非晶体虽然外观像随机排列的液体，但物理性能如同晶体，表现出超稳定性、完美的德拜型声子振动谱、完全仿射的弹性响应以及超均匀性等特性。这项工作证明了有序并不总是需要对称破缺，为设计新型非晶材料提供了全新思路。', accountId: 3, publishDate: '2026-03-12', tags: ['非晶物态', '理论计算', '理想非晶体', '长程关联'], url: 'https://mp.weixin.qq.com/s/a5AxFbKAeo5SbR_mO_A2Pw' },
-
-            { id: 33, title: '抗烧结催化剂，Nature Materials！', author: 'Jordan Finzel, Audrey Dannar, E. Charles H. Sykes, Phillip Christopher (美国塔夫茨大学, 加州大学圣巴巴拉分校)', journal: 'Nature Materials', abstract: '本研究针对多相催化剂中普遍存在的金属纳米颗粒烧结失活问题进行了深入探索。研究发现，在负载于二氧化硅上的铜纳米颗粒中添加极低浓度（约1%）的铂形成稀合金（Pt₁Cu₁₀₀），可显著降低其烧结速率。实验表明，Pt₁Cu₁₀₀纳米颗粒在700℃氢气环境下仍保持微小颗粒尺寸，而纯铜颗粒在500℃即发生严重烧结。通过扫描隧道显微镜（STM）和密度泛函理论（DFT）计算，研究揭示了微量掺杂剂通过"欠配位位点钉扎效应"增强了金属键合（主体-掺杂剂d态杂化），从而提高了原子脱离台阶边缘的能垒，抑制了奥斯特瓦尔德熟化过程。这一发现为设计兼具高活性与抗烧结性能的稀释合金催化剂提供了原子尺度的机理框架和理论预测模型。', accountId: 3, publishDate: '2026-03-11', tags: ['抗烧结催化剂', '稀释合金', '催化剂稳定性', '单原子合金', '纳米颗粒'], url: 'https://mp.weixin.qq.com/s/Mrrsnwxgct7zdiA8zK8pDw' },
-
-            // 新增文章 2026-03-15
-
-            // X-MOL资讯 文章
-            { id: 34, title: '锗/锡变价催化体系实现C(sp3)−F键的选择性活化与转化', author: '董召文, 曾小明 (四川大学)', journal: 'JACS', abstract: '针对三氟甲基化合物中C(sp3)−F键活化与高选择性转化这一核心难题，四川大学董召文/曾小明团队成功开发了一种突破性的主族金属催化策略。研究团队利用碳二膦烷配体（CDP）稳定的二价锗和锡试剂作为催化剂，构建了基于E(II)/E(IV) (E = Ge, Sn)氧化还原循环的催化平台。该工作首次实现了主族金属介导的三氟甲基烯烃C(sp3)−F键的高效活化和选择性转化。机理研究表明，反应经历了独特的SN2’氧化加成路径。研究的关键发现在于，通过简单调控反应条件（如溶剂、温度），利用该Sn(II)体系可以从同一三氟甲基烯烃底物出发，高选择性地合成偕二氟烯烃或单氟烯烃。该催化体系展现出优异的底物普适性，为主族金属在模拟过渡金属催化行为及惰性键活化中的应用开辟了新前景。', accountId: 1, publishDate: '2026-03-15', tags: ['锗/锡催化', 'C(sp3)-F键活化', '三氟甲基烯烃', '主族金属催化'], url: 'https://mp.weixin.qq.com/s/3ClgpueBYPqUfbTPw3IjCA' },
-
-            { id: 35, title: '上海有机所实现仿绿小体含氟纳米带高效光催化制氢', author: '田佳 (中国科学院上海有机化学研究所)', journal: 'JACS', abstract: '本研究报道了中国科学院上海有机化学研究所田佳研究员团队在人工光合组装体研究领域取得的重要进展。研究团队受天然绿小体（一种具有近乎完美光捕获能力的细菌天线系统）启发，设计并构建了一类新型含氟BODIPY纳米带状组装体。通过两亲性含氟BODIPY类似物（PBAF）的一步自组装，在无蛋白骨架条件下构建了超分子纳米带多级光合组装体。全氟烷基链通过氟-氟相互作用驱动了紧密的分子堆积。在无金属催化剂条件下，该系统实现了高效的光催化制氢。基础产氢速率为162.5 μmol•g−1•h−1，在优化条件下最高可达1150 μmol•g−1•h−1，显著优于不含氟组装体和非组装体系。在模拟太阳光（AM1.5G）照射下连续运行30天后，五次24小时循环后的活性保持率超过90%，表现出优异的可回收性。', accountId: 1, publishDate: '2026-03-15', tags: ['光催化制氢', '含氟纳米带', 'BODIPY', '仿生组装'], url: 'https://mp.weixin.qq.com/s/LHeoEvZtpjDAjz-ViTIPXg' },
-
-            { id: 36, title: '南开大学曹婵团队在恶性肿瘤靶点HER2跨膜区域研究中取得重要突破', author: '曹婵, 杨茵, 苏循成 (南开大学)', journal: 'JACS', abstract: 'HER2是一种重要的跨膜受体酪氨酸激酶，在乳腺癌等多种肿瘤中高表达。尽管现有的蛋白质晶体学和冷冻电镜技术揭示了HER2胞外域（ECD）和激酶结构域的特征，但关于其跨膜区域（TMR）在近生理膜环境下的构象特征，以及抗体结合如何引发跨膜区动态变化，目前尚缺乏直接的生化和结构证据。该研究结合了多种前沿技术，包括蛋白质定点标记、氟核磁共振（¹⁹F NMR）、脉冲偶极电子顺磁共振（PD-EPR）以及研究团队发展的膜内定点标记磷脂纳米盘构建策略（NMPCR）。研究发现，HER2的胞外域对跨膜-近膜区域具有显著的构象限制作用。抗体结合能够引发近膜区域的显著构象变化，揭示了胞外域及抗体结合对跨膜区域构象的远程调控作用。这项研究为理解HER2信号转导机制提供了新的结构生物学依据，深化了对分子机制的理解，并为开发基于HER2的靶向癌症治疗策略提供了重要的理论支持。', accountId: 1, publishDate: '2026-03-15', tags: ['HER2', '跨膜区域', 'NMR', 'EPR', '癌症治疗'], url: 'https://mp.weixin.qq.com/s/b7_PevBvNgo0DhHx0d45HQ' },
-
-            { id: 37, title: '生物质衍生双原子催化剂助力5-羟甲基糠醛高效电还原开环制备2,5-己二醇', author: '陈立锋, 俞书宏, 曾杰 (中国科学技术大学)', journal: 'JACS', abstract: '该研究提出了一种利用生物质衍生的可持续双原子催化剂，实现了5-羟甲基糠醛（HMF）的高效电化学还原开环（ERR）制备2,5-己二醇（HD）。传统的热催化还原开环（TRR）过程需要高温、高压及强腐蚀性硝酸等苛刻条件，且活性低、产率低。研究团队基于Sabatier原理和密度泛函理论（DFT）筛选，发现Cu1Zn1双原子位点具有最佳吸附特性。利用木质纤维素作为原料，通过程序控制热解，将Cu1Zn1双原子锚定在生物质衍生的氮掺杂碳基底上（结构为N2-Cu1-N2-Zn1-N2）。在温和条件下（-0.40 V vs. RHE），该催化剂实现了高达91.6%的HD选择性，法拉第效率达90.2%，HD产率达到190.7 μmol mgcat−1 h−1，较此前报道体系提升了一个数量级。Cu1位点主要催化初期加氢步骤，Zn1位点在关键的开环步骤中展现出极高活性，反应由表面吸附氢（*H）通过协同质子-电子转移（CPET）机制诱导。技术经济性分析（TEA）显示该体系收益率达146%，具有工业化潜力。', accountId: 1, publishDate: '2026-03-15', tags: ['双原子催化剂', '生物质', '电还原', '5-羟甲基糠醛', '2,5-己二醇'], url: 'https://mp.weixin.qq.com/s/pJ0A534JG1G7U1LQeXlsWw' },
-
-            // 材料人 文章
-            { id: 38, title: '原子点阵列的大规模类比量子模拟', author: 'M.B. Donnelly, Y. Chung, R. Garreis (澳大利亚硅量子计算公司, 新南威尔士大学)', journal: 'Nature', abstract: '本研究构建了由15,000个亚纳米级精度原子量子点组成的大规模二维阵列，实现了一种用于模拟强相互作用低温物理的全新类比量子模拟平台。通过扫描隧道显微镜（STM）光刻技术，在硅基底上精确构建了二维方形晶格，并实现了对场点相互作用(U)与隧穿参数(t)的独立精确调控。实验成功模拟了由Mott–Hubbard与Anderson机制共同驱动的金属–绝缘体转变（MI transition），并呈现关联电子行为特征。该平台还结合霍尔条器件结构进行了磁输运测量，观测到了电荷输运能隙的尺寸依赖、交换增强效应以及霍尔系数揭示的费米面重构特征。这项精密工程化的平台为在任意二维晶格上研究量子磁性、相互作用拓扑量子态及非常规超导等关键问题提供了新的实验途径。', accountId: 8, publishDate: '2026-03-14', tags: ['量子模拟', '原子点阵列', '硅量子计算', 'Mott转变', '二维晶格'], url: 'https://mp.weixin.qq.com/s/NanRgMNdZCEJMYbd0SKGKw' },
-
-            { id: 39, title: '卤化物钙钛矿界面动力学的多模态电子显微镜研究', author: 'Caterina Ducati, Tianjun Liu (剑桥大学)', journal: 'Nature', abstract: '卤化物钙钛矿发光二极管有望实现高效、低成本的光电子器件，但其实际应用仍受限于工作稳定性。本研究通过开发一种多模态原位电子显微镜方法，结合四维扫描透射电子显微镜（4D-STEM）、能量色散X射线光谱和原子分辨率成像，在纳米尺度上直接观察了卤化物钙钛矿发光二极管在工作状态下的结构和化学演化过程。研究发现，器件的退化主要源于传输层界面处的局部应变、离子迁移和电化学反应，导致金属铅、铅富集相及绝缘AlCl₃的形成，而钙钛矿发光层的主体结构相对保持完整。这一发现揭示了界面退化是影响器件稳定性的关键机制。研究结果建立了工作器件中界面应变、离子传输和电化学反应之间的机理联系，并为使用多模态原位偏压显微镜对复杂多层光电子系统进行纳米级降解分析提供了一个广泛适用的框架。', accountId: 8, publishDate: '2026-03-14', tags: ['钙钛矿', '界面动力学', '多模态电子显微镜', '原位表征', '器件稳定性'], url: 'https://mp.weixin.qq.com/s/NwgJ_2eDvZpXu988BQn9Ow' },
-
-            { id: 40, title: '前驱体价态门策略实现周期可变纳米晶催化剂的可控制备', author: '周光敏 (清华大学深圳国际研究生院)', journal: 'Nature Synthesis', abstract: '过渡金属纳米晶体在催化反应中应用广泛，但现有的单/多晶制备方法依赖对外部实验参数的精确调控，过程复杂且难以控制。清华大学深圳国际研究生院周光敏团队提出了一种"前驱体价态门"策略，基于固相成核规律，通过调控固相前驱体中金属离子的价态（单一或混合），简易地制备了一系列具有单晶或多晶结构的过渡金属纳米晶体。利用"前驱体价态"这一本征参数替代外部实验参数。单一价态金属源倾向于形成单晶，而混合价态金属源由于晶格扩散能垒高，易钉扎形成不同的成核中心，从而形成多晶。结合DFT理论计算，研究揭示了固相还原和成核过程。高价金属还原促进局部氧空位积累和金属迁移；此外，界面形成能（γ）的计算表明，混合价态前驱体的取向锚定作用较弱，利于形成多晶，而单一价态前驱体锚定作用强，利于形成单晶。以肼氧化反应为例，多晶Co催化剂（PC-Co）表现出比单晶Co催化剂（MC-Co）更优越的催化动力学（塔菲尔斜率低至14mV dec−1）和稳定性。团队组装了肼氧化耦合的新型锌空气电池，电能效率高达193%（传统仅为64%），且稳定运行1200小时。利用回收废旧钴酸锂正极作为钴源，相较商业钴源成本降低了75.2%。', accountId: 8, publishDate: '2026-03-12', tags: ['纳米晶催化剂', '前驱体价态', '单晶/多晶', '锌空气电池', '废旧材料回收'], url: 'https://mp.weixin.qq.com/s/anv9a4vEWdx5LbUCTXraWw' },
-
-            { id: 41, title: '一种面向代工厂的二维全互连微处理器制造策略', author: '田禾, 任天令 (清华大学集成电路学院)', journal: 'Nature Electronics', abstract: '硅晶体管特征尺寸逼近物理极限，二维材料（如过渡金属硫族化合物TMDs）因其原子级平整度、无悬挂键及优异的物理性质，成为构建高集成度器件的理想选择。然而，基于转移法的二维材料在大规模电路构建中面临挑战，极易在制造过程中退化，导致信号传输错误和良率下降。清华大学团队与四川大学合作，提出了一种面向代工厂的二维芯片算法驱动的自适应优化制造策略（IDM策略）。该策略涵盖了电路设计、版图设计、二维材料生长与转移、器件加工及芯片测试六个环节的迭代优化。四川大学合作团队实现了2英寸至4英寸二硫化钼（MoS2）材料的连续生长，具有高均匀性和极佳覆盖率。通过算法驱动的自适应优化，动态调整器件参数，提升了晶体管的导通电流、开关比和亚阈值摆幅，实现了较高的平均反相器增益。成功制造了基于二维材料的全互连微处理器。其算术逻辑单元（ALU）、控制单元（CU）及D锁存器良率分别达到96.5%、79.5%和61.5%。与Intel 4004和8008等第一代硅基CPU相比，该二维材料芯片展现出更低的归一化功耗、更佳的多材料系统兼容性以及更高的集成潜力。', accountId: 8, publishDate: '2026-03-05', tags: ['二维材料', '微处理器', 'TMD', '算法驱动优化', '代工厂策略'], url: 'https://mp.weixin.qq.com/s/JiFi9pIJoT5qOPwH7lRFQg' },
-
-            { id: 42, title: '原子级二氧化钛介电薄膜中的铁电性', author: 'Koushik Das, Sayeef Salahuddin (加州大学伯克利分校)', journal: 'Science', abstract: '该研究在原子级厚度上成功实现了铁电性，这在下一代电子学中具有重要应用前景。首次在原子级厚度的二氧化钛（TiO₂）介电薄膜中实现了稳定的铁电相。通常作为介电材料的二氧化钛，当厚度降至3纳米以下时，会诱导出这种全新的铁电相。这种铁电性在厚度仅为1纳米（约两个晶胞尺寸）时依然稳定存在，打破了传统铁电材料在纳米尺度的"尺寸效应"限制。研究揭示了维度驱动下的结构反演对称性破缺机制。原本具有中心对称性的萤石结构氧化物，通过减薄厚度实现了从非铁电体到可电压切换极化状态的相变。研究基于低温（<400°C）原子层沉积工艺，成功在硅和非晶表面（如SiO₂、非晶碳）上制备出稳定的铁电薄膜。这证明了其与现有半导体工艺的兼容性，为超大规模集成铁电存储器提供了一种兼具工艺兼容性与原子级厚度的新型材料体系。', accountId: 8, publishDate: '2026-03-05', tags: ['二氧化钛', '铁电性', '原子级薄膜', '原子层沉积', '下一代电子学'], url: 'https://mp.weixin.qq.com/s/R06bR7sRXNz_313_i-ohKw' },
-
-            { id: 43, title: 'AI+气溶胶，全球首个气溶胶-气象耦合人工智能预报模型AI-GAMFS', author: '桂柯, 张栩滔, 车慧正, 张小曳 (中国气象科学研究院)', journal: 'Nature', abstract: '大气气溶胶对地球气候系统至关重要，但其预报复杂且计算成本高。传统物理模型（如CAMS、GEOS-FP）面临巨大的计算负担和对非线性过程刻画不足的挑战。中国气象科学研究院车慧正研究员和张小曳院士团队联合国内外多家机构，在《Nature》上发布了全球首个气溶胶-气象耦合人工智能预报模型"AI-GAMFS"。该模型基于42年全球再分析资料训练，集成全局注意力机制等关键技术。能在1分钟内（单张GPU卡仅需39秒）实现全球范围5天、逐3小时的高分辨率（50公里）业务化预报。预报变量涵盖沙尘、硫酸盐、黑碳、有机碳、海盐等关键组分的光学特性及地面浓度。在全球AOD（气溶胶光学厚度）及沙尘预报上，性能优于CAMS及多个国际先进区域沙尘物理模型。与GEOS-FP相比，其全球AOD预报误差更低，且对美国和中国近地面关键气溶胶组分浓度的预报更精准（误差显著降低）。该模型已接入"MAZU-Cloud"平台，并在中央气象台及全国10余个省（区）气象部门落地应用，于近期通过中国气象局天气预报科技成果中试基地的业务准入。', accountId: 8, publishDate: '2026-03-07', tags: ['气溶胶预报', '人工智能', '气象耦合', 'AI-GAMFS', '业务化应用'], url: 'https://mp.weixin.qq.com/s/IoYBdViRJSBKMTToVhentQ' },
-
-            { id: 44, title: '块状六方金刚石', author: '单崇新, 程少博, 杨西贵 (郑州大学)', journal: 'Nature', abstract: '六方金刚石（HD，又称蓝丝黛尔石）理论硬度超越立方金刚石（CD），且是陨石撞击的矿物学标志。但由于立方金刚石（CD）在热力学上更稳定，天然和合成产物中HD通常仅以微量存在，且易与含堆垛层错的CD混淆，导致其物相真实性长期存在争议，物理特性也因缺乏纯相样本而难以深入研究。研究团队报道了在高温下从沿c轴压缩的高度取向热解石墨（HOPG）合成了毫米大小的相纯六方金刚石（HD）。结合先进结构表征和理论模拟，确认了HD的物相结构，阐明了石墨的转化途径。块状HD的硬度略高于CD，并具有较高的热稳定性。研究解决了关于HD作为离散碳相存在的长期争议，为石墨到金刚石相变提供了新见解，并为HD在先进技术应用中的未来研究铺平了道路。', accountId: 8, publishDate: '2026-03-05', tags: ['六方金刚石', '块状合成', '石墨转化', '相纯', '物理特性'], url: 'https://mp.weixin.qq.com/s/SmvxWrtxCSq0hRzRuRxTJQ' },
-
-            // 新增文章 2026-03-15 (纳米人公众号)
-            { id: 45, title: 'Edward H. Sargent院士团队，又发Nature Synthesis！', author: 'Yuanjun Chen, Peiying Wang, Yu Mao, Guangcan Su', journal: 'Nature Synthesis', abstract: '本研究深入剖析了在液态进料的反应性捕获碳酸盐电解系统中，利用捕获后CO₂液体直接电合成乙烯所面临的能效瓶颈。研究发现，传统铜催化剂在该环境下，由于亲水性界面和受限的原位CO₂生成速率，导致催化剂表面CO覆盖度不足，严重阻碍了关键的C-C偶联步骤。为破解这一难题，研究者设计并合成了一种BiCu稀合金催化剂，该催化剂能够在不依赖高CO覆盖度的前提下，开启一条非对称的CO-CHO偶联新路径，该路径能垒显著低于传统对称的CO-CO偶联路径。通过进一步与镍单原子（Ni-SA）催化剂构建串联电极，系统实现了51% ± 2%的乙烯法拉第效率、66 wt% ± 2%的高浓度乙烯产物流以及20%的端到端能量效率（在200 mA cm⁻²电流密度下），其能量效率是此前最先进电化学反应性捕获乙烯生产体系的两倍。生命周期评估显示，结合风电，该工艺可实现负碳排放（-2.86 t CO₂e t⁻¹乙烯），为利用捕获的CO₂直接生产高值化学品开辟了高效、低碳的新路径。', accountId: 2, publishDate: '2026-03-15', tags: ['乙烯电合成', 'BiCu稀合金', 'CO₂捕获', '电催化', 'C-C偶联'], url: 'https://mp.weixin.qq.com/s/2rln7htR2DRBeE1XgiD1yw' },
-
-            { id: 46, title: 'NATURE SYNTHESIS：尿素电合成！', author: 'Lei Wang, Pengfei Ou (新加坡国立大学)', journal: 'Nature Synthesis', abstract: '针对尿素电合成在工业级高电流密度下选择性骤降的难题，本研究提出了一种"低CO₂还原活性、高硝酸盐还原活性"的催化剂设计原则。研究团队开发了镉修饰的Fe₂O₃（Cd–Fe₂O₃）催化剂复合材料，通过Cd掺杂改变电子结构并稳定Fe³⁺物种，显著削弱了CO吸附，从而有效抑制了析氢副反应。实验结果表明，该催化剂在-0.5 V（vs. RHE）的电位下，实现了约140 mA cm⁻²的高尿素分电流密度，法拉第效率达到52%，且能稳定运行超过100小时。该工作通过动力学分析、原位光谱和DFT计算揭示了反应机理，为实现高效、稳定的工业化尿素电合成提供了新方案。', accountId: 2, publishDate: '2026-03-15', tags: ['尿素电合成', 'Cd-Fe₂O₃催化剂', '硝酸盐还原', '工业级电流密度', '稳定性'], url: 'https://mp.weixin.qq.com/s/fJwNPiNDe2v9j7ikFPVibw' },
-
-            { id: 47, title: 'JACS：Pd纳米颗粒尺寸与形貌对电化学氢吸储能力的影响机制', author: 'Arnaud Viola, Ivan Saldan, Sousa Javan Nikkhah, Muhammad Umer, Apinya Ngopiala, Matthias Vandichel, Jan M. Macak, Frédéric Maillard', journal: 'JACS', abstract: '爱尔兰利莫瑞克大学的Matthias Vandichel、捷克帕尔杜比采大学的Jan M. Macak和法国格勒诺布尔阿尔卑斯大学的Frédéric Maillard等研究团队系统研究了碳载钯纳米立方体（Pd NCs）的尺寸与形貌对其电化学氢吸储能力及氢捕获行为的影响。通过调控合成条件制备了尺寸为5.4至20.2 nm的Pd NCs，结合电化学测量、同位位置透射电镜（IL-TEM）与分子动力学（MD）模拟，揭示了H:Pd摩尔比随颗粒尺寸增大而增加（0.55→0.68），且氢捕获效应随尺寸减小而增强（13.9%→5.1%）的规律。研究表明，氢吸储能力与捕获程度主要受表面体积比主导，而非颗粒形貌，并通过模拟发现氢原子优先占据八面体间隙位，小尺寸颗粒中四面体位点增多是导致氢捕获增强的关键。', accountId: 2, publishDate: '2026-03-15', tags: ['Pd纳米颗粒', '氢吸储', '电化学', '尺寸效应', '形貌效应', '氢捕获'], url: 'https://mp.weixin.qq.com/s/jX1mdV8qL1uxgVmP_VtA6Q' },
-
-            { id: 48, title: 'Metal hybridization in dilute-alloy catalysts promotes sintering resistance', author: 'Jordan Finzel, Audrey Dannar, E. Charles H. Sykes, Phillip Christopher', journal: 'Nature Materials', abstract: '本研究揭示了稀释合金化（仅添加1 at.%的Pt到Cu中）显著提升铜纳米颗粒抗烧结性能的微观机制，破解了多相催化中活性金属纳米颗粒易烧结失活的长期难题。研究发现，Pt原子通过局部稳定Cu表面低配位台阶位原子，从根本上抑制了导致纳米颗粒粗化的奥斯特瓦尔德熟化过程。结合原位X射线吸收谱、扫描隧道显微镜和密度泛函理论计算，作者证实Pt掺杂使Cu/SiO₂催化剂在H₂气氛中的抗烧结温度从500℃提升至700℃以上。进一步的理论筛选揭示，掺杂原子与宿主金属的d轨道杂化程度是预测稀释合金抗烧结性能的关键描述符，为设计兼具高活性、高选择性和高稳定性的新一代催化剂提供了普适性理论框架。', accountId: 2, publishDate: '2026-03-15', tags: ['稀释合金', '抗烧结', 'Pt掺杂', 'd轨道杂化', '催化剂稳定性', '奥斯特瓦尔德熟化'], url: 'https://mp.weixin.qq.com/s/y5Aetgrhi_GGRDOyoZySiw' },
-
-            { id: 49, title: 'Nature Energy：界面调控策略，刷新效率记录！', author: 'Cui, C., Li, Y., Wei, H. (中科院青岛生物能源与过程研究所崔光磊、邵志鹏和河南大学武四新、寇东星)', journal: 'Nature Energy', abstract: '针对锌黄锡矿 Cu₂ZnSn(S,Se)₄ (CZTSSe) 太阳能电池中因阳离子（Zn²⁺ 和 Sn⁴⁺）迁移速率不匹配导致的深能级缺陷及开路电压损耗问题，本研究报道了一种 Li₂SnS₃ 中间层策略。该策略通过修饰阳离子迁移路径，将 Zn²⁺/Sn⁴⁺ 的迁移能垒差从 0.41 eV 降低至 0.21 eV，有效平衡了离子迁移，促进了大尺寸、高结晶度晶粒的形成。实验结果表明，引入 Li₂SnS₃ 中间层后，器件的深能级缺陷显著减少，非辐射复合得到抑制。最终，器件的光电转换效率从 13.86% 提高到 15.45%（认证效率为 15.04%），在 1.10 eV 带隙下，开路电压达到 602 mV，刷新了该类电池的效率记录。', accountId: 2, publishDate: '2026-03-15', tags: ['CZTSSe太阳能电池', 'Li₂SnS₃中间层', '阳离子迁移', '深能级缺陷', '开路电压', '效率记录'], url: 'https://mp.weixin.qq.com/s/QAs7fDQyP3SOmCDOEN4dOg' },
-
-            { id: 50, title: 'Quantum-sensing-enabled in situ imaging of free radicals in chemical reactions', author: 'Yibo Yang, Zengrong Zhou, Jiandong Feng', journal: 'Nature Catalysis', abstract: '本研究开发了一种名为量子传感化学原位显微镜（QCOM）的革命性成像技术。该技术利用金刚石中的氮-空位（NV）色心作为原子尺度的量子传感器，通过测量纵向弛豫时间（T1）将自由基产生的微弱磁噪声转化为成像衬度，实现了在原位、实时、定量的条件下观察化学反应中的自由基。QCOM技术具有约312 nm的空间分辨率、10-240 ms的时间分辨率和单像素约4个自由基的检测极限。研究团队利用该技术观察了TiO₂光催化水解反应，意外发现了催化剂颗粒内部存在"时空顺序激活效应"，即活性位点并非同时启动，而是像多米诺骨牌一样被邻近位点依次激活。此外，结合双电子-电子共振（DEER）原位自旋谱学，研究团队还成功识别了不同溶剂中生成的自由基物种（如羟基自由基 vs 超氧自由基），为反应机理提供了分子层面的证据，颠覆了对光催化反应动力学的传统认知。', accountId: 2, publishDate: '2026-03-15', tags: ['量子传感', '自由基成像', 'NV色心', '原位显微镜', '光催化', '时空顺序激活'], url: 'https://mp.weixin.qq.com/s/7R-xiCF0I64dLOhUCnCWBw' },
-
-            { id: 51, title: 'Nature Synthesis：光诱导氮溢流，促进AlFe双位点催化剂高效合成氨！', author: '李文倩, 陈伊健, 陆小军 (上海交通大学), 叶天南, 章辉, 鲁杨帆', journal: 'Nature Synthesis', abstract: '针对传统合成氨工业高能耗与高碳排的问题，上海交通大学叶天南团队与上海光源、重庆大学合作，开发了一种AlFe纳米合金催化剂用于温和条件下高效光催化合成氨。该工作通过构筑Fe-Al双活性位点，形成强弱N吸附对：Fe位点负责吸附并活化N₂分子，解离后的氮物种通过光诱导氮溢流方式迁移至Al位点，形成弱的Al-N相互作用，从而促进后续加氢及产物NH₃分子的脱附。这一设计成功打破了传统催化剂中活化与脱附之间的制约关系。实验结果显示，在4.28 W cm–2光照强度和常压下，该催化剂合成氨速率高达8.6 mmol g–1 h–1，远超商业Fe基催化剂和其他报道的催化剂，且表现出优异的稳定性。', accountId: 2, publishDate: '2026-03-15', tags: ['光催化合成氨', 'AlFe双位点催化剂', '氮溢流', '温和条件', '高活性', '稳定性'], url: 'https://mp.weixin.qq.com/s/ArnOmoUvYckBC-8aCM-Tkg' },
-
-            { id: 52, title: 'SCIENCE：实用！手性大环化合物合成', author: 'Helma Wennemers (苏黎世联邦理工学院)', journal: 'Science', abstract: '手性大环化合物（12元环以上）在药物研发和材料科学中具有重要价值，但其合成长期面临环化效率与选择性博弈、立体中心构建难以精准受控两大挑战。针对这一问题，苏黎世联邦理工学院Helma Wennemers等人报道了一种催化剂控制的立体选择性头对尾大环化方法。该研究开发了双功能肽催化剂，通过模板效应将线性前体的末端官能团拉近并固定，从而使分子内反应优于分子间反应。该方法不仅高效合成了多种12至18元的手性大环内酯和内酰胺，收率和选择性极高（最高97%收率，>20:1 dr，99% ee），更实现了催化剂对立体化学的绝对主导权——即使底物本身带有手性，催化剂也能"覆盖"原有手性，通过更换催化剂手性即可灵活获取不同构型的异构体。研究团队成功利用该方法合成了天然产物robotnikinin的核心骨架，证明了其在复杂分子合成、药物修饰及生物偶联领域的巨大应用潜力。', accountId: 2, publishDate: '2026-03-15', tags: ['手性大环化合物', '大环化', '立体选择性', '肽催化剂', '药物合成', 'robotnikinin'], url: 'https://mp.weixin.qq.com/s/g9isyl3sLhaPMGfjVDD-_A' },
-
-            { id: 53, title: '点击锁定策略实现具有工业兼容性的单原子催化剂自动化合成', author: 'Weibin Chen, Long Feng, Bingbing Ma (北京大学张锦、邹如强; MIT李巨; 新加坡国立大学吕炯; 上海交通大学汪圣尧)', journal: 'Nature Synthesis', abstract: '本研究针对单原子催化剂（SACs）面临的"难稳定、难放大、难自动化"关键瓶颈，提出了一种由机器人技术驱动的"点击锁定"策略。研究团队通过引入点击辅助剂，利用电子-阳离子相互作用等驱动力，将单原子稳定地锚定于载体表面，构建出点击单原子催化剂。该工作构建了机器人驱动的高通量合成与性能评价体系，实现了粉体及电极负载型催化剂的自动化制备与筛选。此外，该策略在 100 L 反应器中成功完成了 10 kg 级别的宏量制备，并在 CO 氧化、NH₃-SCR 脱硝、CO₂ 加氢及 C₄ 馏分加氢等工业相关反应中展现出优异的活性和稳定性。这一成果不仅解决了单原子催化剂规模化制备的难题，也为 AI 辅助的材料发现奠定了基础。', accountId: 2, publishDate: '2026-03-15', tags: ['单原子催化剂', '自动化合成', '点击锁定', '机器人技术', '工业兼容', '宏量制备'], url: 'https://mp.weixin.qq.com/s/TIjhU70DVB8bVg8nID8z8w' },
-
-            { id: 54, title: '北京大学AM：天然气高效益产氢新方法！', author: '赵孟泽, 张志斌, 王悰, 冯鹏, 刘开辉, 王恩哥, 李致朋, 马丁', journal: 'Advanced Materials', abstract: '在全球变暖与减排压力加剧的背景下，实现天然气清洁低碳化利用至关重要。针对天然气热裂解制氢体系中氢气生成与碳沉积高度耦合导致催化剂失活及碳产物附加值低的问题，本研究提出了一种"镍原子晶格分离"的新思路。该设计利用由镍泡沫-镍箔组成的内外管分离结构，使天然气在管内高效裂解产生氢气和活性碳原子，碳原子随后溶入镍箔并穿过晶格向外扩散，在外侧外延生长为高品质晶体石墨。该方法成功实现了能量（氢）与物质（碳）转化路径的解耦，在连续制备高纯度富氢气体的同时，协同制备了高附加值的晶体石墨。实验结果显示，该体系甲烷转化率超过99%，连续稳定运行超过300小时，且核心结构可循环使用5次以上。此外，研究将该系统与固体氧化物燃料电池（SOFC）集成，实现了从"清洁制氢"到"高效用氢"的完整链路，最高功率密度达1.0 W·cm⁻²，发电效率约57%。该技术为化石能源的高效、低碳利用提供了具有工程潜力的新方案。', accountId: 2, publishDate: '2026-03-15', tags: ['天然气制氢', '镍原子晶格分离', '晶体石墨', 'SOFC集成', '低碳利用', '工程潜力'], url: 'https://mp.weixin.qq.com/s/Wr6WZFF51ouQUCmblXu5Sw' },
-
-            { id: 55, title: '攻克行业难题！武汉大学最新Science！', author: 'YUANHANG YANG, 王植平团队', journal: 'Science', abstract: '钙钛矿太阳能电池（PSCs）的发展受限于脆弱的空穴传输界面和热稳定性不足的电子传输界面。武汉大学王植平团队利用原子层沉积（ALD）技术沉积了氧化铪（HfOx）夹层以稳定这些分子界面。在空穴端（NiOx/SAM），富含羟基且具有路易斯酸性的n-HfOx层促进了磷酸基团的三齿配位，增强了自组装单分子层（SAM）的保留能力和热耐久性。在电子端（钙钛矿/C60），p-HfOx层通过Hf···F相互作用锚定钝化分子3F-PEAI，并作为阻挡碘离子和银离子迁移的扩散屏障。该研究成功将器件光电转换效率提升至27.1%（认证效率26.6%），并实现了在85°C环境空气及1个标准太阳光照下运行约5000小时后仍保持初始效率90%以上的优异稳定性，解决了钙钛矿太阳能电池效率与稳定性难以协同提升的行业难题。', accountId: 2, publishDate: '2026-03-15', tags: ['钙钛矿太阳能电池', 'HfOx夹层', '原子层沉积', '界面稳定性', '高效率', '长寿命'], url: 'https://mp.weixin.qq.com/s/-ldUTwI3U5W6lts-fmZ_kA' },
-
-            { id: 56, title: '石墨烯埃米孔化身"气体二极管"，限域输运领域实现突破！', author: '段弘伟, 杨婧, 梁年杰, 陈笑博, 王路达, 宋柏, 刘开辉', journal: 'Nature Materials', abstract: '北京大学王路达教授和宋柏教授合作团队在限域输运领域取得突破，设计出一种不对称（Janus）埃米孔结构，并将其用作"气体二极管"。团队结合精密实验观测与高通量理论计算，首次揭示并系统阐释了多种典型气体分子（不同组分、形状、大小）跨石墨烯埃米孔的整流现象。研究利用原子级负反馈控制的臭氧刻蚀系统在石墨烯上制备了具有不对称含氧官能团分布的埃米孔。实验结果表明，该结构对氧气和氮气等气体呈现出显著的整流现象，整流比可高达两个数量级。通过高通量DFT计算和AIMD模拟，团队发现非局域范德华相互作用对能垒差异起决定性作用，且气体分子的极化率对于实现整流输运至关重要。', accountId: 2, publishDate: '2026-03-15', tags: ['石墨烯埃米孔', 'Janus结构', '气体整流', '限域输运', '范德华相互作用', '极化率'], url: 'https://mp.weixin.qq.com/s/gRUrc5UDSaglh7WE4UiqvA' },
-
-            // 新增文章 2026-03-16
-            { id: 57, title: '香港城市大学，Nature Energy！', author: 'Xingyu Wang, Qi Fan, Wei Wang, Xiongyi Liang', journal: 'Nature Energy', abstract: '本研究报道了通过层状正极材料（层状锰酸钠，NMO）实现可逆溶剂插层，从而获得超快倍率性能。实验表明，基于甘醇二甲醚的溶剂分子可嵌入该正极材料，在高压条件下发挥扩散促进剂和亚纳米支柱作用。原位超快X射线吸收光谱结合模拟计算证实，溶剂插层能显著提升正极氧化还原动力学性能。借助该机制，该正极材料在10A/g电流密度下（30秒内充电）实现77.4mAh/g的容量，在2A/g电流密度下（约3.6分钟充电）循环500次后容量保持率超过70%。此外，研究还展示了全溶剂辅助钠离子电池（NMO||G2||石墨）的可行性。层状氧化物中溶剂插层机制的成功实现，为开发下一代超快充电钠离子电池开辟了新途径。', accountId: 3, publishDate: '2026-03-16', tags: ['层状正极', '溶剂插层', '超快充电', '钠离子电池', 'NMO', '动力学性能'], url: 'https://mp.weixin.qq.com/s/d22ytY1nll1IE6ONzFp3Cg' },
-
-            { id: 58, title: '福州大学，NATURE CATALYSIS!', author: 'Baoying Yang, Kunlong Liu', journal: 'Nature Catalysis', abstract: '氢化反应在工业生产中具有重要意义，但负载型钯纳米催化剂上的化学选择性氢化（如炔烃半氢化）仍面临挑战，因为底物容易在钯表面发生过度氢化。本文研究表明，光照射可直接诱导位点分离，在半导体支撑的钯纳米催化剂上实现溢流氢化，且不损害催化活性。在光照条件下，积累在钯纳米颗粒上的光生电子抑制了不饱和底物的吸附，确保钯位点专一促进氢分子解离；而留在载体上的光生空穴则增强底物吸附和活性氢迁移。该现象在 Pd/SrTiO3、Pd/ZnO、Pd/PCN 和 Ru/MnOx 等多个催化体系中得到验证，证明光增强溢流氢化效应是可推广的界面现象，为提高溢流氢化效率提供了普适性策略。', accountId: 3, publishDate: '2026-03-16', tags: ['光催化氢化', '溢流氢化', '位点分离', 'Pd纳米催化剂', '选择性氢化', '半导体载体'], url: 'https://mp.weixin.qq.com/s/QkQW8ai1lh63EQ2vtQekSw' },
-
-            { id: 59, title: '哥伦比亚大学，Nature！', author: 'Itai Keren, Tatiana A. Webb, Shuai Zhang', journal: 'Nature', abstract: '本研究聚焦于通过工程化电磁环境来改变超导体的基态性质。研究团队构建了六方氮化硼与分子超导体 κ-(BEDT-TTF)₂Cu[N(CN)₂]Br 的范德华异质结，利用六方氮化硼的双曲声子模与超导体中C=C伸缩振动模的共振耦合，实现了在无需外部光激发的条件下（即"暗腔"环境）对界面处超流密度的显著抑制。通过磁力显微镜（MFM）直接观测到了这一效应，并结合散射型近场光学显微镜和第一性原理分子朗之万动力学模拟，揭示了微观机制：六方氮化硼双曲模的零点涨落通过面外电场分量与分子振动耦合，从而改变了超导电性。非共振对照实验排除了电荷转移和应变等其他因素的干扰，证实了共振耦合的关键作用。这项工作为利用"暗腔"设计电子基态性质提供了新的实验范式。', accountId: 3, publishDate: '2026-03-16', tags: ['超导体', '暗腔', '六方氮化硼', '分子超导体', '共振耦合', '基态调控'], url: 'https://mp.weixin.qq.com/s/kWV1ZShpVYcAKZx_EEfxpg' },
-
-            { id: 60, title: '通过暗态双激子加载实现量子点珀塞尔增强的双光子发射', author: '吴邦, 袁之良', journal: 'Nature Materials', abstract: '北京量子信息科学研究院袁之良团队与中国科学院半导体研究所牛智川课题组合作，首次实现了基于单个量子点的高效双光子发射。该研究制备了一种基于量子点-微柱腔耦合体系的高效率、高纯度双光子发射器。器件利用创新的暗态双激子激发路径，结合腔增强的简并双激子-激子级联辐射，大幅提升了双光子发射的效率与纯度。实验结果显示，该光源表现出极强的双光子聚束效应，98.3%的发射光子以光子对形式出现，双光子发射效率达到29.9%。该成果为发展实用化的按需固态双光子源奠定了重要基础，有望在量子计量、量子成像等前沿领域发挥关键作用。', accountId: 3, publishDate: '2026-03-16', tags: ['量子点', '双光子发射', '暗态双激子', '珀塞尔增强', '量子光源', '聚束效应'], url: 'https://mp.weixin.qq.com/s/c0HDAF91UyNj5jDe2v3yiw' },
-
-            { id: 61, title: '哥伦比亚大学，Nature！La₃Ni₂O₇镍酸盐超导性研究', author: 'S. V. Mandyam, C. R. Laumann, N. Y. Yao', journal: 'Nature', abstract: '镍酸盐材料在高温超导研究中扮演着重要角色，近期发现化学计量镍酸盐（如 La₃Ni₂O₇）在高压下可实现高达临界温度（Tc）的超导现象，但超导态的形成机制及样品表现出的微弱抗磁响应（不均匀的"丝状"超导态）尚不明确。本研究采用宽场高压光学探测磁共振光谱技术，利用金刚石压砧中嵌入的氮空位（NV）量子传感器，对原位生长的 La₃Ni₂O₇ 样品进行了局部抗磁响应成像。研究发现，样品在微米尺度上存在显著的超导响应不均匀性。通过将抗磁迈斯纳响应与原位成像的局部张量应力环境及化学计量组成进行空间关联分析，文章揭示了抑制和增强超导性的主导机制：超导性首先出现在高法向应力区域，且对化学计量比（La:Ni = 3:2）高度敏感。该技术既能提供宏观视图，又具备局部灵敏度，成功构建了多参数相图，为理解镍酸盐超导机制及材料异质性提供了新视角。', accountId: 3, publishDate: '2026-03-16', tags: ['镍酸盐', '高温超导', 'La₃Ni₂O₇', 'NV量子传感器', '局部成像', '不均匀性'], url: 'https://mp.weixin.qq.com/s/8oGIKqivigNFvhZdjxgAdw' },
-
-            { id: 62, title: '清华大学，Nature！手性反铁磁体Mn₃Sn电学翻转研究', author: 'Zhiyuan Zhou, Cheng Song', journal: 'Nature', abstract: '本研究通过精心设计的Mn₃Sn同质结，成功解决了手性反铁磁体在零磁场下难以实现完全电学翻转的难题。研究利用底层单晶Mn₃Sn产生的面外自旋极化，结合顶层多晶Mn₃Sn倾斜的Kagome几何结构，将反铁磁型驱动力与铁磁型驱动力有机结合。这一机制不仅首次实现了零磁场下100%的完全磁序翻转，还创纪录地降低了翻转电流密度和功耗（比以往构型低一个数量级）。此外，该研究还展示了八极矩可编程的翻转手性调控以及对外加磁场的强鲁棒性，为开发基于全反铁磁体的高密度、高速度、低功耗下一代存储器奠定了基础。', accountId: 3, publishDate: '2026-03-16', tags: ['手性反铁磁体', 'Mn₃Sn', '零磁场翻转', 'Kagome几何结构', '低功耗', '存储器'], url: 'https://mp.weixin.qq.com/s/iU9V8g2Loviz2cbnYJIfvw' },
-
-            { id: 63, title: '增材制造Nature：打破无机结构与生命功能间传统界限！', author: '陈安南, 王子秦', journal: 'Nature', abstract: '本研究由香港城市大学吕坚院士团队联合香港理工大学与华中科技大学的研究人员共同完成，首次揭示了海胆棘刺具有卓越的机电感知功能。研究发现，海胆棘刺这种主要由碳酸钙陶瓷构成的无机生物矿化结构，凭借其沿[001]轴向的梯度多孔结构（孔径从根部至尖端逐渐减小，孔隙率增加），在液体流经表面时能产生非均匀的流动电势，从而形成可测量的电压信号。受此启发，团队利用仿生设计与高精度3D打印技术，成功制备出具有类似梯度多孔结构的陶瓷与高分子仿生材料。实验表明，人造结构成功复现了机电感知效应，电压输出比无梯度结构提升约3倍，响应振幅提高约8倍。该研究打破了无机结构与生命功能间的传统界限，为开发下一代航空航天、生物医疗等领域的结构-功能一体化智能器件奠定了基础。', accountId: 3, publishDate: '2026-03-16', tags: ['海胆棘刺', '机电感知', '梯度多孔结构', '仿生材料', '3D打印', '结构-功能一体化'], url: 'https://mp.weixin.qq.com/s/C2VGGy_vDAWEuqrrlfoLFQ' },
-
-            { id: 64, title: '生命手性晶体微观对称破缺驱动宏观双稳态', author: 'Yu-Chen Chao, Shreyas Gokhale, Lisa Lin, Alasdair Hastewell, Nikta Fakhri', journal: 'Nature Physics', abstract: '本研究利用海星胚胎自组装形成的生命手性晶体作为模型系统，探讨了非互易活性物质中微观个体行为与宏观集体动力学之间的联系。研究发现，胚胎微观层面的"直立自旋"与"倾斜进动"两种束缚态，导致了宏观晶体呈现出"涨落态"和"振荡态"的双稳态特性。通过动态模式分解（DMD）技术，研究者在振荡态中观测到了与进动相关的、频率不随波矢变化的"光学支"振动模式，这是平衡态固体中不存在的非平衡涌现现象。此外，研究建立了非线性连续介质模型，并通过实验证实了微观旋转与宏观变形的耦合机制。更重要的是，研究展示了通过特定速率的机械压缩，可以可控地将晶体从涨落态激发至振荡态，并利用熵产率量化了该状态下持续的位移循环做功能力。这一发现揭示了活性物质将内部能量转化为宏观机械功的潜力，为设计新型自适应智能材料和能量转换系统提供了物理基础。', accountId: 3, publishDate: '2026-03-16', tags: ['生命手性晶体', '双稳态', '振荡态', '微观对称破缺', '活性物质', '机械功'], url: 'https://mp.weixin.qq.com/s/LjifGuzsNNvpMywr9HB1yg' },
-
-            { id: 65, title: '悉尼科技大学，Nature Materials！光学可寻址自旋量子发射体', author: 'Benjamin Whitefield, Helen Zhi Jie Zeng, Igor Aharonovich, Mehran Kianinia', journal: 'Nature Materials', abstract: '本研究报道了一种通过对碳掺杂六方氮化硼薄片进行单步氧气氛围热处理的工艺，成功制备出高密度、窄带且具有光学活性自旋跃迁的量子发射器。主要成果如下：1. 高密度与高活性：该工艺制备出的发射体密度较先前报道结果提高近一个数量级，其中超过25%的发射器在室温下展现出清晰的光学自旋读出特征（光探测磁共振活性）。2. 自旋特性：生成的自旋缺陷复合体同时表现出S=1和S=1/2跃迁特征，这一现象可通过电荷从强耦合自旋对向弱耦合自旋对的转移机制进行解释。3. 理论模型：研究提出了包含光学活性施主-受主对（如 CBCN–DAP-X）与邻近暗态缺陷的模型，阐释了发射体在可见光范围内零声子线的变化特性及自旋读出原理。4. 应用前景：该研究为在层状材料中实现单自旋-光子界面铺平了道路，有望推动量子传感、量子网络及信息处理领域的应用发展。', accountId: 3, publishDate: '2026-03-16', tags: ['六方氮化硼', '自旋量子发射体', '光学可寻址', '量子传感', '自旋-光子界面', '室温工作'], url: 'https://mp.weixin.qq.com/s/7uMpcamiP0CCBCuYjxaJtg' },
-
-            { id: 66, title: '上海交通大学，Nature Sustainability!溴回收催化策略', author: 'Qingming Song, Bofan Cui, Zhenming Xu', journal: 'Nature Sustainability', abstract: '溴是一种关键资源，广泛应用于阻燃剂等领域，但含溴废弃物的处理（如焚烧或填埋）会释放有毒污染物，造成环境风险。本文提出了一种利用廉价的Cu(I)、简单配体和氢氧化物在DMSO-H₂O溶剂中实现的催化策略（乌尔曼型反应）。该策略能够在温和条件（≤120℃）下将废弃物中存在的有机溴化物选择性转化为可再生的溴化物，产率超过95%。通过后续的无机化-蒸发-氧化过程，可产生适用于Br₂生产的富溴化物溶液，并回收化学结构保持不变的脱溴固体。机理研究揭示了一个涵盖多种活化途径的完全脱溴框架。这项工作突破了有机溴向溴离子转化的瓶颈，为溴回收提供了一种可行的方法，有助于构建可持续的溴生命周期，促进人为溴流的循环。', accountId: 3, publishDate: '2026-03-16', tags: ['溴回收', '乌尔曼型反应', 'Cu(I)催化', '可持续性', '溴生命周期', '废物处理'], url: 'https://mp.weixin.qq.com/s/fWtkypGWkSPVoRjTtMsfYg' },
-
-            { id: 67, title: '石墨烯超润滑多型体阵列中的堆叠序调控', author: 'Nirmal Roy, Pengua Ying', journal: 'Nature Nanotechnology', abstract: '本研究通过设计一种"超润滑多型体阵列"（SLAP）结构，在纳米腔体（直径可小至30纳米）中实现了石墨烯四层体伯纳尔（Bernal）与菱面体堆叠之间的完全可逆转换。该结构利用图案化的不对齐间隔层在局域腔体内形成稳定的堆叠畴，同时在腔体外利用超润滑界面实现低摩擦、长程弹性弛豫。实验表明，该转换所需的横向剪切力低于1纳牛顿，每次切换能量低于1飞焦耳。研究进一步揭示了边界孤子的成核与自发传播机制，并通过调控间隔层扭转角、腔体几何形状及连接通道，实现了对切换阈值、动力学及岛屿间弹性耦合的精细工程操控。这项工作为开发高密度、低能耗的纳米电子器件及探索堆叠序相关的关联物态提供了新平台。', accountId: 3, publishDate: '2026-03-16', tags: ['石墨烯', '堆叠序', '超润滑', '多型体阵列', '纳米腔体', '可逆转换'], url: 'https://mp.weixin.qq.com/s/-h46-8hoFUuWGUuA8CtCKA' },
-
-            { id: 68, title: 'B-D相二维钙钛矿', author: 'Chenjian Lin, Yuanhao Tang, Zhichen Nian, Brett M. Savoie, Letian Dou', journal: 'Nature Chemistry', abstract: '本研究引入了一类采用层内双齿配体的新型二维钙钛矿，称为B-D相钙钛矿，旨在提升材料的结构多样性与稳定性。研究团队成功合成了具有刚性核心单元及双侧铵基末端连接基团的双齿配体，并获得了结合这些B-D配体的单晶。分子动力学模拟表明，B-D配体与无机层的结合能显著强于传统的R-P相和D-J相配体。基于吸收稳定性评估，B-D相多晶薄膜表现出卓越的耐热性，其T80寿命分别比R-P相和D-J相类似物提升了1600%和140%。采用B-D配体的光伏器件展现出更高的功率转换效率和更持久的稳定性。这些发现确立了B-D相二维钙钛矿作为下一代光电子应用平台的潜力，推动了金属卤化物钙钛矿及其他杂化材料的配体工程发展。', accountId: 3, publishDate: '2026-03-16', tags: ['B-D相', '二维钙钛矿', '双齿配体', '结构稳定性', '光伏器件', '配体工程'], url: 'https://mp.weixin.qq.com/s/GP44xvziQvn0t_z1TIVCBA' },
-
-            { id: 69, title: '全球首个医学循证推理智能体破解罕见病诊断难题', author: '张娅, 谢伟迪, 孙锟, 余永国', journal: 'Nature', abstract: '该研究提出了全球首个智能体式罕见病循证推理诊断系统DeepRare。系统采用"中枢-分身"架构，突破了传统医学AI的"黑盒"限制，具备全域链接医学知识库、主动提问进行"慢思考"推理以及全流程循证可溯的能力。实验数据显示，在仅提供临床表型信息时，DeepRare的首位准确率达到57.18%（比此前最佳模型提升23.79%）；结合基因数据后，综合诊断准确率突破70.6%。该系统目前已上线平台，并在全球600多家机构投入使用，旨在解决罕见病确诊难、漏诊率高的问题。', accountId: 3, publishDate: '2026-03-16', tags: ['罕见病诊断', '医学AI', '循证推理', 'DeepRare系统', '人工智能', '诊断准确率'], url: 'https://mp.weixin.qq.com/s/gSlaXD6kZnGBxuI0hf9quA' },
-
-            { id: 70, title: '脑内精准基因编辑，为神经发育疾病治疗点亮曙光', author: '杨侃, 李维克, 耿一啸, 张淑倩, 程艳波, 吴诗昊, 李斐, 程田林, 仇子龙', journal: 'Nature', abstract: '该研究针对由CHD3基因突变导致的Snijders Blok–Campeau综合征（SNIBCPS），设计了一种新型腺嘌呤碱基编辑器TeABE。该编辑器能精准识别并将突变的A•T碱基对修复为正常的G•C碱基对，全程无DNA双链断裂风险。在人源化突变小鼠模型中，该技术成功修复了多个脑区的基因位点，显著改善了小鼠的社交回避、认知迟钝等行为异常。此外，研究还在非人灵长类（猕猴）模型中验证了技术的跨物种应用可行性，为自闭症等神经发育疾病的基因治疗提供了突破性进展和安全依据。', accountId: 3, publishDate: '2026-03-16', tags: ['基因编辑', '神经发育疾病', '碱基编辑器', 'TeABE', '脑内编辑', 'CHD3突变'], url: 'https://mp.weixin.qq.com/s/kOC_F9yidkaKnUI8Jvedig' },
-
-            { id: 71, title: '安徽师范大学王广凤&南京航空航天大学李林林&东南大学彭生杰合作，JACS！', author: '顾明政, 王广凤, 李林林, 彭生杰', journal: 'JACS', abstract: '本研究针对金属硫化物在碱性析氧反应（OER）中面临的活性与稳定性难以协调的挑战，通过碘掺杂策略精确控制了CuS预催化剂的表面重构。研究发现，碘掺杂引起的电子操纵、弱配位Cu-S键和晶格畸变共同促进了表面重建，生成了富含氧空位（VO）的高价羟基氧化铜表面。文章提出了一种全新的协同氧化机制（OVOM）：晶格氧空位作为促进羟基吸附的真正活性源，而高价Cu位点作为辅助位点通过增强Cu-O共价键来削弱O-H键，从而加速去质子化过程。该优化后的催化剂在10 mA cm⁻²下过电位低至189 mV，稳定性长达1250 h；在实际膜电极电解槽测试中，1 A cm⁻²电流密度下槽电压低至1.65 V，稳定性达480 h，且制氢成本低至1.70 $/kgH₂，优于美国能源部2026年目标，展示了巨大的实际应用潜力。', accountId: 3, publishDate: '2026-03-16', tags: ['碱性析氧', 'CuS催化剂', '碘掺杂', '表面重构', '协同氧化机制', '制氢成本'], url: 'https://mp.weixin.qq.com/s/weevzqSMOR7r9e0jxJfVQQ' }
-        ];
-
-        // 根据实际文章动态生成期刊分类
-        function getJournalCategories(accountArticles) {
-            const journalMap = new Map();
-            
-            accountArticles.forEach(article => {
-                const journal = article.journal;
-                journalMap.set(journal, (journalMap.get(journal) || 0) + 1);
-            });
-
-            const categories = [
-                { id: 'all', name: '全部', count: accountArticles.length }
-            ];
-
-            // 添加各个期刊分类
-            journalMap.forEach((count, journal) => {
-                categories.push({ id: journal, name: journal, count });
-            });
-
-            // 如果有多个Nature期刊，添加Nature系列分类
-            const natureJournals = Array.from(journalMap.keys()).filter(j => j.includes('Nature'));
-            if (natureJournals.length > 1) {
-                const natureCount = natureJournals.reduce((sum, j) => sum + journalMap.get(j), 0);
-                categories.push({ id: 'Nature Series', name: 'Nature系列期刊', count: natureCount });
-            }
-
-            // 如果有多个Cell期刊，添加Cell系列分类
-            const cellJournals = Array.from(journalMap.keys()).filter(j => j.includes('Cell'));
-            if (cellJournals.length > 1) {
-                const cellCount = cellJournals.reduce((sum, j) => sum + journalMap.get(j), 0);
-                categories.push({ id: 'Cell Series', name: 'Cell系列期刊', count: cellCount });
-            }
-
-            return categories;
+// 全局变量
+let allArticles = [];
+let allAccounts = [];
+let currentFilter = 'all';
+let currentAccount = null;
+let searchKeyword = '';
+let readingHistory = JSON.parse(localStorage.getItem('readingHistory') || '{}');
+
+// 初始化
+document.addEventListener('DOMContentLoaded', function() {
+    loadArticles();
+    initializeEventListeners();
+});
+
+// 内嵌文章数据
+const embeddedData = {
+    accounts: [
+        {
+                "id": "xmol",
+                "name": "X-MOL资讯",
+                "description": "专注于化学、材料科学领域的前沿科研资讯",
+                "website": "https://www.x-mol.com",
+                "mpUrl": ""
+        },
+        {
+                "id": "namiren",
+                "name": "纳米人",
+                "description": "纳米科学与技术领域的专业平台",
+                "website": "https://www.nanoren.com",
+                "mpUrl": ""
+        },
+        {
+                "id": "yanzhichengli",
+                "name": "研之成理",
+                "description": "理论计算与实验研究的学术资讯平台",
+                "website": "",
+                "mpUrl": ""
+        },
+        {
+                "id": "weechem",
+                "name": "WeeChem微观化",
+                "description": "微观化学世界探索",
+                "website": "",
+                "mpUrl": ""
+        },
+        {
+                "id": "cellpress",
+                "name": "CellPress全学科",
+                "description": "Cell Press全学科期刊资讯",
+                "website": "https://www.cell.com",
+                "mpUrl": ""
+        },
+        {
+                "id": "bioart",
+                "name": "BioArt",
+                "description": "生物艺术与生命科学前沿资讯",
+                "website": "",
+                "mpUrl": ""
+        },
+        {
+                "id": "nature",
+                "name": "自然系列",
+                "description": "Nature Portfolio期刊资讯",
+                "website": "https://www.nature.com",
+                "mpUrl": ""
+        },
+        {
+                "id": "energist",
+                "name": "能源学人",
+                "description": "能源科学与技术领域资讯",
+                "website": "",
+                "mpUrl": ""
+        },
+        {
+                "id": "materialist",
+                "name": "材料人",
+                "description": "材料科学领域的专业资讯平台",
+                "website": "",
+                "mpUrl": ""
         }
-
-        // 根据所有文章生成首页期刊分类
-        function getHomeJournalCategories() {
-            const journalMap = new Map();
-
-            articles.forEach(article => {
-                const journal = article.journal;
-                journalMap.set(journal, (journalMap.get(journal) || 0) + 1);
-            });
-
-            const categories = [
-                { id: 'all', name: '全部文章', count: articles.length }
-            ];
-
-            // 按照用户要求的顺序添加期刊系列
-            // JACS
-            if (journalMap.has('JACS')) {
-                categories.push({ id: 'JACS', name: 'JACS', count: journalMap.get('JACS') });
-            }
-
-            // Angew
-            if (journalMap.has('Angew')) {
-                categories.push({ id: 'Angew', name: 'Angew', count: journalMap.get('Angew') });
-            }
-
-            // Advanced Materials
-            if (journalMap.has('Advanced Materials') || journalMap.has('Adv. Materials')) {
-                const count = (journalMap.get('Advanced Materials') || 0) + (journalMap.get('Adv. Materials') || 0);
-                categories.push({ id: 'Advanced Materials', name: 'Advanced Materials', count });
-            }
-
-            // Nature系列(包括Nature和Nature子刊,期刊名通常为Nature XXX)
-            const natureJournals = Array.from(journalMap.keys()).filter(j => j.includes('Nature'));
-            if (natureJournals.length > 0) {
-                const natureCount = natureJournals.reduce((sum, j) => sum + journalMap.get(j), 0);
-                categories.push({ id: 'Nature系列', name: 'Nature系列', count: natureCount });
-            }
-
-            // Cell系列(包括Cell, Chem, Joule, Matter)
-            const cellJournals = Array.from(journalMap.keys()).filter(j => ['Cell', 'Chem', 'Joule', 'Matter'].includes(j));
-            if (cellJournals.length > 0) {
-                const cellCount = cellJournals.reduce((sum, j) => sum + journalMap.get(j), 0);
-                categories.push({ id: 'Cell系列', name: 'Cell系列', count: cellCount });
-            }
-
-            // Science系列(包括Science和Science Advances)
-            const scienceJournals = Array.from(journalMap.keys()).filter(j => j.includes('Science'));
-            if (scienceJournals.length > 0) {
-                const scienceCount = scienceJournals.reduce((sum, j) => sum + journalMap.get(j), 0);
-                categories.push({ id: 'Science系列', name: 'Science系列', count: scienceCount });
-            }
-
-            return categories;
+],
+    articles: [
+        {
+                "id": 1,
+                "account": "nature",
+                "title": "\"超级老人\"80岁大脑仍在生成神经元 | 基因或影响生男生女概率 | 干细胞治疗对衰弱症初现潜力 | 自然每周简报",
+                "author": "Nature Portfolio",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-11",
+                "summary": "本周自然简报精选了以下热点科研事件：1. 干细胞治疗衰弱：研究显示，一剂高剂量干细胞注射能帮助70至85岁的衰弱症受试者显著提升耐力。2. 乙酸增强雌性记忆：乙酸能增强雌性小鼠的长期记忆力，但对雄性小鼠无效。3. \"自私\"基因影响性别：研究发现某种基因导致家族中出生的男孩数量约为女孩的两倍。4. \"超级老人\"大脑神经元再生：80岁以上且记忆力卓越的\"超级老人\"，其大脑仍能持续生成高水平的神经元。5. 宝可梦与科学：在宝可梦诞生30周年之际，《自然》回顾了这一虚构世界如何作为灵感源泉。6. 地球构造运动早期证据：对古老锆石晶体的分析表明，地球的构造板块运动早在33亿年前就已经开始。",
+                "link": "https://mp.weixin.qq.com/s/gaNQiPd6fpC01XsDQfC9jw",
+                "readCount": null
+        },
+        {
+                "id": 2,
+                "account": "yanzhichengli",
+                "title": "麻省理工，NATURE！",
+                "author": "Qian Xu, Yichen Nie, Alison E. Wendlandt",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-11",
+                "summary": "本文报道了一种新的分子编辑方法，能够实现常见醇基官能团向邻近位点的迁移，并具有可预测的立体选择性和区域化学结果。该反应在激发态十钨酸盐阴离子催化的可逆氢原子转移条件下进行，通过1,2-酰氧基自由基迁移步骤实现形式上的醇基迁移。这一工具在合成后期阶段的应用可实现醇基官能团的精准重定位。",
+                "link": "https://mp.weixin.qq.com/s/2Z1ymo6mAHDajJ5Oi5tdZg",
+                "readCount": null
+        },
+        {
+                "id": 3,
+                "account": "namiren",
+                "title": "一维COF，南开大学，最新Nature Synthesis！",
+                "author": "Wang, T., Hao, L., Wu, S. et al.",
+                "journal": "Nature Synthesis",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-11",
+                "summary": "本研究针对一维共价有机框架（1D COF）单晶生长困难以及理论模拟与实验现实存在偏差的问题，南开大学张振杰、陈瑶等人开发了一个通用且系统的协议来生长高质量的1D COF晶体。研究通过连续旋转电子衍射技术，清楚地解析了六种具有高孔隙率的1D COFs的晶体结构，并定位了所有非氢原子。",
+                "link": "https://mp.weixin.qq.com/s/OsnO5pM4bRh3oGPeqTuItg",
+                "readCount": null
+        },
+        {
+                "id": 4,
+                "account": "namiren",
+                "title": "JOULE：自推进三相界面发电机，传统火力发电的有益补充！",
+                "author": "程鹏, 邹洋, 李舟",
+                "journal": "Joule",
+                "journalCategory": "Cell Series",
+                "publishDate": "2026-03-11",
+                "summary": "这项研究提出了一种基于亚稳态莱顿弗罗斯特效应的协同能量收集装置。针对火电厂大量流失的低品位废热和水蒸气资源，该装置利用棘轮结构表面液滴的亚稳态莱顿弗罗斯特效应，在液滴和棘轮之间形成了连续的动态固-液-气三相界面。单个30 μL液滴可连续产生超过100个直流脉冲信号，峰值电压达到1.552 V。",
+                "link": "https://mp.weixin.qq.com/s/vjF7HisAScjI5WBTRaL8CQ",
+                "readCount": null
+        },
+        {
+                "id": 5,
+                "account": "cellpress",
+                "title": "成都中医药大学黎胜红/刘燕团队综述丨植物源抗癌药物紫杉醇可持续性生产的合成生物学路线图",
+                "author": "谭春林, 黎胜红, 刘燕",
+                "journal": "Trends in Biotechnology",
+                "journalCategory": "Cell Series",
+                "publishDate": "2026-03-08",
+                "summary": "紫杉醇作为一种从红豆杉中提取的广谱抗癌药物，在乳腺癌、卵巢癌等治疗中具有不可替代的地位。然而，传统生产方式依赖天然红豆杉资源，提取效率极低。为此，成都中医药大学黎胜红/刘燕团队在Trends in Biotechnology发表综述文章，系统总结了紫杉醇生物合成领域的最新研究进展，并提出了基于合成生物学技术的紫杉醇\"从头合成\"技术框架图。",
+                "link": "https://mp.weixin.qq.com/s/GeZHem8yInjracegL2VLxw",
+                "readCount": null
+        },
+        {
+                "id": 6,
+                "account": "weechem",
+                "title": "单硅原子嵌入苯并呋喃骨架：镍催化骨架编辑开辟氧杂硅环构建新路径",
+                "author": "Qiuling Yan, Hongxia Song, Hong Lu, Hao Wei",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-03-11",
+                "summary": "本文报道了一种将苯并呋喃直接扩环转化为氧杂硅环的镍催化新方法。该方法利用二氢硅烷作为硅源，通过C–H键硅化与后续重排相结合的路径，实现了单硅原子插入。该反应对多种取代基具有较好的兼容性，且适用于复杂荧光分子的后期修饰。所得氧杂硅环产物可作为合成平台，进一步转化为氧杂硼环、香豆素、苯并氧杂䓬等多种骨架。",
+                "link": "https://mp.weixin.qq.com/s/GtfMunr8-DGIKorQxZCvrQ",
+                "readCount": null
+        },
+        {
+                "id": 7,
+                "account": "bioart",
+                "title": "CELL | 刘悦晨等利用古DNA揭示现代人类定居远大洋洲新路径",
+                "author": "刘悦晨, Joanne Eakin, Ron Pinhasi, David Reich",
+                "journal": "Cell",
+                "journalCategory": "Cell Series",
+                "publishDate": "2026-03-10",
+                "summary": "该研究通过分析帕劳群岛出土的21例史前人类古基因组，揭示了现代人类定居远大洋洲的新路径。研究发现，帕劳群岛最早的居民就已经具备约60%的东亚成分和40%的新几内亚巴布亚成分。基因混合时间推算显示，南岛语族与巴布亚人群的融合发生在约3900至3200年前，修正了以往认为南岛语族早期扩散未与巴布亚人群混合的\"快车模型\"。",
+                "link": "https://mp.weixin.qq.com/s/YSLmsQfzW28mAKMzfrgnbA",
+                "readCount": null
+        },
+        {
+                "id": 8,
+                "account": "bioart",
+                "title": "Neuron | 孙疏影团队揭示DCPS通过P小体调控RNA降解引发TDP-43介导的神经毒性的新机制",
+                "author": "孙疏影, 叶英枝, 张喆",
+                "journal": "Neuron",
+                "journalCategory": "Cell Series",
+                "publishDate": "2026-03-11",
+                "summary": "该研究通过CRISPRi筛选，首次揭示了清道夫脱帽酶（DCPS）是TDP-43功能缺失（LOF）介导神经毒性的关键调控因子。研究发现，TDP-43 LOF会导致P小体异常增大，进而引起大量神经元功能相关的mRNA与P小体结合增强、半衰期缩短，导致全局性RNA代谢失调。降低DCPS的表达或使用抑制剂可以逆转上述异常。",
+                "link": "https://mp.weixin.qq.com/s/lASCmNBlYGJxLbU7y2kpXw",
+                "readCount": null
+        },
+        {
+                "id": 9,
+                "account": "bioart",
+                "title": "NAT SUSTAIN | 高翔/王元元/杨琛团队创建人工光合工程细胞",
+                "author": "高翔, 王元元, 杨琛, 郭明明, 孔新珂",
+                "journal": "Nature Sustainability",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-10",
+                "summary": "针对天然光合生物效率低、非光合生物无法直接利用光能的问题，中国科学院深圳先进技术研究院高翔团队联合南京大学王元元团队及上海交通大学杨琛团队，开发了一种新型人工光合工程细胞。该研究突破了传统杂合体系中无机材料与微生物界面适配性差及胞内电子传递机制不清晰的瓶颈，实现了光能在细胞内的精准分配与高效利用。其中BDO合成过程中的太阳能到化学品转化效率达到2.83%。",
+                "link": "https://mp.weixin.qq.com/s/pK-Ujlrd-oPjUYbc8vyPjQ",
+                "readCount": null
+        },
+        {
+                "id": 10,
+                "account": "bioart",
+                "title": "Cell | 王霆/傅源/向嵩/余秋景合作揭示NAD水解酶SelO作为线粒体代谢压力\"安全阀门\"维持线粒体稳态",
+                "author": "王霆, 傅源, 向嵩, 余秋景, 贾晓凡, 张腾, 杨晨曦",
+                "journal": "Cell",
+                "journalCategory": "Cell Series",
+                "publishDate": "2026-03-10",
+                "summary": "本研究首次揭示了线粒体基质中的NAD水解酶SelO，阐明了其将NAD水解为NMN和AMP的机制。研究发现，SelO活性随线粒体基质pH升高而增强，通过降解NAD反馈抑制产能代谢，防止pH过高造成的损伤；同时，SelO还能优先抑制脂肪酸氧化（FAO）。在肝脏中，SelO的高表达起到了关键的线粒体保护作用。",
+                "link": "https://mp.weixin.qq.com/s/jZAWEFTH_lJ3ZxmTfk0wDQ",
+                "readCount": null
+        },
+        {
+                "id": 11,
+                "account": "xmol",
+                "title": "【有机】大连化物所陈庆安/郑浩团队JACS：酯转位诱导烯烃的选择性远程双卤化",
+                "author": "刘倡辉, 郑浩, 陈庆安",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-03-11",
+                "summary": "针对烯烃远程选择性双卤化反应领域存在的研究空白，大连化物所陈庆安/郑浩团队开发了一种无需导向基团的膦酰二胺催化策略。该策略利用易得的烯基酯为底物，通过催化剂与NBS/SOCI2协同作用生成活性卤化中间体，诱导酯基发生转位，从而在温和条件下实现了烯烃的1,3-、1,4-和2,3-远程双卤化。克级制备及多样化的衍生化反应进一步证实了该策略在复杂分子组装和药物合成中的应用潜力。",
+                "link": "https://mp.weixin.qq.com/s/lO1ytjmCEaGEzgLSrlETeQ",
+                "readCount": null
+        },
+        {
+                "id": 12,
+                "account": "xmol",
+                "title": "【材料】苏州纳米所王强斌课题组JACS：微米级二维抗体阵列的构建及其HER2信号通路阻断与癌症治疗应用",
+                "author": "杜明明, 王强斌, 姜江, 陈光村",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-03-11",
+                "summary": "中国科学院苏州纳米技术与纳米仿生研究所王强斌研究员团队创新性地设计出RhuA-P双功能蛋白质模块，它能精准地组装成结构规整、高度有序的微米尺度二维蛋白阵列。通过在RhuA-P的C端融合Protein G，二维RhuA-P阵列表面可规则排布Protein G位点。体内外实验证实，高密度排列的TmAb阵列展现出优异的HER2信号阻断能力，能将细胞膜上的HER2受体牢牢\"锁定\"并聚集成\"微米级无活性簇\"。",
+                "link": "https://mp.weixin.qq.com/s/WGCO54V_RtbqoDR-SzhkYA",
+                "readCount": null
+        },
+        {
+                "id": 13,
+                "account": "xmol",
+                "title": "应变离域化策略实现水系储镁负极材料7.5万周次超长循环寿命",
+                "author": "Yu Wu, Shunning Li, Bowen Jin, Yusen Yang, 潘锋, 李舜宁, 段雪, 邵明飞, 靳博文",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-03-07",
+                "summary": "该研究针对水系镁离子电池中因Mg2+/H2O共嵌入导致层状电极结构退化、循环稳定性差的问题，提出了一种应变离域化策略。研究团队通过Ta掺杂MoO3构筑了MoTaO_x层状电极。Ta掺杂引入的氧空位能锚定并部分解离层间H2O分子。最终，MoTaO_x电极在水系镁电解质中实现了约75,000次的超长循环寿命，累积容量高达7.2 kAh g−1。",
+                "link": "https://mp.weixin.qq.com/s/8_HFfYJSCJRBliT2VZgF2w",
+                "readCount": null
+        },
+        {
+                "id": 14,
+                "account": "xmol",
+                "title": "【分析】东南大学张春阳教授团队JACS：同步三维DNA步行驱动双色RNA适配体点亮技术用于乳腺癌中多种环状RNA的无标记和阿摩尔水平精准分析",
+                "author": "王施, 张春阳",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-03-11",
+                "summary": "东南大学张春阳教授团队开发了一种基于同步三维DNA步行驱动的双色RNA适配体点亮策略，用于乳腺癌相关多种环状RNA的无标记、阿摩尔级超灵敏检测。该技术利用特异性捕获探针与挂锁探针识别靶标circRNA，启动双链特异性核酸内切酶驱动的三维DNA行走。该传感器对靶标的检出限分别低至10.96 aM和17.78 aM，在乳腺癌早期诊断准确率达91.1%，晚期达99.4%。",
+                "link": "https://mp.weixin.qq.com/s/a3kX99piUKMOrPwNxFjA6A",
+                "readCount": null
+        },
+        {
+                "id": 15,
+                "account": "xmol",
+                "title": "Nature：如果非要给这份记忆加一个期限，我希望是……一万年",
+                "author": "小希",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-02",
+                "summary": "微软研究院Project Silica团队在Nature期刊发表研究，展示了一种基于飞秒激光直写的玻璃存储技术。该技术通过在玻璃内部刻写微纳尺度的三维结构，实现了数据的可靠写入与读取。在一块边长120 mm、厚2 mm的玻璃中，研究团队构建了301层存储结构，实现了1.59 Gbit mm−3的数据密度和4.8 TB的总容量。实验表明，这种玻璃存储介质具有优异的热稳定性和化学稳定性，数据保存寿命预测可超过一万年。",
+                "link": "https://mp.weixin.qq.com/s/GgN2gPGws9SAdc8mgejisw",
+                "readCount": null
+        },
+        {
+                "id": 16,
+                "account": "yanzhichengli",
+                "title": "大连化物所，Nature Materials！质子穿梭辅助的三重态能量转移",
+                "author": "Zhaolong Wang, Kaifeng Wu",
+                "journal": "Nature Materials",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-12",
+                "summary": "本研究首次发现并命名了一种全新的能量转移机制——质子穿梭辅助的三重态能量转移。研究构建了由 ZnSe/ZnS 核壳量子点和表面锚定的酚-吡啶二元分子受体组成的给体-受体体系，利用超快光谱学手段揭示了激发态相互作用的完整动力学过程。这一发现填补了电子-质子耦合过程图谱中关于三重态能量转移的空白，为提升光子上转换、三重态光催化等领域中三重态形成的效率提供了全新的分子工程策略。",
+                "link": "https://mp.weixin.qq.com/s/gzJmlSfWgyBNPV5AiHEvzg",
+                "readCount": null
+        },
+        {
+                "id": 17,
+                "account": "namiren",
+                "title": "苏州大学，Nature Energy！双面隧道氧化物钝化接触太阳能电池",
+                "author": "K. Gao, J. Mao, Z. Yang, 张晓宏, 杨新波, 杨洁, 张昕宇",
+                "journal": "Nature Energy",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-12",
+                "summary": "高效晶体硅太阳能电池主要依赖于隧道氧化物钝化接触 (TOPCon) 技术，但传统 TOPCon 电池因正面硼扩散发射极导致的复合损失，效率提升受限。本研究通过模拟分析确定了指状接触型（Finger TOPCon）架构具有最高潜力。团队成功展示了全尺寸双面 TOPCon 电池，采用图案化正面 n 型指状 TOPCon 和全背面双层 p 型 TOPCon 接触结构，并通过控制多晶硅结晶度、掺杂浓度及优化银浆，实现了 26.34% 的认证效率。进一步将该底电池与宽带隙钙钛矿顶电池集成，制备出的单片钙钛矿/TOPCon 叠层电池认证效率高达 32.73%。",
+                "link": "https://mp.weixin.qq.com/s/mp_2Y5BrOGGpJkuFmOM-Zg",
+                "readCount": null
+        },
+        {
+                "id": 18,
+                "account": "yanzhichengli",
+                "title": "上海交通大学，NATURE ENERGY！吸附驱动溶解制冷循环",
+                "author": "Si Wu, Kaiyue Tang, Ruzhu Wang, Tingxian Li",
+                "journal": "Nature Energy",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-12",
+                "summary": "本研究提出了一种具有可扩展蓄热功能的吸附驱动溶解制冷循环。理论和实验结果表明，利用中低品位热能（80–150℃）作为驱动能源，该循环能产生比固态热效应更大的绝热温度变化。实验验证了该系统的可行性，数据显示绝热温度变化达37K，最低制冷温度可达-25.4℃。此外，吸附过程可实现热能存储和冷热灵活供应，以适应多样复杂的应用场景。这项研究为利用可再生能源（如太阳能热、工业废热）实现高效制冷和供暖开辟了新途径。",
+                "link": "https://mp.weixin.qq.com/s/DGPwNvo2AZe29Fd97G3lcw",
+                "readCount": null
+        },
+        {
+                "id": 19,
+                "account": "weechem",
+                "title": "对映选择性铜催化烯烃氢羟胺化反应",
+                "author": "James A. Law, Binh Khanh Mai, Hsuan-Min Hung, Tobianna Hendon, Yuyang Dong, Yu Zhang, Peng Liu, Stephen L. Buchwald",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-03-12",
+                "summary": "手性羟胺是一类兼具合成价值与应用潜力的重要含氮化合物，在药物分子构建、功能分子修饰以及进一步转化为手性胺等过程中都具有较高的使用价值。这项研究建立了一种以乙烯基杂芳烃和硝基烷烃为原料、通过铜氢催化实现不对称氢羟胺化的新方法。作者通过系统考察底物适用范围，发现多类乙烯基杂芳烃如苯并噻吩、苯并呋喃、噁唑、噻唑、呋喃和噻吩衍生物都能够顺利参与反应。结合对照实验与DFT计算，证明关键的C–N键形成更倾向于由手性烷基铜中间体直接进攻硝基完成。",
+                "link": "https://mp.weixin.qq.com/s/yU9aB-e0mesr_Aw7TDDmpQ",
+                "readCount": null
+        },
+        {
+                "id": 20,
+                "account": "bioart",
+                "title": "孙勤利等开发快速建立体内免疫耐受新方法",
+                "author": "孙勤利, K. Christopher Garcia, 姜华",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-11",
+                "summary": "本研究针对体内高效建立免疫耐受这一核心难题，开发了一种基于白细胞介素-2（IL-2）和转化生长因子-β（TGF-β）双激动剂的新策略。研究团队设计并构建了一种\"顺式双激动剂\"，将低亲和力TGF-β激动剂与IL-2融合。该分子能够精准将TGF-β信号递送至表达IL-2受体的T细胞，并在同一细胞内协同激活TGF-β-SMAD2/3与IL-2-STAT5信号通路。实验结果显示，该策略在两种抗原模型中，均能安全、快速且高效地诱导抗原特异性外周调节性T细胞的分化，效率最高可达80%。",
+                "link": "https://mp.weixin.qq.com/s/bOdb9S4hj3GAbw2gI1c28Q",
+                "readCount": null
+        },
+        {
+                "id": 21,
+                "account": "bioart",
+                "title": "郭兴团队揭示渐冻症的致病枢纽：PGAM5驱动的线粒体逆行信号",
+                "author": "郭兴, 刘妍, 陈盼盼, 郑志隆, 杨王菊, 陈震, 陶梦丹",
+                "journal": "Neuron",
+                "journalCategory": "Cell Series",
+                "publishDate": "2026-03-11",
+                "summary": "肌萎缩侧索硬化（ALS）即渐冻症，是一种致死性中枢神经系统退行性疾病，目前缺乏有效治疗手段，核心挑战在于其高度的遗传与临床亚型异质性。南京医科大学郭兴团队在Neuron杂志发表研究，首次揭示磷酸甘油酸变位酶5（PGAM5）驱动的线粒体整合应激反应（mtISR）是ALS的共性致病通路。机制研究发现，ALS相关的VCP突变会抑制VCP对PGAM5的降解，导致PGAM5异常积累。PGAM5通过去磷酸化激活线粒体蛋白酶OMA1，进而激活OMA1-DELE1-HRI-eIF2α轴，引发mtISR异常激活。",
+                "link": "https://mp.weixin.qq.com/s/DbQ1kzBoSSvsqPCPIrCKmw",
+                "readCount": null
+        },
+        {
+                "id": 22,
+                "account": "namiren",
+                "title": "Nature Water：一石二鸟，把\"永久污染物\"变成提锂原料！",
+                "author": "程熠, James M. Tour",
+                "journal": "Nature Water",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-13",
+                "summary": "针对新能源技术发展中锂资源需求攀升及环境中PFAS（全氟和多氟烷基物质）难以降解的双重问题，美国莱斯大学James M. Tour院士和程熠博士团队提出了一种创新策略。该研究利用吸附PFAS的活性炭中富含的氟元素作为反应来源，基于闪速焦耳热技术，在降解污染物的同时实现盐湖卤水中的锂分离。通过高温电热处理，PFAS中的有机氟被矿化为无机氟化物，并利用不同金属氟化物在溶解度和沸点上的差异，实现了锂离子的选择性分离与高纯度氟化锂的回收。",
+                "link": "https://mp.weixin.qq.com/s/efZv9vWmXcJLnvK0Jwyt0Q",
+                "readCount": null
+        },
+        {
+                "id": 23,
+                "account": "namiren",
+                "title": "具有电压可控磁序的室温二维多铁金属",
+                "author": "D. Tian, S. Zhong, J. Dong, et al.",
+                "journal": "Nature Materials",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-13",
+                "summary": "本研究报告了一种具有本征室温多铁性的空气稳定双层CrTe2。研究揭示了一种交替的铁磁和反铁磁双层架构，该架构由层间电荷转移自发打破反演对称性并产生可切换的面外铁电极化所驱动。通过扫描探针显微镜，研究确认了利用电场对磁化状态的非易失性控制，实现了电写磁读功能。这一机制根植于层间电荷转移，而非传统的自旋轨道耦合，为工程化层状系统的多铁性奠定了基础。",
+                "link": "https://mp.weixin.qq.com/s/kcynNAP-REpcaYmfqtmAiA",
+                "readCount": null
+        },
+        {
+                "id": 24,
+                "account": "namiren",
+                "title": "AND logic nanoparticle for precision immunotherapy of metastatic cancers",
+                "author": "Ye, S., Chen, S., Basava, V., 高金明",
+                "journal": "Nature Nanotechnology",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-13",
+                "summary": "该研究介绍了一种针对肿瘤微环境（TME）的pH和缺氧双重响应的聚合物纳米颗粒，采用\"与\"门逻辑设计，用于转移性癌症的全身免疫治疗。该纳米颗粒通过pH敏感聚合物和缺氧敏感连接子偶联STING激动剂，确保药物仅在同时暴露于酸性和缺氧条件时才释放。在转移性肺癌和乳腺癌模型中，这种双重刺激响应纳米颗粒展现了优越的治疗疗效，显著减少了转移性肺结节，同时最小化了全身毒性。它能诱导免疫\"冷\"肿瘤转化为\"热\"肿瘤，增加CD8+ T细胞浸润并产生持久的全身抗肿瘤免疫记忆。",
+                "link": "https://mp.weixin.qq.com/s/wSmeDxBcEeAiL_fgoac4wQ",
+                "readCount": null
+        },
+        {
+                "id": 25,
+                "account": "namiren",
+                "title": "JACS：沸石限域，Pt活性提高20倍！",
+                "author": "Tao Wang, Sheng Dai, Tian Ke, Qingju Wang, Kevin Siniard",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-03-13",
+                "summary": "美国橡树岭国家实验室的Tao Wang和Sheng Dai研究团队提出了一种非传统策略，利用具有布朗斯特酸位的超微孔HZSM5沸石与大体积有机碱四丁基氢氧化铵（TBAOH）电解质结合，在强碱性环境中构建了局域酸性微环境。通过尺寸排阻效应，TBA+阳离子被阻挡在沸石孔道外，水分子进入孔内与布朗斯特酸位点相互作用形成稳定的水合质子。基于此设计的HZSM5-炭黑/Pt复合催化剂，在碱性析氢反应（HER）中表现出显著性能提升：过电位降低19-25%，Pt质量活性提高20倍。",
+                "link": "https://mp.weixin.qq.com/s/Q1J_yXrZ2s9ebZ4vHRFslA",
+                "readCount": null
+        },
+        {
+                "id": 26,
+                "account": "namiren",
+                "title": "古老的砷化学开\"新花\"，南京大学最新Nature Chemistry!",
+                "author": "Yandong Wang, Frank Glorius, 史壮志",
+                "journal": "Nature Chemistry",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-13",
+                "summary": "本研究开创性地提出了一种\"矿物到分子\"的合成新范式，利用可见光光氧化还原催化技术，直接将天然砷硫化物矿物（特别是雌黄，As2S3）转化为结构多样的有机砷化合物。该方法成功绕过了传统合成路线中需要使用高毒性、易挥发砷试剂（如AsCl3）的关键瓶颈，在温和条件下实现了有机砷的一步高效构建。研究展示了该策略广泛的底物适用性，能兼容芳基、杂芳基及烷基碘化物，高效合成相应的三级砷或砷硫化物。这一成果不仅为有机砷化学提供了一条安全、可持续的合成路径，更在地球化学与合成化学之间架起了一座桥梁。",
+                "link": "https://mp.weixin.qq.com/s/eww_otCXQ_hxcEjXkEw2JA",
+                "readCount": null
+        },
+        {
+                "id": 27,
+                "account": "energist",
+                "title": "聚合物链段介导的溶剂化调控构筑宽温域、可回收凝胶电解质",
+                "author": "Xinyang Yue, Zheng Liang (上海交通大学梁正团队)",
+                "journal": "Science Advances",
+                "journalCategory": "Science",
+                "publishDate": "2026-03-14",
+                "summary": "针对锂金属电池（LMBs）中传统液态电解质界面稳定性差、工作温域窄及环境可持续性差的问题，上海交通大学梁正团队设计了一种基于动态氟化聚氨酯网络的\"持续氢键\"凝胶聚合物电解质（PHB-GPE）。该材料通过在聚合物骨架中引入氟化端基，诱导形成了能够实现N-H…O=C与N-H…F-C相互作用的动态切换的独特网络结构。这种结构赋予了电解质在低温下的高离子电导率和在高温下的结构稳定性。得益于该网络对锂离子溶剂化结构与界面化学的协同调控，基于F8PU-GPE的锂金属电池在-60至100℃的宽温域内实现了稳定运行，锂对称电池循环寿命超过6000小时，Li||LiFePO4电池在1.0 C倍率下循环2000次后仍保持80.9%的容量。此外，该电解质基于可逆氢键作用，可通过解聚实现高效回收与再利用，为下一代兼具宽温域适应性和高可持续性的锂金属电池提供了新的设计思路。",
+                "link": "https://mp.weixin.qq.com/s/fAFnT2FJASFTr4QIfazn-w",
+                "readCount": null
+        },
+        {
+                "id": 28,
+                "account": "cellpress",
+                "title": "Chem封面：张浩可/张鉴予/唐本忠团队报道基于动态空间共轭实现超高不对称因子的圆偏振发光",
+                "author": "熊祖平, 张浩可, 张鉴予, 唐本忠",
+                "journal": "Chem",
+                "journalCategory": "Cell Series",
+                "publishDate": "2026-03-14",
+                "summary": "浙江大学高分子科学与工程系张浩可、张鉴予团队联合香港中文大学（深圳）唐本忠团队，报道了一种实现强圆偏振发光（CPL）的新策略。该研究基于前期发现的孤对电子间超强空间共轭（TSC），提出通过激发态光致异构形成孤对电子之间的动态n-n空间共轭。这一策略在无需依赖超分子自组装的情况下，实现了小分子体系中的稳定红光CPL（610 nm），并将不对称因子gCPL动态放大至约0.20，刷新了非组装有机小分子体系的纪录。该工作利用飞秒瞬态吸收光谱等手段验证了激发态的动态变化机制，为可编程光学材料和动态手性器件的设计提供了新范式。",
+                "link": "https://mp.weixin.qq.com/s/ipAtJbk_W--oTYdbCEQxzQ",
+                "readCount": null
+        },
+        {
+                "id": 29,
+                "account": "namiren",
+                "title": "Science：揭示\"死锂\"新路径！\"软\"锂不\"软\"！",
+                "author": "楼峻, 高华健 (莱斯大学)",
+                "journal": "Science",
+                "journalCategory": "Science",
+                "publishDate": "2026-03-13",
+                "summary": "该研究由莱斯大学楼峻教授、新加坡科技研究局高华健教授等人合作完成，通过开发无空气原位力学测试协议，对纳米级锂枝晶的力学性能进行了定量测量。研究颠覆了锂是极软金属的传统观点，发现纳米锂枝晶具有高强度（断裂应力>150 MPa）和脆性（延伸率仅3%）的\"又硬又脆\"特性。冷冻电镜和力学建模表明，这一特性源于枝晶的单晶核心结构导致的位错匮乏以及固体电解质界面（SEI）层的约束作用。该发现阐明了枝晶刺穿固态电解质导致短路的物理机制，并为\"死锂\"的形成（脆性碎裂而非电化学溶解）提供了新的解释，对设计更安全的锂金属电池具有重要指导意义。",
+                "link": "https://mp.weixin.qq.com/s/N77rBAmCkRfHZKQQSkaQDg",
+                "readCount": null
+        },
+        {
+                "id": 30,
+                "account": "weechem",
+                "title": "手性膦有机催化开辟硫手性构筑新路径：S(IV)-手性亚磺酰胺的不对称合成",
+                "author": "Chenxiao Qian, Yuyang Chen, Baocheng Wang, Tao Wang, Chaoshen Zhang, Zhenyang Lin, Jianwei Sun",
+                "journal": "Nature Chemistry",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-13",
+                "summary": "本文报道了一种基于新型手性二烷基膦催化剂QianPhos催化的不对称C-S键构筑反应，用于高效合成环状乙烯基亚磺酰胺，实现了对硫中心手性的精准控制。该方法利用MBH加合物与亚磺酰亚胺偶联，无需过渡金属参与，克服了传统方法依赖手性辅基或金属/手性配体协同控制的局限。QianPhos催化剂不仅具有优异的催化性能和对映选择性，还兼具良好的空气稳定性。研究通过机理实验和理论计算阐明了反应路径，证实了该方法的底物适用范围广且易于放大。所得产物可作为合成平台进一步衍生，且在生物活性方向展现出潜在应用价值，为硫手性化学和有机膦催化剂设计提供了新思路。",
+                "link": "https://mp.weixin.qq.com/s/hWDrQNcwAGIio5bqaY4JvQ",
+                "readCount": null
+        },
+        {
+                "id": 31,
+                "account": "yanzhichengli",
+                "title": "基于动态ctDNA监测的鼻咽癌风险适应性治疗策略",
+                "author": "孙颖, 马骏, 周冠群, 李济宾 (中山大学肿瘤防治中心)",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-12",
+                "summary": "该研究由中山大学肿瘤防治中心孙颖、吕佳蔚团队完成，以鼻咽癌作为疾病模型，首次提出并验证了基于动态液体活检的\"风险适应性治疗\"新策略。研究通过利用诱导化疗带来的\"机会窗\"，根据血浆游离EB病毒DNA（cfEBV DNA）的动态清除规律，将患者分为低、中、高三个风险等级。团队结合不同风险组在化疗后呈现的肿瘤微环境重塑特征（如干性肿瘤细胞富集或T细胞耗竭），对中高风险患者\"因地制宜\"地调整后续治疗方案（如加入节拍卡培他滨或PD-1免疫治疗）。结果显示，该策略显著降低了患者的疾病进展或死亡风险（降低59%），3年无失败生存率达89.1%，且具有良好的安全性和卫生经济学效益。该研究入选ASCO口头报告，并被Nature杂志同期以临床简报形式重点报道。",
+                "link": "https://mp.weixin.qq.com/s/_WmQJrDPfXCY49lk_G_G6w",
+                "readCount": null
+        },
+        {
+                "id": 32,
+                "account": "yanzhichengli",
+                "title": "新型非晶有序态，中科大纯理论计算Nature Materials!",
+                "author": "范新宇, 童华, 徐宁, Hajime Tanaka (中国科学技术大学)",
+                "journal": "Nature Materials",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-12",
+                "summary": "中国科学技术大学童华教授、徐宁教授及其合作者在非晶物态理论研究中取得突破。研究通过纯理论计算，成功制备出兼具非晶结构与晶体般完美结构效率和稳定性的全新有序物态——理想非晶体。该团队发展了类似路径积分的关联表征方法，揭示了其非常规的长程空间关联。研究发现，理想非晶体虽然外观像随机排列的液体，但物理性能如同晶体，表现出超稳定性、完美的德拜型声子振动谱、完全仿射的弹性响应以及超均匀性等特性。这项工作证明了有序并不总是需要对称破缺，为设计新型非晶材料提供了全新思路。",
+                "link": "https://mp.weixin.qq.com/s/a5AxFbKAeo5SbR_mO_A2Pw",
+                "readCount": null
+        },
+        {
+                "id": 33,
+                "account": "yanzhichengli",
+                "title": "抗烧结催化剂，Nature Materials！",
+                "author": "Jordan Finzel, Audrey Dannar, E. Charles H. Sykes, Phillip Christopher (美国塔夫茨大学, 加州大学圣巴巴拉分校)",
+                "journal": "Nature Materials",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-11",
+                "summary": "本研究针对多相催化剂中普遍存在的金属纳米颗粒烧结失活问题进行了深入探索。研究发现，在负载于二氧化硅上的铜纳米颗粒中添加极低浓度（约1%）的铂形成稀合金（Pt₁Cu₁₀₀），可显著降低其烧结速率。实验表明，Pt₁Cu₁₀₀纳米颗粒在700℃氢气环境下仍保持微小颗粒尺寸，而纯铜颗粒在500℃即发生严重烧结。通过扫描隧道显微镜（STM）和密度泛函理论（DFT）计算，研究揭示了微量掺杂剂通过\"欠配位位点钉扎效应\"增强了金属键合（主体-掺杂剂d态杂化），从而提高了原子脱离台阶边缘的能垒，抑制了奥斯特瓦尔德熟化过程。这一发现为设计兼具高活性与抗烧结性能的稀释合金催化剂提供了原子尺度的机理框架和理论预测模型。",
+                "link": "https://mp.weixin.qq.com/s/Mrrsnwxgct7zdiA8zK8pDw",
+                "readCount": null
+        },
+        {
+                "id": 34,
+                "account": "xmol",
+                "title": "锗/锡变价催化体系实现C(sp3)−F键的选择性活化与转化",
+                "author": "董召文, 曾小明 (四川大学)",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-03-15",
+                "summary": "针对三氟甲基化合物中C(sp3)−F键活化与高选择性转化这一核心难题，四川大学董召文/曾小明团队成功开发了一种突破性的主族金属催化策略。研究团队利用碳二膦烷配体（CDP）稳定的二价锗和锡试剂作为催化剂，构建了基于E(II)/E(IV) (E = Ge, Sn)氧化还原循环的催化平台。该工作首次实现了主族金属介导的三氟甲基烯烃C(sp3)−F键的高效活化和选择性转化。机理研究表明，反应经历了独特的SN2’氧化加成路径。研究的关键发现在于，通过简单调控反应条件（如溶剂、温度），利用该Sn(II)体系可以从同一三氟甲基烯烃底物出发，高选择性地合成偕二氟烯烃或单氟烯烃。该催化体系展现出优异的底物普适性，为主族金属在模拟过渡金属催化行为及惰性键活化中的应用开辟了新前景。",
+                "link": "https://mp.weixin.qq.com/s/3ClgpueBYPqUfbTPw3IjCA",
+                "readCount": null
+        },
+        {
+                "id": 35,
+                "account": "xmol",
+                "title": "上海有机所实现仿绿小体含氟纳米带高效光催化制氢",
+                "author": "田佳 (中国科学院上海有机化学研究所)",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-03-15",
+                "summary": "本研究报道了中国科学院上海有机化学研究所田佳研究员团队在人工光合组装体研究领域取得的重要进展。研究团队受天然绿小体（一种具有近乎完美光捕获能力的细菌天线系统）启发，设计并构建了一类新型含氟BODIPY纳米带状组装体。通过两亲性含氟BODIPY类似物（PBAF）的一步自组装，在无蛋白骨架条件下构建了超分子纳米带多级光合组装体。全氟烷基链通过氟-氟相互作用驱动了紧密的分子堆积。在无金属催化剂条件下，该系统实现了高效的光催化制氢。基础产氢速率为162.5 μmol•g−1•h−1，在优化条件下最高可达1150 μmol•g−1•h−1，显著优于不含氟组装体和非组装体系。在模拟太阳光（AM1.5G）照射下连续运行30天后，五次24小时循环后的活性保持率超过90%，表现出优异的可回收性。",
+                "link": "https://mp.weixin.qq.com/s/LHeoEvZtpjDAjz-ViTIPXg",
+                "readCount": null
+        },
+        {
+                "id": 36,
+                "account": "xmol",
+                "title": "南开大学曹婵团队在恶性肿瘤靶点HER2跨膜区域研究中取得重要突破",
+                "author": "曹婵, 杨茵, 苏循成 (南开大学)",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-03-15",
+                "summary": "HER2是一种重要的跨膜受体酪氨酸激酶，在乳腺癌等多种肿瘤中高表达。尽管现有的蛋白质晶体学和冷冻电镜技术揭示了HER2胞外域（ECD）和激酶结构域的特征，但关于其跨膜区域（TMR）在近生理膜环境下的构象特征，以及抗体结合如何引发跨膜区动态变化，目前尚缺乏直接的生化和结构证据。该研究结合了多种前沿技术，包括蛋白质定点标记、氟核磁共振（¹⁹F NMR）、脉冲偶极电子顺磁共振（PD-EPR）以及研究团队发展的膜内定点标记磷脂纳米盘构建策略（NMPCR）。研究发现，HER2的胞外域对跨膜-近膜区域具有显著的构象限制作用。抗体结合能够引发近膜区域的显著构象变化，揭示了胞外域及抗体结合对跨膜区域构象的远程调控作用。这项研究为理解HER2信号转导机制提供了新的结构生物学依据，深化了对分子机制的理解，并为开发基于HER2的靶向癌症治疗策略提供了重要的理论支持。",
+                "link": "https://mp.weixin.qq.com/s/b7_PevBvNgo0DhHx0d45HQ",
+                "readCount": null
+        },
+        {
+                "id": 37,
+                "account": "xmol",
+                "title": "生物质衍生双原子催化剂助力5-羟甲基糠醛高效电还原开环制备2,5-己二醇",
+                "author": "陈立锋, 俞书宏, 曾杰 (中国科学技术大学)",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-03-15",
+                "summary": "该研究提出了一种利用生物质衍生的可持续双原子催化剂，实现了5-羟甲基糠醛（HMF）的高效电化学还原开环（ERR）制备2,5-己二醇（HD）。传统的热催化还原开环（TRR）过程需要高温、高压及强腐蚀性硝酸等苛刻条件，且活性低、产率低。研究团队基于Sabatier原理和密度泛函理论（DFT）筛选，发现Cu1Zn1双原子位点具有最佳吸附特性。利用木质纤维素作为原料，通过程序控制热解，将Cu1Zn1双原子锚定在生物质衍生的氮掺杂碳基底上（结构为N2-Cu1-N2-Zn1-N2）。在温和条件下（-0.40 V vs. RHE），该催化剂实现了高达91.6%的HD选择性，法拉第效率达90.2%，HD产率达到190.7 μmol mgcat−1 h−1，较此前报道体系提升了一个数量级。Cu1位点主要催化初期加氢步骤，Zn1位点在关键的开环步骤中展现出极高活性，反应由表面吸附氢（*H）通过协同质子-电子转移（CPET）机制诱导。技术经济性分析（TEA）显示该体系收益率达146%，具有工业化潜力。",
+                "link": "https://mp.weixin.qq.com/s/pJ0A534JG1G7U1LQeXlsWw",
+                "readCount": null
+        },
+        {
+                "id": 38,
+                "account": "energist",
+                "title": "原子点阵列的大规模类比量子模拟",
+                "author": "M.B. Donnelly, Y. Chung, R. Garreis (澳大利亚硅量子计算公司, 新南威尔士大学)",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-14",
+                "summary": "本研究构建了由15,000个亚纳米级精度原子量子点组成的大规模二维阵列，实现了一种用于模拟强相互作用低温物理的全新类比量子模拟平台。通过扫描隧道显微镜（STM）光刻技术，在硅基底上精确构建了二维方形晶格，并实现了对场点相互作用(U)与隧穿参数(t)的独立精确调控。实验成功模拟了由Mott–Hubbard与Anderson机制共同驱动的金属–绝缘体转变（MI transition），并呈现关联电子行为特征。该平台还结合霍尔条器件结构进行了磁输运测量，观测到了电荷输运能隙的尺寸依赖、交换增强效应以及霍尔系数揭示的费米面重构特征。这项精密工程化的平台为在任意二维晶格上研究量子磁性、相互作用拓扑量子态及非常规超导等关键问题提供了新的实验途径。",
+                "link": "https://mp.weixin.qq.com/s/NanRgMNdZCEJMYbd0SKGKw",
+                "readCount": null
+        },
+        {
+                "id": 39,
+                "account": "energist",
+                "title": "卤化物钙钛矿界面动力学的多模态电子显微镜研究",
+                "author": "Caterina Ducati, Tianjun Liu (剑桥大学)",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-14",
+                "summary": "卤化物钙钛矿发光二极管有望实现高效、低成本的光电子器件，但其实际应用仍受限于工作稳定性。本研究通过开发一种多模态原位电子显微镜方法，结合四维扫描透射电子显微镜（4D-STEM）、能量色散X射线光谱和原子分辨率成像，在纳米尺度上直接观察了卤化物钙钛矿发光二极管在工作状态下的结构和化学演化过程。研究发现，器件的退化主要源于传输层界面处的局部应变、离子迁移和电化学反应，导致金属铅、铅富集相及绝缘AlCl₃的形成，而钙钛矿发光层的主体结构相对保持完整。这一发现揭示了界面退化是影响器件稳定性的关键机制。研究结果建立了工作器件中界面应变、离子传输和电化学反应之间的机理联系，并为使用多模态原位偏压显微镜对复杂多层光电子系统进行纳米级降解分析提供了一个广泛适用的框架。",
+                "link": "https://mp.weixin.qq.com/s/NwgJ_2eDvZpXu988BQn9Ow",
+                "readCount": null
+        },
+        {
+                "id": 40,
+                "account": "energist",
+                "title": "前驱体价态门策略实现周期可变纳米晶催化剂的可控制备",
+                "author": "周光敏 (清华大学深圳国际研究生院)",
+                "journal": "Nature Synthesis",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-12",
+                "summary": "过渡金属纳米晶体在催化反应中应用广泛，但现有的单/多晶制备方法依赖对外部实验参数的精确调控，过程复杂且难以控制。清华大学深圳国际研究生院周光敏团队提出了一种\"前驱体价态门\"策略，基于固相成核规律，通过调控固相前驱体中金属离子的价态（单一或混合），简易地制备了一系列具有单晶或多晶结构的过渡金属纳米晶体。利用\"前驱体价态\"这一本征参数替代外部实验参数。单一价态金属源倾向于形成单晶，而混合价态金属源由于晶格扩散能垒高，易钉扎形成不同的成核中心，从而形成多晶。结合DFT理论计算，研究揭示了固相还原和成核过程。高价金属还原促进局部氧空位积累和金属迁移；此外，界面形成能（γ）的计算表明，混合价态前驱体的取向锚定作用较弱，利于形成多晶，而单一价态前驱体锚定作用强，利于形成单晶。以肼氧化反应为例，多晶Co催化剂（PC-Co）表现出比单晶Co催化剂（MC-Co）更优越的催化动力学（塔菲尔斜率低至14mV dec−1）和稳定性。团队组装了肼氧化耦合的新型锌空气电池，电能效率高达193%（传统仅为64%），且稳定运行1200小时。利用回收废旧钴酸锂正极作为钴源，相较商业钴源成本降低了75.2%。",
+                "link": "https://mp.weixin.qq.com/s/anv9a4vEWdx5LbUCTXraWw",
+                "readCount": null
+        },
+        {
+                "id": 41,
+                "account": "energist",
+                "title": "一种面向代工厂的二维全互连微处理器制造策略",
+                "author": "田禾, 任天令 (清华大学集成电路学院)",
+                "journal": "Nature Electronics",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-05",
+                "summary": "硅晶体管特征尺寸逼近物理极限，二维材料（如过渡金属硫族化合物TMDs）因其原子级平整度、无悬挂键及优异的物理性质，成为构建高集成度器件的理想选择。然而，基于转移法的二维材料在大规模电路构建中面临挑战，极易在制造过程中退化，导致信号传输错误和良率下降。清华大学团队与四川大学合作，提出了一种面向代工厂的二维芯片算法驱动的自适应优化制造策略（IDM策略）。该策略涵盖了电路设计、版图设计、二维材料生长与转移、器件加工及芯片测试六个环节的迭代优化。四川大学合作团队实现了2英寸至4英寸二硫化钼（MoS2）材料的连续生长，具有高均匀性和极佳覆盖率。通过算法驱动的自适应优化，动态调整器件参数，提升了晶体管的导通电流、开关比和亚阈值摆幅，实现了较高的平均反相器增益。成功制造了基于二维材料的全互连微处理器。其算术逻辑单元（ALU）、控制单元（CU）及D锁存器良率分别达到96.5%、79.5%和61.5%。与Intel 4004和8008等第一代硅基CPU相比，该二维材料芯片展现出更低的归一化功耗、更佳的多材料系统兼容性以及更高的集成潜力。",
+                "link": "https://mp.weixin.qq.com/s/JiFi9pIJoT5qOPwH7lRFQg",
+                "readCount": null
+        },
+        {
+                "id": 42,
+                "account": "energist",
+                "title": "原子级二氧化钛介电薄膜中的铁电性",
+                "author": "Koushik Das, Sayeef Salahuddin (加州大学伯克利分校)",
+                "journal": "Science",
+                "journalCategory": "Science",
+                "publishDate": "2026-03-05",
+                "summary": "该研究在原子级厚度上成功实现了铁电性，这在下一代电子学中具有重要应用前景。首次在原子级厚度的二氧化钛（TiO₂）介电薄膜中实现了稳定的铁电相。通常作为介电材料的二氧化钛，当厚度降至3纳米以下时，会诱导出这种全新的铁电相。这种铁电性在厚度仅为1纳米（约两个晶胞尺寸）时依然稳定存在，打破了传统铁电材料在纳米尺度的\"尺寸效应\"限制。研究揭示了维度驱动下的结构反演对称性破缺机制。原本具有中心对称性的萤石结构氧化物，通过减薄厚度实现了从非铁电体到可电压切换极化状态的相变。研究基于低温（<400°C）原子层沉积工艺，成功在硅和非晶表面（如SiO₂、非晶碳）上制备出稳定的铁电薄膜。这证明了其与现有半导体工艺的兼容性，为超大规模集成铁电存储器提供了一种兼具工艺兼容性与原子级厚度的新型材料体系。",
+                "link": "https://mp.weixin.qq.com/s/R06bR7sRXNz_313_i-ohKw",
+                "readCount": null
+        },
+        {
+                "id": 43,
+                "account": "energist",
+                "title": "AI+气溶胶，全球首个气溶胶-气象耦合人工智能预报模型AI-GAMFS",
+                "author": "桂柯, 张栩滔, 车慧正, 张小曳 (中国气象科学研究院)",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-07",
+                "summary": "大气气溶胶对地球气候系统至关重要，但其预报复杂且计算成本高。传统物理模型（如CAMS、GEOS-FP）面临巨大的计算负担和对非线性过程刻画不足的挑战。中国气象科学研究院车慧正研究员和张小曳院士团队联合国内外多家机构，在《Nature》上发布了全球首个气溶胶-气象耦合人工智能预报模型\"AI-GAMFS\"。该模型基于42年全球再分析资料训练，集成全局注意力机制等关键技术。能在1分钟内（单张GPU卡仅需39秒）实现全球范围5天、逐3小时的高分辨率（50公里）业务化预报。预报变量涵盖沙尘、硫酸盐、黑碳、有机碳、海盐等关键组分的光学特性及地面浓度。在全球AOD（气溶胶光学厚度）及沙尘预报上，性能优于CAMS及多个国际先进区域沙尘物理模型。与GEOS-FP相比，其全球AOD预报误差更低，且对美国和中国近地面关键气溶胶组分浓度的预报更精准（误差显著降低）。该模型已接入\"MAZU-Cloud\"平台，并在中央气象台及全国10余个省（区）气象部门落地应用，于近期通过中国气象局天气预报科技成果中试基地的业务准入。",
+                "link": "https://mp.weixin.qq.com/s/IoYBdViRJSBKMTToVhentQ",
+                "readCount": null
+        },
+        {
+                "id": 44,
+                "account": "energist",
+                "title": "块状六方金刚石",
+                "author": "单崇新, 程少博, 杨西贵 (郑州大学)",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-05",
+                "summary": "六方金刚石（HD，又称蓝丝黛尔石）理论硬度超越立方金刚石（CD），且是陨石撞击的矿物学标志。但由于立方金刚石（CD）在热力学上更稳定，天然和合成产物中HD通常仅以微量存在，且易与含堆垛层错的CD混淆，导致其物相真实性长期存在争议，物理特性也因缺乏纯相样本而难以深入研究。研究团队报道了在高温下从沿c轴压缩的高度取向热解石墨（HOPG）合成了毫米大小的相纯六方金刚石（HD）。结合先进结构表征和理论模拟，确认了HD的物相结构，阐明了石墨的转化途径。块状HD的硬度略高于CD，并具有较高的热稳定性。研究解决了关于HD作为离散碳相存在的长期争议，为石墨到金刚石相变提供了新见解，并为HD在先进技术应用中的未来研究铺平了道路。",
+                "link": "https://mp.weixin.qq.com/s/SmvxWrtxCSq0hRzRuRxTJQ",
+                "readCount": null
+        },
+        {
+                "id": 45,
+                "account": "namiren",
+                "title": "Edward H. Sargent院士团队，又发Nature Synthesis！",
+                "author": "Yuanjun Chen, Peiying Wang, Yu Mao, Guangcan Su",
+                "journal": "Nature Synthesis",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-15",
+                "summary": "本研究深入剖析了在液态进料的反应性捕获碳酸盐电解系统中，利用捕获后CO₂液体直接电合成乙烯所面临的能效瓶颈。研究发现，传统铜催化剂在该环境下，由于亲水性界面和受限的原位CO₂生成速率，导致催化剂表面CO覆盖度不足，严重阻碍了关键的C-C偶联步骤。为破解这一难题，研究者设计并合成了一种BiCu稀合金催化剂，该催化剂能够在不依赖高CO覆盖度的前提下，开启一条非对称的CO-CHO偶联新路径，该路径能垒显著低于传统对称的CO-CO偶联路径。通过进一步与镍单原子（Ni-SA）催化剂构建串联电极，系统实现了51% ± 2%的乙烯法拉第效率、66 wt% ± 2%的高浓度乙烯产物流以及20%的端到端能量效率（在200 mA cm⁻²电流密度下），其能量效率是此前最先进电化学反应性捕获乙烯生产体系的两倍。生命周期评估显示，结合风电，该工艺可实现负碳排放（-2.86 t CO₂e t⁻¹乙烯），为利用捕获的CO₂直接生产高值化学品开辟了高效、低碳的新路径。",
+                "link": "https://mp.weixin.qq.com/s/2rln7htR2DRBeE1XgiD1yw",
+                "readCount": null
+        },
+        {
+                "id": 46,
+                "account": "namiren",
+                "title": "NATURE SYNTHESIS：尿素电合成！",
+                "author": "Lei Wang, Pengfei Ou (新加坡国立大学)",
+                "journal": "Nature Synthesis",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-15",
+                "summary": "针对尿素电合成在工业级高电流密度下选择性骤降的难题，本研究提出了一种\"低CO₂还原活性、高硝酸盐还原活性\"的催化剂设计原则。研究团队开发了镉修饰的Fe₂O₃（Cd–Fe₂O₃）催化剂复合材料，通过Cd掺杂改变电子结构并稳定Fe³⁺物种，显著削弱了CO吸附，从而有效抑制了析氢副反应。实验结果表明，该催化剂在-0.5 V（vs. RHE）的电位下，实现了约140 mA cm⁻²的高尿素分电流密度，法拉第效率达到52%，且能稳定运行超过100小时。该工作通过动力学分析、原位光谱和DFT计算揭示了反应机理，为实现高效、稳定的工业化尿素电合成提供了新方案。",
+                "link": "https://mp.weixin.qq.com/s/fJwNPiNDe2v9j7ikFPVibw",
+                "readCount": null
+        },
+        {
+                "id": 47,
+                "account": "namiren",
+                "title": "JACS：Pd纳米颗粒尺寸与形貌对电化学氢吸储能力的影响机制",
+                "author": "Arnaud Viola, Ivan Saldan, Sousa Javan Nikkhah, Muhammad Umer, Apinya Ngopiala, Matthias Vandichel, Jan M. Macak, Frédéric Maillard",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-03-15",
+                "summary": "爱尔兰利莫瑞克大学的Matthias Vandichel、捷克帕尔杜比采大学的Jan M. Macak和法国格勒诺布尔阿尔卑斯大学的Frédéric Maillard等研究团队系统研究了碳载钯纳米立方体（Pd NCs）的尺寸与形貌对其电化学氢吸储能力及氢捕获行为的影响。通过调控合成条件制备了尺寸为5.4至20.2 nm的Pd NCs，结合电化学测量、同位位置透射电镜（IL-TEM）与分子动力学（MD）模拟，揭示了H:Pd摩尔比随颗粒尺寸增大而增加（0.55→0.68），且氢捕获效应随尺寸减小而增强（13.9%→5.1%）的规律。研究表明，氢吸储能力与捕获程度主要受表面体积比主导，而非颗粒形貌，并通过模拟发现氢原子优先占据八面体间隙位，小尺寸颗粒中四面体位点增多是导致氢捕获增强的关键。",
+                "link": "https://mp.weixin.qq.com/s/jX1mdV8qL1uxgVmP_VtA6Q",
+                "readCount": null
+        },
+        {
+                "id": 48,
+                "account": "namiren",
+                "title": "Metal hybridization in dilute-alloy catalysts promotes sintering resistance",
+                "author": "Jordan Finzel, Audrey Dannar, E. Charles H. Sykes, Phillip Christopher",
+                "journal": "Nature Materials",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-15",
+                "summary": "本研究揭示了稀释合金化（仅添加1 at.%的Pt到Cu中）显著提升铜纳米颗粒抗烧结性能的微观机制，破解了多相催化中活性金属纳米颗粒易烧结失活的长期难题。研究发现，Pt原子通过局部稳定Cu表面低配位台阶位原子，从根本上抑制了导致纳米颗粒粗化的奥斯特瓦尔德熟化过程。结合原位X射线吸收谱、扫描隧道显微镜和密度泛函理论计算，作者证实Pt掺杂使Cu/SiO₂催化剂在H₂气氛中的抗烧结温度从500℃提升至700℃以上。进一步的理论筛选揭示，掺杂原子与宿主金属的d轨道杂化程度是预测稀释合金抗烧结性能的关键描述符，为设计兼具高活性、高选择性和高稳定性的新一代催化剂提供了普适性理论框架。",
+                "link": "https://mp.weixin.qq.com/s/y5Aetgrhi_GGRDOyoZySiw",
+                "readCount": null
+        },
+        {
+                "id": 49,
+                "account": "namiren",
+                "title": "Nature Energy：界面调控策略，刷新效率记录！",
+                "author": "Cui, C., Li, Y., Wei, H. (中科院青岛生物能源与过程研究所崔光磊、邵志鹏和河南大学武四新、寇东星)",
+                "journal": "Nature Energy",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-15",
+                "summary": "针对锌黄锡矿 Cu₂ZnSn(S,Se)₄ (CZTSSe) 太阳能电池中因阳离子（Zn²⁺ 和 Sn⁴⁺）迁移速率不匹配导致的深能级缺陷及开路电压损耗问题，本研究报道了一种 Li₂SnS₃ 中间层策略。该策略通过修饰阳离子迁移路径，将 Zn²⁺/Sn⁴⁺ 的迁移能垒差从 0.41 eV 降低至 0.21 eV，有效平衡了离子迁移，促进了大尺寸、高结晶度晶粒的形成。实验结果表明，引入 Li₂SnS₃ 中间层后，器件的深能级缺陷显著减少，非辐射复合得到抑制。最终，器件的光电转换效率从 13.86% 提高到 15.45%（认证效率为 15.04%），在 1.10 eV 带隙下，开路电压达到 602 mV，刷新了该类电池的效率记录。",
+                "link": "https://mp.weixin.qq.com/s/QAs7fDQyP3SOmCDOEN4dOg",
+                "readCount": null
+        },
+        {
+                "id": 50,
+                "account": "namiren",
+                "title": "Quantum-sensing-enabled in situ imaging of free radicals in chemical reactions",
+                "author": "Yibo Yang, Zengrong Zhou, Jiandong Feng",
+                "journal": "Nature Catalysis",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-15",
+                "summary": "本研究开发了一种名为量子传感化学原位显微镜（QCOM）的革命性成像技术。该技术利用金刚石中的氮-空位（NV）色心作为原子尺度的量子传感器，通过测量纵向弛豫时间（T1）将自由基产生的微弱磁噪声转化为成像衬度，实现了在原位、实时、定量的条件下观察化学反应中的自由基。QCOM技术具有约312 nm的空间分辨率、10-240 ms的时间分辨率和单像素约4个自由基的检测极限。研究团队利用该技术观察了TiO₂光催化水解反应，意外发现了催化剂颗粒内部存在\"时空顺序激活效应\"，即活性位点并非同时启动，而是像多米诺骨牌一样被邻近位点依次激活。此外，结合双电子-电子共振（DEER）原位自旋谱学，研究团队还成功识别了不同溶剂中生成的自由基物种（如羟基自由基 vs 超氧自由基），为反应机理提供了分子层面的证据，颠覆了对光催化反应动力学的传统认知。",
+                "link": "https://mp.weixin.qq.com/s/7R-xiCF0I64dLOhUCnCWBw",
+                "readCount": null
+        },
+        {
+                "id": 51,
+                "account": "namiren",
+                "title": "Nature Synthesis：光诱导氮溢流，促进AlFe双位点催化剂高效合成氨！",
+                "author": "李文倩, 陈伊健, 陆小军 (上海交通大学), 叶天南, 章辉, 鲁杨帆",
+                "journal": "Nature Synthesis",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-15",
+                "summary": "针对传统合成氨工业高能耗与高碳排的问题，上海交通大学叶天南团队与上海光源、重庆大学合作，开发了一种AlFe纳米合金催化剂用于温和条件下高效光催化合成氨。该工作通过构筑Fe-Al双活性位点，形成强弱N吸附对：Fe位点负责吸附并活化N₂分子，解离后的氮物种通过光诱导氮溢流方式迁移至Al位点，形成弱的Al-N相互作用，从而促进后续加氢及产物NH₃分子的脱附。这一设计成功打破了传统催化剂中活化与脱附之间的制约关系。实验结果显示，在4.28 W cm–2光照强度和常压下，该催化剂合成氨速率高达8.6 mmol g–1 h–1，远超商业Fe基催化剂和其他报道的催化剂，且表现出优异的稳定性。",
+                "link": "https://mp.weixin.qq.com/s/ArnOmoUvYckBC-8aCM-Tkg",
+                "readCount": null
+        },
+        {
+                "id": 52,
+                "account": "namiren",
+                "title": "SCIENCE：实用！手性大环化合物合成",
+                "author": "Helma Wennemers (苏黎世联邦理工学院)",
+                "journal": "Science",
+                "journalCategory": "Science",
+                "publishDate": "2026-03-15",
+                "summary": "手性大环化合物（12元环以上）在药物研发和材料科学中具有重要价值，但其合成长期面临环化效率与选择性博弈、立体中心构建难以精准受控两大挑战。针对这一问题，苏黎世联邦理工学院Helma Wennemers等人报道了一种催化剂控制的立体选择性头对尾大环化方法。该研究开发了双功能肽催化剂，通过模板效应将线性前体的末端官能团拉近并固定，从而使分子内反应优于分子间反应。该方法不仅高效合成了多种12至18元的手性大环内酯和内酰胺，收率和选择性极高（最高97%收率，>20:1 dr，99% ee），更实现了催化剂对立体化学的绝对主导权——即使底物本身带有手性，催化剂也能\"覆盖\"原有手性，通过更换催化剂手性即可灵活获取不同构型的异构体。研究团队成功利用该方法合成了天然产物robotnikinin的核心骨架，证明了其在复杂分子合成、药物修饰及生物偶联领域的巨大应用潜力。",
+                "link": "https://mp.weixin.qq.com/s/g9isyl3sLhaPMGfjVDD-_A",
+                "readCount": null
+        },
+        {
+                "id": 53,
+                "account": "namiren",
+                "title": "点击锁定策略实现具有工业兼容性的单原子催化剂自动化合成",
+                "author": "Weibin Chen, Long Feng, Bingbing Ma (北京大学张锦、邹如强; MIT李巨; 新加坡国立大学吕炯; 上海交通大学汪圣尧)",
+                "journal": "Nature Synthesis",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-15",
+                "summary": "本研究针对单原子催化剂（SACs）面临的\"难稳定、难放大、难自动化\"关键瓶颈，提出了一种由机器人技术驱动的\"点击锁定\"策略。研究团队通过引入点击辅助剂，利用电子-阳离子相互作用等驱动力，将单原子稳定地锚定于载体表面，构建出点击单原子催化剂。该工作构建了机器人驱动的高通量合成与性能评价体系，实现了粉体及电极负载型催化剂的自动化制备与筛选。此外，该策略在 100 L 反应器中成功完成了 10 kg 级别的宏量制备，并在 CO 氧化、NH₃-SCR 脱硝、CO₂ 加氢及 C₄ 馏分加氢等工业相关反应中展现出优异的活性和稳定性。这一成果不仅解决了单原子催化剂规模化制备的难题，也为 AI 辅助的材料发现奠定了基础。",
+                "link": "https://mp.weixin.qq.com/s/TIjhU70DVB8bVg8nID8z8w",
+                "readCount": null
+        },
+        {
+                "id": 54,
+                "account": "namiren",
+                "title": "北京大学AM：天然气高效益产氢新方法！",
+                "author": "赵孟泽, 张志斌, 王悰, 冯鹏, 刘开辉, 王恩哥, 李致朋, 马丁",
+                "journal": "Advanced Materials",
+                "journalCategory": "Advanced Materials",
+                "publishDate": "2026-03-15",
+                "summary": "在全球变暖与减排压力加剧的背景下，实现天然气清洁低碳化利用至关重要。针对天然气热裂解制氢体系中氢气生成与碳沉积高度耦合导致催化剂失活及碳产物附加值低的问题，本研究提出了一种\"镍原子晶格分离\"的新思路。该设计利用由镍泡沫-镍箔组成的内外管分离结构，使天然气在管内高效裂解产生氢气和活性碳原子，碳原子随后溶入镍箔并穿过晶格向外扩散，在外侧外延生长为高品质晶体石墨。该方法成功实现了能量（氢）与物质（碳）转化路径的解耦，在连续制备高纯度富氢气体的同时，协同制备了高附加值的晶体石墨。实验结果显示，该体系甲烷转化率超过99%，连续稳定运行超过300小时，且核心结构可循环使用5次以上。此外，研究将该系统与固体氧化物燃料电池（SOFC）集成，实现了从\"清洁制氢\"到\"高效用氢\"的完整链路，最高功率密度达1.0 W·cm⁻²，发电效率约57%。该技术为化石能源的高效、低碳利用提供了具有工程潜力的新方案。",
+                "link": "https://mp.weixin.qq.com/s/Wr6WZFF51ouQUCmblXu5Sw",
+                "readCount": null
+        },
+        {
+                "id": 55,
+                "account": "namiren",
+                "title": "攻克行业难题！武汉大学最新Science！",
+                "author": "YUANHANG YANG, 王植平团队",
+                "journal": "Science",
+                "journalCategory": "Science",
+                "publishDate": "2026-03-15",
+                "summary": "钙钛矿太阳能电池（PSCs）的发展受限于脆弱的空穴传输界面和热稳定性不足的电子传输界面。武汉大学王植平团队利用原子层沉积（ALD）技术沉积了氧化铪（HfOx）夹层以稳定这些分子界面。在空穴端（NiOx/SAM），富含羟基且具有路易斯酸性的n-HfOx层促进了磷酸基团的三齿配位，增强了自组装单分子层（SAM）的保留能力和热耐久性。在电子端（钙钛矿/C60），p-HfOx层通过Hf···F相互作用锚定钝化分子3F-PEAI，并作为阻挡碘离子和银离子迁移的扩散屏障。该研究成功将器件光电转换效率提升至27.1%（认证效率26.6%），并实现了在85°C环境空气及1个标准太阳光照下运行约5000小时后仍保持初始效率90%以上的优异稳定性，解决了钙钛矿太阳能电池效率与稳定性难以协同提升的行业难题。",
+                "link": "https://mp.weixin.qq.com/s/-ldUTwI3U5W6lts-fmZ_kA",
+                "readCount": null
+        },
+        {
+                "id": 56,
+                "account": "namiren",
+                "title": "石墨烯埃米孔化身\"气体二极管\"，限域输运领域实现突破！",
+                "author": "段弘伟, 杨婧, 梁年杰, 陈笑博, 王路达, 宋柏, 刘开辉",
+                "journal": "Nature Materials",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-15",
+                "summary": "北京大学王路达教授和宋柏教授合作团队在限域输运领域取得突破，设计出一种不对称（Janus）埃米孔结构，并将其用作\"气体二极管\"。团队结合精密实验观测与高通量理论计算，首次揭示并系统阐释了多种典型气体分子（不同组分、形状、大小）跨石墨烯埃米孔的整流现象。研究利用原子级负反馈控制的臭氧刻蚀系统在石墨烯上制备了具有不对称含氧官能团分布的埃米孔。实验结果表明，该结构对氧气和氮气等气体呈现出显著的整流现象，整流比可高达两个数量级。通过高通量DFT计算和AIMD模拟，团队发现非局域范德华相互作用对能垒差异起决定性作用，且气体分子的极化率对于实现整流输运至关重要。",
+                "link": "https://mp.weixin.qq.com/s/gRUrc5UDSaglh7WE4UiqvA",
+                "readCount": null
+        },
+        {
+                "id": 57,
+                "account": "yanzhichengli",
+                "title": "香港城市大学，Nature Energy！",
+                "author": "Xingyu Wang, Qi Fan, Wei Wang, Xiongyi Liang",
+                "journal": "Nature Energy",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-16",
+                "summary": "本研究报道了通过层状正极材料（层状锰酸钠，NMO）实现可逆溶剂插层，从而获得超快倍率性能。实验表明，基于甘醇二甲醚的溶剂分子可嵌入该正极材料，在高压条件下发挥扩散促进剂和亚纳米支柱作用。原位超快X射线吸收光谱结合模拟计算证实，溶剂插层能显著提升正极氧化还原动力学性能。借助该机制，该正极材料在10A/g电流密度下（30秒内充电）实现77.4mAh/g的容量，在2A/g电流密度下（约3.6分钟充电）循环500次后容量保持率超过70%。此外，研究还展示了全溶剂辅助钠离子电池（NMO||G2||石墨）的可行性。层状氧化物中溶剂插层机制的成功实现，为开发下一代超快充电钠离子电池开辟了新途径。",
+                "link": "https://mp.weixin.qq.com/s/d22ytY1nll1IE6ONzFp3Cg",
+                "readCount": null
+        },
+        {
+                "id": 58,
+                "account": "yanzhichengli",
+                "title": "福州大学，NATURE CATALYSIS!",
+                "author": "Baoying Yang, Kunlong Liu",
+                "journal": "Nature Catalysis",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-16",
+                "summary": "氢化反应在工业生产中具有重要意义，但负载型钯纳米催化剂上的化学选择性氢化（如炔烃半氢化）仍面临挑战，因为底物容易在钯表面发生过度氢化。本文研究表明，光照射可直接诱导位点分离，在半导体支撑的钯纳米催化剂上实现溢流氢化，且不损害催化活性。在光照条件下，积累在钯纳米颗粒上的光生电子抑制了不饱和底物的吸附，确保钯位点专一促进氢分子解离；而留在载体上的光生空穴则增强底物吸附和活性氢迁移。该现象在 Pd/SrTiO3、Pd/ZnO、Pd/PCN 和 Ru/MnOx 等多个催化体系中得到验证，证明光增强溢流氢化效应是可推广的界面现象，为提高溢流氢化效率提供了普适性策略。",
+                "link": "https://mp.weixin.qq.com/s/QkQW8ai1lh63EQ2vtQekSw",
+                "readCount": null
+        },
+        {
+                "id": 59,
+                "account": "yanzhichengli",
+                "title": "哥伦比亚大学，Nature！",
+                "author": "Itai Keren, Tatiana A. Webb, Shuai Zhang",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-16",
+                "summary": "本研究聚焦于通过工程化电磁环境来改变超导体的基态性质。研究团队构建了六方氮化硼与分子超导体 κ-(BEDT-TTF)₂Cu[N(CN)₂]Br 的范德华异质结，利用六方氮化硼的双曲声子模与超导体中C=C伸缩振动模的共振耦合，实现了在无需外部光激发的条件下（即\"暗腔\"环境）对界面处超流密度的显著抑制。通过磁力显微镜（MFM）直接观测到了这一效应，并结合散射型近场光学显微镜和第一性原理分子朗之万动力学模拟，揭示了微观机制：六方氮化硼双曲模的零点涨落通过面外电场分量与分子振动耦合，从而改变了超导电性。非共振对照实验排除了电荷转移和应变等其他因素的干扰，证实了共振耦合的关键作用。这项工作为利用\"暗腔\"设计电子基态性质提供了新的实验范式。",
+                "link": "https://mp.weixin.qq.com/s/kWV1ZShpVYcAKZx_EEfxpg",
+                "readCount": null
+        },
+        {
+                "id": 60,
+                "account": "yanzhichengli",
+                "title": "通过暗态双激子加载实现量子点珀塞尔增强的双光子发射",
+                "author": "吴邦, 袁之良",
+                "journal": "Nature Materials",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-16",
+                "summary": "北京量子信息科学研究院袁之良团队与中国科学院半导体研究所牛智川课题组合作，首次实现了基于单个量子点的高效双光子发射。该研究制备了一种基于量子点-微柱腔耦合体系的高效率、高纯度双光子发射器。器件利用创新的暗态双激子激发路径，结合腔增强的简并双激子-激子级联辐射，大幅提升了双光子发射的效率与纯度。实验结果显示，该光源表现出极强的双光子聚束效应，98.3%的发射光子以光子对形式出现，双光子发射效率达到29.9%。该成果为发展实用化的按需固态双光子源奠定了重要基础，有望在量子计量、量子成像等前沿领域发挥关键作用。",
+                "link": "https://mp.weixin.qq.com/s/c0HDAF91UyNj5jDe2v3yiw",
+                "readCount": null
+        },
+        {
+                "id": 61,
+                "account": "yanzhichengli",
+                "title": "哥伦比亚大学，Nature！La₃Ni₂O₇镍酸盐超导性研究",
+                "author": "S. V. Mandyam, C. R. Laumann, N. Y. Yao",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-16",
+                "summary": "镍酸盐材料在高温超导研究中扮演着重要角色，近期发现化学计量镍酸盐（如 La₃Ni₂O₇）在高压下可实现高达临界温度（Tc）的超导现象，但超导态的形成机制及样品表现出的微弱抗磁响应（不均匀的\"丝状\"超导态）尚不明确。本研究采用宽场高压光学探测磁共振光谱技术，利用金刚石压砧中嵌入的氮空位（NV）量子传感器，对原位生长的 La₃Ni₂O₇ 样品进行了局部抗磁响应成像。研究发现，样品在微米尺度上存在显著的超导响应不均匀性。通过将抗磁迈斯纳响应与原位成像的局部张量应力环境及化学计量组成进行空间关联分析，文章揭示了抑制和增强超导性的主导机制：超导性首先出现在高法向应力区域，且对化学计量比（La:Ni = 3:2）高度敏感。该技术既能提供宏观视图，又具备局部灵敏度，成功构建了多参数相图，为理解镍酸盐超导机制及材料异质性提供了新视角。",
+                "link": "https://mp.weixin.qq.com/s/8oGIKqivigNFvhZdjxgAdw",
+                "readCount": null
+        },
+        {
+                "id": 62,
+                "account": "yanzhichengli",
+                "title": "清华大学，Nature！手性反铁磁体Mn₃Sn电学翻转研究",
+                "author": "Zhiyuan Zhou, Cheng Song",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-16",
+                "summary": "本研究通过精心设计的Mn₃Sn同质结，成功解决了手性反铁磁体在零磁场下难以实现完全电学翻转的难题。研究利用底层单晶Mn₃Sn产生的面外自旋极化，结合顶层多晶Mn₃Sn倾斜的Kagome几何结构，将反铁磁型驱动力与铁磁型驱动力有机结合。这一机制不仅首次实现了零磁场下100%的完全磁序翻转，还创纪录地降低了翻转电流密度和功耗（比以往构型低一个数量级）。此外，该研究还展示了八极矩可编程的翻转手性调控以及对外加磁场的强鲁棒性，为开发基于全反铁磁体的高密度、高速度、低功耗下一代存储器奠定了基础。",
+                "link": "https://mp.weixin.qq.com/s/iU9V8g2Loviz2cbnYJIfvw",
+                "readCount": null
+        },
+        {
+                "id": 63,
+                "account": "yanzhichengli",
+                "title": "增材制造Nature：打破无机结构与生命功能间传统界限！",
+                "author": "陈安南, 王子秦",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-16",
+                "summary": "本研究由香港城市大学吕坚院士团队联合香港理工大学与华中科技大学的研究人员共同完成，首次揭示了海胆棘刺具有卓越的机电感知功能。研究发现，海胆棘刺这种主要由碳酸钙陶瓷构成的无机生物矿化结构，凭借其沿[001]轴向的梯度多孔结构（孔径从根部至尖端逐渐减小，孔隙率增加），在液体流经表面时能产生非均匀的流动电势，从而形成可测量的电压信号。受此启发，团队利用仿生设计与高精度3D打印技术，成功制备出具有类似梯度多孔结构的陶瓷与高分子仿生材料。实验表明，人造结构成功复现了机电感知效应，电压输出比无梯度结构提升约3倍，响应振幅提高约8倍。该研究打破了无机结构与生命功能间的传统界限，为开发下一代航空航天、生物医疗等领域的结构-功能一体化智能器件奠定了基础。",
+                "link": "https://mp.weixin.qq.com/s/C2VGGy_vDAWEuqrrlfoLFQ",
+                "readCount": null
+        },
+        {
+                "id": 64,
+                "account": "yanzhichengli",
+                "title": "生命手性晶体微观对称破缺驱动宏观双稳态",
+                "author": "Yu-Chen Chao, Shreyas Gokhale, Lisa Lin, Alasdair Hastewell, Nikta Fakhri",
+                "journal": "Nature Physics",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-16",
+                "summary": "本研究利用海星胚胎自组装形成的生命手性晶体作为模型系统，探讨了非互易活性物质中微观个体行为与宏观集体动力学之间的联系。研究发现，胚胎微观层面的\"直立自旋\"与\"倾斜进动\"两种束缚态，导致了宏观晶体呈现出\"涨落态\"和\"振荡态\"的双稳态特性。通过动态模式分解（DMD）技术，研究者在振荡态中观测到了与进动相关的、频率不随波矢变化的\"光学支\"振动模式，这是平衡态固体中不存在的非平衡涌现现象。此外，研究建立了非线性连续介质模型，并通过实验证实了微观旋转与宏观变形的耦合机制。更重要的是，研究展示了通过特定速率的机械压缩，可以可控地将晶体从涨落态激发至振荡态，并利用熵产率量化了该状态下持续的位移循环做功能力。这一发现揭示了活性物质将内部能量转化为宏观机械功的潜力，为设计新型自适应智能材料和能量转换系统提供了物理基础。",
+                "link": "https://mp.weixin.qq.com/s/LjifGuzsNNvpMywr9HB1yg",
+                "readCount": null
+        },
+        {
+                "id": 65,
+                "account": "yanzhichengli",
+                "title": "悉尼科技大学，Nature Materials！光学可寻址自旋量子发射体",
+                "author": "Benjamin Whitefield, Helen Zhi Jie Zeng, Igor Aharonovich, Mehran Kianinia",
+                "journal": "Nature Materials",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-16",
+                "summary": "本研究报道了一种通过对碳掺杂六方氮化硼薄片进行单步氧气氛围热处理的工艺，成功制备出高密度、窄带且具有光学活性自旋跃迁的量子发射器。主要成果如下：1. 高密度与高活性：该工艺制备出的发射体密度较先前报道结果提高近一个数量级，其中超过25%的发射器在室温下展现出清晰的光学自旋读出特征（光探测磁共振活性）。2. 自旋特性：生成的自旋缺陷复合体同时表现出S=1和S=1/2跃迁特征，这一现象可通过电荷从强耦合自旋对向弱耦合自旋对的转移机制进行解释。3. 理论模型：研究提出了包含光学活性施主-受主对（如 CBCN–DAP-X）与邻近暗态缺陷的模型，阐释了发射体在可见光范围内零声子线的变化特性及自旋读出原理。4. 应用前景：该研究为在层状材料中实现单自旋-光子界面铺平了道路，有望推动量子传感、量子网络及信息处理领域的应用发展。",
+                "link": "https://mp.weixin.qq.com/s/7uMpcamiP0CCBCuYjxaJtg",
+                "readCount": null
+        },
+        {
+                "id": 66,
+                "account": "yanzhichengli",
+                "title": "上海交通大学，Nature Sustainability!溴回收催化策略",
+                "author": "Qingming Song, Bofan Cui, Zhenming Xu",
+                "journal": "Nature Sustainability",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-16",
+                "summary": "溴是一种关键资源，广泛应用于阻燃剂等领域，但含溴废弃物的处理（如焚烧或填埋）会释放有毒污染物，造成环境风险。本文提出了一种利用廉价的Cu(I)、简单配体和氢氧化物在DMSO-H₂O溶剂中实现的催化策略（乌尔曼型反应）。该策略能够在温和条件（≤120℃）下将废弃物中存在的有机溴化物选择性转化为可再生的溴化物，产率超过95%。通过后续的无机化-蒸发-氧化过程，可产生适用于Br₂生产的富溴化物溶液，并回收化学结构保持不变的脱溴固体。机理研究揭示了一个涵盖多种活化途径的完全脱溴框架。这项工作突破了有机溴向溴离子转化的瓶颈，为溴回收提供了一种可行的方法，有助于构建可持续的溴生命周期，促进人为溴流的循环。",
+                "link": "https://mp.weixin.qq.com/s/fWtkypGWkSPVoRjTtMsfYg",
+                "readCount": null
+        },
+        {
+                "id": 67,
+                "account": "yanzhichengli",
+                "title": "石墨烯超润滑多型体阵列中的堆叠序调控",
+                "author": "Nirmal Roy, Pengua Ying",
+                "journal": "Nature Nanotechnology",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-16",
+                "summary": "本研究通过设计一种\"超润滑多型体阵列\"（SLAP）结构，在纳米腔体（直径可小至30纳米）中实现了石墨烯四层体伯纳尔（Bernal）与菱面体堆叠之间的完全可逆转换。该结构利用图案化的不对齐间隔层在局域腔体内形成稳定的堆叠畴，同时在腔体外利用超润滑界面实现低摩擦、长程弹性弛豫。实验表明，该转换所需的横向剪切力低于1纳牛顿，每次切换能量低于1飞焦耳。研究进一步揭示了边界孤子的成核与自发传播机制，并通过调控间隔层扭转角、腔体几何形状及连接通道，实现了对切换阈值、动力学及岛屿间弹性耦合的精细工程操控。这项工作为开发高密度、低能耗的纳米电子器件及探索堆叠序相关的关联物态提供了新平台。",
+                "link": "https://mp.weixin.qq.com/s/-h46-8hoFUuWGUuA8CtCKA",
+                "readCount": null
+        },
+        {
+                "id": 68,
+                "account": "yanzhichengli",
+                "title": "B-D相二维钙钛矿",
+                "author": "Chenjian Lin, Yuanhao Tang, Zhichen Nian, Brett M. Savoie, Letian Dou",
+                "journal": "Nature Chemistry",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-16",
+                "summary": "本研究引入了一类采用层内双齿配体的新型二维钙钛矿，称为B-D相钙钛矿，旨在提升材料的结构多样性与稳定性。研究团队成功合成了具有刚性核心单元及双侧铵基末端连接基团的双齿配体，并获得了结合这些B-D配体的单晶。分子动力学模拟表明，B-D配体与无机层的结合能显著强于传统的R-P相和D-J相配体。基于吸收稳定性评估，B-D相多晶薄膜表现出卓越的耐热性，其T80寿命分别比R-P相和D-J相类似物提升了1600%和140%。采用B-D配体的光伏器件展现出更高的功率转换效率和更持久的稳定性。这些发现确立了B-D相二维钙钛矿作为下一代光电子应用平台的潜力，推动了金属卤化物钙钛矿及其他杂化材料的配体工程发展。",
+                "link": "https://mp.weixin.qq.com/s/GP44xvziQvn0t_z1TIVCBA",
+                "readCount": null
+        },
+        {
+                "id": 69,
+                "account": "yanzhichengli",
+                "title": "全球首个医学循证推理智能体破解罕见病诊断难题",
+                "author": "张娅, 谢伟迪, 孙锟, 余永国",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-16",
+                "summary": "该研究提出了全球首个智能体式罕见病循证推理诊断系统DeepRare。系统采用\"中枢-分身\"架构，突破了传统医学AI的\"黑盒\"限制，具备全域链接医学知识库、主动提问进行\"慢思考\"推理以及全流程循证可溯的能力。实验数据显示，在仅提供临床表型信息时，DeepRare的首位准确率达到57.18%（比此前最佳模型提升23.79%）；结合基因数据后，综合诊断准确率突破70.6%。该系统目前已上线平台，并在全球600多家机构投入使用，旨在解决罕见病确诊难、漏诊率高的问题。",
+                "link": "https://mp.weixin.qq.com/s/gSlaXD6kZnGBxuI0hf9quA",
+                "readCount": null
+        },
+        {
+                "id": 70,
+                "account": "yanzhichengli",
+                "title": "脑内精准基因编辑，为神经发育疾病治疗点亮曙光",
+                "author": "杨侃, 李维克, 耿一啸, 张淑倩, 程艳波, 吴诗昊, 李斐, 程田林, 仇子龙",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-16",
+                "summary": "该研究针对由CHD3基因突变导致的Snijders Blok–Campeau综合征（SNIBCPS），设计了一种新型腺嘌呤碱基编辑器TeABE。该编辑器能精准识别并将突变的A•T碱基对修复为正常的G•C碱基对，全程无DNA双链断裂风险。在人源化突变小鼠模型中，该技术成功修复了多个脑区的基因位点，显著改善了小鼠的社交回避、认知迟钝等行为异常。此外，研究还在非人灵长类（猕猴）模型中验证了技术的跨物种应用可行性，为自闭症等神经发育疾病的基因治疗提供了突破性进展和安全依据。",
+                "link": "https://mp.weixin.qq.com/s/kOC_F9yidkaKnUI8Jvedig",
+                "readCount": null
+        },
+        {
+                "id": 71,
+                "account": "yanzhichengli",
+                "title": "安徽师范大学王广凤&南京航空航天大学李林林&东南大学彭生杰合作，JACS！",
+                "author": "顾明政, 王广凤, 李林林, 彭生杰",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-03-16",
+                "summary": "本研究针对金属硫化物在碱性析氧反应（OER）中面临的活性与稳定性难以协调的挑战，通过碘掺杂策略精确控制了CuS预催化剂的表面重构。研究发现，碘掺杂引起的电子操纵、弱配位Cu-S键和晶格畸变共同促进了表面重建，生成了富含氧空位（VO）的高价羟基氧化铜表面。文章提出了一种全新的协同氧化机制（OVOM）：晶格氧空位作为促进羟基吸附的真正活性源，而高价Cu位点作为辅助位点通过增强Cu-O共价键来削弱O-H键，从而加速去质子化过程。该优化后的催化剂在10 mA cm⁻²下过电位低至189 mV，稳定性长达1250 h；在实际膜电极电解槽测试中，1 A cm⁻²电流密度下槽电压低至1.65 V，稳定性达480 h，且制氢成本低至1.70 $/kgH₂，优于美国能源部2026年目标，展示了巨大的实际应用潜力。",
+                "link": "https://mp.weixin.qq.com/s/weevzqSMOR7r9e0jxJfVQQ",
+                "readCount": null
+        },
+        {
+                "id": 72,
+                "account": "bioart",
+                "title": "Nature | 王建祥、徐颖茜等揭示蛋白酶体引导的血红素信号轴导致T细胞耗竭",
+                "author": "王建祥、徐颖茜、Ping-Chih Ho",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-18",
+                "summary": "该项研究首次揭示了线粒体代谢紊乱激活蛋白酶体进而诱导血红素释放，从而推动T细胞耗竭的分子机制。研究发现，含有去极化线粒体的T细胞中蛋白酶体活性显著增强，导致线粒体中含血红素蛋白被降解，增加了调节型血红素（RH）的水平。",
+                "link": "https://mp.weixin.qq.com/s/iHW_VAXfQEyNHgyYgHFJIQ",
+                "readCount": null
+        },
+        {
+                "id": 73,
+                "account": "namiren",
+                "title": "中国科大Nature Materials：让机器人拥有媲美人类指尖的触觉！",
+                "author": "贠国霖、Tawfique Hasan",
+                "journal": "Nature Materials",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-19",
+                "summary": "中国科学技术大学贠国霖特任教授与剑桥大学Tawfique Hasan教授合作，在柔性传感领域取得重大突破。团队通过多尺度力学结构设计，开发出一种基于石墨烯-液态金属协同复合材料的微型化三维力传感器阵列，具有高达120 kPa⁻¹的线性灵敏度。",
+                "link": "https://mp.weixin.qq.com/s/wmjD8hg2IMqUZUAqXInXaw",
+                "readCount": null
+        },
+        {
+                "id": 74,
+                "account": "xmol",
+                "title": "兰州大学/西北农林科技大学Sci. Adv.：pH值介导下异硫氰酸酯调控的噬菌体环肽的二元环化与活性发现",
+                "author": "雷新响、高锦明",
+                "journal": "Science Advances",
+                "journalCategory": "Science",
+                "publishDate": "2026-03-19",
+                "summary": "兰州大学雷新响教授与西北农林科技大学高锦明教授联合团队开发了一种基于异硫氰酸酯衍生物交联剂的pH调控噬菌体环肽展示平台。该策略利用pH值控制反应路径，在弱酸性条件（pH 6.5）下优先实现N端-侧链环化，在碱性条件（pH 9.5）下则转为侧链-侧链环化。",
+                "link": "https://mp.weixin.qq.com/s/3hzxwZ4YN1UsJWZXQ_leFQ",
+                "readCount": null
+        },
+        {
+                "id": 75,
+                "account": "xmol",
+                "title": "悉尼大学李逢旺团队JACS：界面水结构调控CO2电还原产物选择性",
+                "author": "李逢旺、徐奥妮、刘同亮",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-03-19",
+                "summary": "悉尼大学团队在酸性电解液中引入聚阳离子电解质PDDA，在电极界面形成疏水环境。通过原位光谱和理论计算发现，该环境改变了界面水的氢键结构，富集了弱氢键水（f-H₂O），成功将Ag催化剂的产物选择性从CO转变为HCOOH。",
+                "link": "https://mp.weixin.qq.com/s/7ioce2B35jZRx_DSjYk-ow",
+                "readCount": null
+        },
+        {
+                "id": 76,
+                "account": "xmol",
+                "title": "南京大学朱琴JACS：全金属双重芳香性稳定三线态一价铝阴离子",
+                "author": "朱琴、陈鹏飞",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-03-18",
+                "summary": "南京大学朱琴团队在全金属芳香化学领域取得了重要突破。研究团队通过对具有σ-芳香性的Al2Pd2四元环化合物进行两电子还原，成功构建了同时具有σ和π双重芳香性的全金属[Al2Pd2]2-四元环化合物，首次实现了形式上为三线态一价铝阴离子的稳定分离。",
+                "link": "https://mp.weixin.qq.com/s/PiN5fAt6KvG1gUOqX19jaw",
+                "readCount": null
+        },
+        {
+                "id": 77,
+                "account": "xmol",
+                "title": "南开大学王粉粉/河北工业大学瞿雄伟/陈胜利JACS：异步聚合-结晶动力学精准构建V-型缺口球晶",
+                "author": "王粉粉、瞿雄伟、陈胜利",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-03-18",
+                "summary": "该研究提出了一种名为本体聚合诱导-结晶驱动自组装（BPI-CDSA）的新方法。研究团队通过调控聚合与结晶过程的固有动力学异步性，在低温条件下利用磷酸二苯酯催化戊内酯的开环聚合，成功制备了具有分级结构且热力学上难以存在的V-型缺口球晶。",
+                "link": "https://mp.weixin.qq.com/s/hy5ezycmPdR1bUm8Qmh3QQ",
+                "readCount": null
+        },
+        {
+                "id": 78,
+                "account": "cellpress",
+                "title": "Nature Portfolio | 水母没有脑，也要睡觉觉",
+                "author": "Lynne Peeples",
+                "journal": "Nature Portfolio",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-01-06",
+                "summary": "这篇文章报道了发表于自然-通讯的一项研究，指出没有大脑的水母和海葵也会像人类一样睡觉。研究发现，仙后水母每天大约睡8小时，而海葵每天也有约三分之一的时间在休息。研究支持了一种睡眠演化理论，即睡眠的功能是保护单个神经元的DNA。",
+                "link": "https://mp.weixin.qq.com/s/RTDdgjzmgi7Lqdh5sXoxCg",
+                "readCount": null
+        },
+        {
+                "id": 79,
+                "account": "xmol",
+                "title": "西湖大学最新NATURE！无负极锂金属电池能量密度高达508 Wh kg⁻¹",
+                "author": "王建辉",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-18",
+                "summary": "西湖大学王建辉教授团队在无负极锂金属电池（AFLMBs）领域取得突破性研究成果。团队设计了一种新型电解液（1.6 M LiDFOB/N,N-二甲基三氟乙酰胺），并提出交叉耦合界面化学机制，成功诱导形成了亚纳米均匀、高柔性的富B-F聚合物SEI膜。",
+                "link": "https://mp.weixin.qq.com/s/BcCpRW4QslnSXxOWdolE1A",
+                "readCount": null
+        },
+        {
+                "id": 80,
+                "account": "xmol",
+                "title": "青岛能源所领衔Nature Energy：新型氧化锡纳米材料原位构建2D/3D钙钛矿异质结用于高效光伏器件",
+                "author": "逄淑平、王凯、Stefaan De Wolf、王莉",
+                "journal": "Nature Energy",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-18",
+                "summary": "研究团队开发了一种固态配体交换介导的掩埋界面2D/3D异质结构建策略，通过在SnO2纳米颗粒表面接枝巯基乙酸（TGA）与油胺，实现了在钙钛矿太阳能电池底部掩埋界面原位生成2D/3D异质结。基于该策略制备的小面积器件光电转换效率达26.19%（认证26.04%）。",
+                "link": "https://mp.weixin.qq.com/s/_vbL10zA1lLqnwFpD4YgWw",
+                "readCount": null
+        },
+        {
+                "id": 81,
+                "account": "xmol",
+                "title": "重磅Nature！万亿分之一的精度检验",
+                "author": "Lothar Maisenbacher团队",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-02-21",
+                "summary": "美国加州大学伯克利分校Lothar Maisenbacher团队利用超高精度激光光谱技术，对氢原子2S–6P跃迁进行了测量。通过多普勒自由单光子光谱、魔术偏振角、盲法分析等一系列先进技术和方法，实现了对标准模型精度达0.7 ppt（万亿分之0.7）的检验。",
+                "link": "https://mp.weixin.qq.com/s/2U7B59iRXmdAVBOd3E1a4A",
+                "readCount": null
+        },
+        {
+                "id": 82,
+                "account": "xmol",
+                "title": "今日SCIENCE：单分子红外光谱的原子级指纹识别",
+                "author": "李绍巍",
+                "journal": "Science",
+                "journalCategory": "Science",
+                "publishDate": "2026-03-20",
+                "summary": "美国加州大学圣地亚哥分校李绍巍教授课题组开发了一种新型测量方案，将频率可调谐红外激发与扫描隧道显微镜（STM）技术相结合，实现了单分子振动光谱的原子级指纹识别。首次在Cu(100)表面实现了单个乙炔基自由基和四氢吡咯分子的红外振动光谱测量。",
+                "link": "https://mp.weixin.qq.com/s/R6BVjWB3BSvniDHDeybDwA",
+                "readCount": null
+        },
+        {
+                "id": 83,
+                "account": "xmol",
+                "title": "清华大学最新Nature！创造体积三维打印速度新纪录",
+                "author": "清华大学成像与智能技术实验室",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-02-14",
+                "summary": "清华大学成像与智能技术实验室提出了一种名为数字非相干合成全息光场（DISH）的体积三维打印技术。该技术通过构建高速旋转潜望镜系统与全息光场优化算法，将三维制造从传统的逐层扫描转变为静态容器内的光场调控。曝光时间仅0.6秒，体积建造速率达333 mm³/s。",
+                "link": "https://mp.weixin.qq.com/s/gJoNGRWoDQ914kGoHJjdHw",
+                "readCount": null
+        },
+        {
+                "id": 84,
+                "account": "xmol",
+                "title": "北邮吴真平/南开张杨/香港理工郝建华SCIENCE ADVANCES | 宽禁带半导体氧化镓的室温铁电性",
+                "author": "吴真平、张杨、郝建华",
+                "journal": "Science Advances",
+                "journalCategory": "Science",
+                "publishDate": "2026-03-20",
+                "summary": "北京邮电大学吴真平教授联合南开大学张杨教授、香港理工大学郝建华教授团队，在国际上首次通过实验证实了宽禁带半导体氧化镓（Ga2O3）的室温本征铁电性。研究采用工业兼容的MOCVD技术制备了纯相外延κ-Ga2O3薄膜，提供了铁电性的确凿证据。",
+                "link": "https://mp.weixin.qq.com/s/sKbGauxP0AyjAiEfAsp9NA",
+                "readCount": null
+        },
+        {
+                "id": 85,
+                "account": "bioart",
+                "title": "Science | 王育才/朱书/蒋为团队提出多器官协同调控新范式，实现药物递送效率系统性提升",
+                "author": "王育才、朱书、蒋为",
+                "journal": "Science",
+                "journalCategory": "Science",
+                "publishDate": "2026-03-20",
+                "summary": "中国科学技术大学王育才/朱书/蒋为团队系统阐明了一条可持续驱动机体清除药物递送载体的肠—肝免疫调控轴。研究发现，肠道共生菌通过刺激肠道五羟色胺分泌，维持了肝脏Kupffer细胞对递送载体的高效清除活性。该策略能使多种合成型或病毒型递送载体的体内循环时间提升1～2倍。",
+                "link": "https://mp.weixin.qq.com/s/UkcjnZq_lqNYIyS23nwmqg",
+                "readCount": null
+        },
+        {
+                "id": 86,
+                "account": "xmol",
+                "title": "西湖大学叶宇轩和耶鲁大学朱天宇Nat. Chem.：用于复杂分子后期修饰的酶催化选择性脱氢",
+                "author": "叶宇轩、朱天宇",
+                "journal": "Nature Chemistry",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-20",
+                "summary": "西湖大学叶宇轩课题组与耶鲁大学朱天宇课题组合作，利用黄素依赖的烯还原酶（ERED），通过酶工程手段，成功构建了一种能同时控制位点选择性与立体选择性的羰基化合物去饱和化平台。该体系展现了广泛的底物兼容性，对于复杂的萜类和甾体分子，实现了与传统化学方法互补的位点选择性修饰。",
+                "link": "https://mp.weixin.qq.com/s/ilPKg1xdTguThnhBj71NNQ",
+                "readCount": null
+        },
+        {
+                "id": 87,
+                "account": "xmol",
+                "title": "南开大学肖力军Angew：手性单齿二胺基亚磷酸酯配体实现镍催化1,3-二烯对醛的不对称加成反应",
+                "author": "肖力军、刘祥瑞",
+                "journal": "Angew",
+                "journalCategory": "Angew",
+                "publishDate": "2026-03-20",
+                "summary": "南开大学肖力军课题组设计并合成了一类新型手性单齿二胺基亚磷酸酯配体，成功实现了镍催化下1,3-二烯对醛的直接不对称加成反应。该方法克服了传统方法原子经济性低、反应条件苛刻等限制，在温和的室温条件下即可高效合成手性共轭二烯醇。",
+                "link": "https://mp.weixin.qq.com/s/jivWRbDyJJM2HJT0NtPHeA",
+                "readCount": null
+        },
+        {
+                "id": 88,
+                "account": "bioart",
+                "title": "Immunity | 感觉神经元调控HSV-1感染的免疫反应",
+                "author": "Sophie Ugolini",
+                "journal": "Immunity",
+                "journalCategory": "Cell Series",
+                "publishDate": "2026-03-20",
+                "summary": "法国艾克斯-马赛大学Sophie Ugolini研究团队揭示，HSV-1能直接激活感觉神经元，诱导神经肽P物质（SP）和神经因子TAFA4的产生。在皮肤中，SP通过作用于中性粒细胞表面的MRGPRA1受体，限制中性粒细胞的浸润。在DRG中，TAFA4通过促进IL-10的产生，帮助炎症消退。",
+                "link": "https://mp.weixin.qq.com/s/EvLUAZj5GsHOTg_jJ_Kdcw",
+                "readCount": null
+        },
+        {
+                "id": 89,
+                "account": "yanzhichengli",
+                "title": "北京工业大学，Nature！混合背接触硅太阳能电池效率达27.62%",
+                "author": "北京工业大学、福建金石能源",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-20",
+                "summary": "北京工业大学与福建金石能源有限公司合作在Nature期刊上发表了一项关于混合背接触硅太阳能电池的研究。该工作融合了TOPCon、SHJ和IBC技术的优势，设计了一种新型的混合背接触太阳能电池结构，最终实现了27.62%的认证转换效率。",
+                "link": "https://mp.weixin.qq.com/s/rNgcwDvtHpSJrDHSpoN8tA",
+                "readCount": null
+        },
+        {
+                "id": 90,
+                "account": "xmol",
+                "title": "Science | KRAS抑制剂\"拦截\"癌前病变显著延长胰腺癌小鼠生存期",
+                "author": "宾夕法尼亚大学医学院团队",
+                "journal": "Science",
+                "journalCategory": "Science",
+                "publishDate": "2026-03-22",
+                "summary": "该文章报道了美国宾夕法尼亚大学医学院团队在《Science》上发表的一项研究。研究评估了RAS抑制剂（多选择性抑制剂RMC-7977和G12D选择性抑制剂RMC-9945）对胰腺癌前病变的影响。结果显示，在癌前病变阶段使用KRAS抑制剂进行\"癌症截击\"，可以显著减少胰腺导管内乳头状瘤的数量和体积，延缓肿瘤发生。",
+                "link": "https://mp.weixin.qq.com/s/OukeLI5i9FSXDShDXxSybg",
+                "readCount": null
+        },
+        {
+                "id": 91,
+                "account": "bioart",
+                "title": "Immunity | 组织和物种间保守的巨噬细胞转录调节因子——MAFB",
+                "author": "Thomas Marichal、Domien Vanneste",
+                "journal": "Immunity",
+                "journalCategory": "Cell Series",
+                "publishDate": "2026-03-22",
+                "summary": "比利时列日大学Thomas Marichal和Domien Vanneste团队在《Immunity》杂志上发表的研究成果。研究发现，转录因子MafB是组织和物种间保守的巨噬细胞发育及功能身份的关键调节因子。MafB的缺失会导致细胞停留在CD52高表达的未成熟阶段，破坏巨噬细胞的身份，导致吞噬作用受损。",
+                "link": "https://mp.weixin.qq.com/s/FjYE-dne-bI1amIres71Iw",
+                "readCount": null
+        },
+        {
+                "id": 92,
+                "account": "xmol",
+                "title": "Sci Adv丨李沉简团队开发自失活CRISPR系统实现亨廷顿舞蹈症基因治疗新突破",
+                "author": "李沉简、郑素双",
+                "journal": "Science Advances",
+                "journalCategory": "Science",
+                "publishDate": "2026-03-21",
+                "summary": "北京大学生命科学学院李沉简团队在《Science Advances》上发表研究，开发了一种\"自失活\"CRISPR基因编辑系统，用于治疗亨廷顿舞蹈症（HD）。该系统利用AAV载体递送，能在SaCas9表达后破坏自身序列，实现核酸酶的瞬时表达，从而降低长期表达可能带来的脱靶效应和免疫反应等安全风险。",
+                "link": "https://mp.weixin.qq.com/s/0V_DHEpRVMj5xqwzfWRHOQ",
+                "readCount": null
+        },
+        {
+                "id": 93,
+                "account": "bioart",
+                "title": "NATURE｜PD-1之外的免疫\"刹车\"：李彬等揭示靶向SLAMF6顺式同源相互作用解除T细胞抑制",
+                "author": "André Veillette团队",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-21",
+                "summary": "加拿大蒙特利尔临床研究所的André Veillette团队发表在《Nature》上，主要发现：揭示了SLAMF6受体通过在细胞膜上的顺式同源相互作用招募磷酸酶SHP-1，从而抑制T细胞受体（TCR）近端信号，限制T细胞的抗肿瘤效应。确立了SLAMF6作为一个新的、可药物化的T细胞抑制轴。",
+                "link": "https://mp.weixin.qq.com/s/EkoJIJorwiwo0TdrdNutBA",
+                "readCount": null
+        },
+        {
+                "id": 94,
+                "account": "xmol",
+                "title": "概念创新！Nature Energy：VO2光催化，新发现！",
+                "author": "My Nghe Tran、Vitaly Ordomsky、Bruno Grandidier",
+                "journal": "Nature Energy",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-21",
+                "summary": "本研究首次报道了利用二氧化钒（VO₂）在临界相变温度附近自发形成的绝缘体-金属相界，作为一种天然、动态的纳米结阵列，来高效促进光生电荷分离。研究发现，VO₂的光催化甲烷非氧化偶联活性在其绝缘体-金属转变温度（T_IMT ≈ 68°C）处出现峰值，因为临界温度下绝缘相与金属相共存。",
+                "link": "https://mp.weixin.qq.com/s/9UI67m9SnXdpQyuTsdwa_A",
+                "readCount": null
+        },
+        {
+                "id": 95,
+                "account": "namiren",
+                "title": "NATURE BIOMEDICAL ENGINEERING：藻酸盐微球，作为体内 \"充电站\"！",
+                "author": "加州大学洛杉矶分校SONG LI、LILI YANG",
+                "journal": "Nature Biomedical Engineering",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-21",
+                "summary": "本文介绍了一种由加州大学洛杉矶分校团队开发的仿生工程平台——IMRAS。该平台以藻酸盐微球为基础，作为体内的\"充电站\"，用于增强CAR-INKT细胞的癌症免疫治疗效果。它能够通过持续释放趋化信号招募循环中的CAR-INKT细胞至肿瘤局部，并提供持续激活信号。",
+                "link": "https://mp.weixin.qq.com/s/ysGol0waJEOO4kS1raTEVA",
+                "readCount": null
+        },
+        {
+                "id": 96,
+                "account": "namiren",
+                "title": "调控形貌，发一篇Nature Catalysis！",
+                "author": "Raffaella Buonsanti",
+                "journal": "Nature Catalysis",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-20",
+                "summary": "洛桑联邦理工学院（EPFL）团队通过使用形貌与尺寸精确可控的铜纳米晶体，系统揭示了CO电还原反应（CORR）的结构敏感性。研究发现铜纳米球对正丙醇具有独特的选择性，结合理论模拟与原位表征，首次指出晶格应变是提升醇类选择性的关键因素。",
+                "link": "https://mp.weixin.qq.com/s/Eoi9-iIoTmt6NlAXVtV2sQ",
+                "readCount": null
+        },
+        {
+                "id": 97,
+                "account": "namiren",
+                "title": "中科大王育才/朱书/蒋为团队，最新SCIENCE！",
+                "author": "王育才、朱书、蒋为",
+                "journal": "Science",
+                "journalCategory": "Science",
+                "publishDate": "2026-03-20",
+                "summary": "中国科学技术大学王育才、朱书和蒋为团队发表，揭示了药物递送载体在体内的命运并非仅由材料属性决定，而是受到机体跨器官调控网络的系统性影响。研究解析了一条由肠道共生菌驱动的\"肠-肝免疫调控轴\"，为突破药物递送效率瓶颈提供了新的理论基础。",
+                "link": "https://mp.weixin.qq.com/s/_LUuts_pI83yAEGBsHZouQ",
+                "readCount": null
+        },
+        {
+                "id": 98,
+                "account": "xmol",
+                "title": "MHAT催化，最新Science！",
+                "author": "Ryan A. Shenvi",
+                "journal": "Science",
+                "journalCategory": "Science",
+                "publishDate": "2026-03-20",
+                "summary": "文章报道了美国斯克里普斯研究所Ryan A. Shenvi教授团队在金属氢化物氢转移（MHAT）催化领域的最新突破性研究。针对MHAT反应中常见的副产物（线性产物）及金属降解问题，研究团队提出了一种\"金属氢化物选择\"的双重解决方案，实现了有效的交叉和分支选择性氢化烯基化反应。",
+                "link": "https://mp.weixin.qq.com/s/WH8-NeXi9Rda3iROX80l6Q",
+                "readCount": null
+        },
+        {
+                "id": 99,
+                "account": "bioart",
+                "title": "《自然-生物技术》新文上线︱北大陈雪梅胡昊团队揭示新型RNA帽——脱磷酸辅酶A（DPCOA）修饰的跨物种分布与动态调控",
+                "author": "陈雪梅、胡昊",
+                "journal": "Nature Biotechnology",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-20",
+                "summary": "北京大学陈雪梅和胡昊团队主导，发表在《自然-生物技术》上。研究主要发现并解析了一种新型RNA帽子结构——脱磷酸辅酶A（dpCoA）修饰。通过液相质谱技术证实，dpCoA修饰广泛存在于大肠杆菌、酵母、小鼠、人源细胞及拟南芥中，表明其在进化上具有保守性。",
+                "link": "https://mp.weixin.qq.com/s/ZZ-oIsdy02rJaPzgiCgrlA",
+                "readCount": null
+        },
+        {
+                "id": 100,
+                "account": "xmol",
+                "title": "Nat. Synth.：突破\"五元环规则\"，合成桥联双环杂芳族生物电子等排体",
+                "author": "Varinder K. Aggarwal、Adam Noble",
+                "journal": "Nature Synthesis",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-20",
+                "summary": "英国布里斯托大学Varinder K. Aggarwal和Adam Noble等研究者开发了一种可见光驱动的分子内[2+2]环加成反应，成功合成了此前难以获取的6-氮杂双环[3.1.1]庚烷（6-N-BCHep）及其衍生物。利用自由基稳定策略，逆转了非共轭二烯烃光环加成中固有的\"五元环规则\"，实现了6-exo-trig环化。",
+                "link": "https://mp.weixin.qq.com/s/ALbztRyzuYk5goZ7KfH04w",
+                "readCount": null
+        },
+        {
+                "id": 101,
+                "account": "xmol",
+                "title": "Nat. Chem.：不抓蛋白抓G4——用DNA当\"锚点\"的PROTAC",
+                "author": "Shankar Balasubramanian",
+                "journal": "Nature Chemistry",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-03-21",
+                "summary": "英国剑桥大学Shankar Balasubramanian教授团队提出了一种新型的靶向蛋白降解技术——G4L-PROTACs。与传统PROTAC需要直接结合蛋白不同，该技术利用双功能分子一端结合染色质中的G-四链体（G4）结构，另一端招募E3泛素连接酶，从而实现对邻近G4结合蛋白的选择性降解。",
+                "link": "https://mp.weixin.qq.com/s/haGBG7IZvSkL1Owl6BuDAg",
+                "readCount": null
+        },
+        {
+                "id": 102,
+                "account": "xmol",
+                "title": "SCIENCE：11C或18F三氟甲基化及其在PET中的应用",
+                "author": "Wei Liu、Victor W. Pike",
+                "journal": "Science",
+                "journalCategory": "Science",
+                "publishDate": "2026-03-20",
+                "summary": "美国辛辛那提大学刘巍教授团队与美国国立卫生研究院Victor W. Pike研究员合作，开发了一种通用的后期安装[18F]CF3或[11C]CF3基团的方法。该方法利用铜介导的卤原子转移三氟甲基化和光氧化还原脱羧三氟甲基化两种策略，成功应用于50多种复杂分子和药物分子的放射性标记。",
+                "link": "https://mp.weixin.qq.com/s/XBrZUO2Wux4cY9qCZAxCNQ",
+                "readCount": null
+        },
+        {
+                "id": 103,
+                "account": "xmol",
+                "title": "Nat. Chem.：反电负性转金属化解锁烯烃碳镁化反应构筑手性季碳",
+                "author": "施世良",
+                "journal": "Nature Chemistry",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-02-15",
+                "summary": "中国科学院上海有机化学研究所施世良团队报道了一种镍催化的碳镁化新策略，通过非常规的\"反电负性转金属化\"（Contra-electronegativity Transmetallation）过程，成功解决了从非活化烯烃高效合成复杂手性格氏试剂的难题。实现了对1,1-二取代烯烃和1,3-二烯烃的高区域选择性和对映选择性碳镁化反应。",
+                "link": "https://mp.weixin.qq.com/s/GqPBMt-Ws3JdwPCcpdje-A",
+                "readCount": null
+        },
+        {
+                "id": 104,
+                "account": "xmol",
+                "title": "南开大学黄灵CHEM：通过分子锚定与高结晶度共价有机框架实现高效三重态-三重态湮灭上转换",
+                "author": "黄灵",
+                "journal": "Chem",
+                "journalCategory": "Cell Series",
+                "publishDate": "2026-02-13",
+                "summary": "南开大学黄灵团队在Chem期刊上发表了一项突破性研究，通过创新的\"分子锚定\"策略与高结晶度共价有机框架（COF）设计，成功构建了全有机、无重金属的固态三重态-三重态湮灭上转换（TTA-UC）体系。在721 nm近红外光激发下，该体系呈现出明亮的黄色上转换发光。",
+                "link": "https://mp.weixin.qq.com/s/b6iH0sKdfiIw7LNMA1xJrQ",
+                "readCount": null
+        },
+        {
+                "id": 105,
+                "account": "xmol",
+                "title": "【催化】华中科技大学唐从辉JACS：单原子钴催化剂实现烯烃双氮化反应选择性翻转",
+                "author": "唐从辉",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-02-13",
+                "summary": "华中科技大学唐从辉团队报道了一种利用单原子钴催化剂实现烯烃选择性1,2-磺酰胺叠氮化反应的研究。与传统均相催化剂（如Cu/Fe/Ru）通常生成1,2-叠氮磺酰胺化产物不同，该单原子催化体系实现了反应选择性的完全翻转，专一性地生成1,2-磺酰胺叠氮化产物。",
+                "link": "https://mp.weixin.qq.com/s/89wzwW19NYnnyqxVT-ZijA",
+                "readCount": null
+        },
+        {
+                "id": 106,
+                "account": "xmol",
+                "title": "单原子催化赋能有机电合成：从界面电子调控到反应方法学构建",
+                "author": "王定胜、李文豪、唐海涛",
+                "journal": "Chem",
+                "journalCategory": "Cell Series",
+                "publishDate": "2026-02-12",
+                "summary": "清华大学王定胜教授团队、东北大学李文豪教授团队、广西师范大学唐海涛教授团队联合发表在期刊Chem上的综述文章。系统梳理了单原子催化在有机电合成领域的研究进展，探讨了单原子催化剂（SACs）如何通过其明确的活性中心和可调配位环境，为有机电合成中的\"电极–催化剂–底物\"三元界面电子转移提供新的设计思路。",
+                "link": "https://mp.weixin.qq.com/s/ywXMGDLAoj64SH20FARZZA",
+                "readCount": null
+        },
+        {
+                "id": 107,
+                "account": "xmol",
+                "title": "南科大刘柳团队Nature：铝宾催化",
+                "author": "刘柳",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-02-12",
+                "summary": "南方科技大学刘柳团队在国际顶级学术期刊Nature上发表了一项突破性研究，成功实现了铝（I）/铝（III）氧化还原催化循环。利用具有\"三位点双亲性\"特征的稳定铝宾（R–Al）物种作为催化剂，高效催化了经典的Reppe炔烃三聚反应合成苯衍生物，催化转化数（TON）高达2290。",
+                "link": "https://mp.weixin.qq.com/s/jrYbqQ1JC59CRLhk7hQ02w",
+                "readCount": null
+        },
+        {
+                "id": 108,
+                "account": "xmol",
+                "title": "\"背对背\"发NATURE：非晶纳米颗粒成像的\"隔空对话\"",
+                "author": "Jianwei Miao、Jian-Min Zuo",
+                "journal": "Nature",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-02-11",
+                "summary": "介绍了加州大学洛杉矶分校（UCLA）Jianwei Miao教授课题组与伊利诺伊大学厄巴纳-香槟分校Jian-Min Zuo教授课题组在《Nature》杂志上同期发表的两项关于原子级电子断层成像（AET）的研究成果。这两项工作聚焦于非晶纳米颗粒的三维原子结构解析，共同确立了非晶材料三维原子成像的新基准。",
+                "link": "https://mp.weixin.qq.com/s/15chxChMGiqgd5Dk_IuHoQ",
+                "readCount": null
+        },
+        {
+                "id": 109,
+                "account": "xmol",
+                "title": "DNA超螺旋稳定\"DNA束身衣\"凝聚体—扭转驱动的可逆压缩与拓扑滞后",
+                "author": "庄巍、韦学锋",
+                "journal": "JACS Au",
+                "journalCategory": "JACS",
+                "publishDate": "2026-02-11",
+                "summary": "中国科学院福建物质结构研究所庄巍团队通过粗粒化分子动力学模拟，揭示了DNA超螺旋调控DNA-蛋白凝聚体尺寸的拓扑学机制。研究发现，当引入超螺旋时，DNA发生\"扭转向空间缠绕\"的转换，在凝聚体表面形成贴附的环状结构，像\"松紧束带\"一样勒紧边界。",
+                "link": "https://mp.weixin.qq.com/s/UmrbRPP-yFKpbhXMtynlyQ",
+                "readCount": null
+        },
+        {
+                "id": 110,
+                "account": "xmol",
+                "title": "NAT. CHEM.：分子导线中的电子\"跳跃\"——从单分子电子学到锡基钙钛矿太阳能电池的新桥梁",
+                "author": "Maxie Roessler、Saif Haque",
+                "journal": "Nature Chemistry",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-02-10",
+                "summary": "英国帝国理工学院团队开发了一种以二茂铁为末端、刚性共轭结构为桥连的分子导线，并将其锚定在透明导电电极（ITO）表面。研究发现，在仅约1纳米的极短分子尺度上，电子转移依然由\"跳跃\"机制主导，而非传统的量子隧穿机制。将该分子导线应用于锡基钙钛矿太阳能电池，效率达9.48%。",
+                "link": "https://mp.weixin.qq.com/s/qSuOcVGCxKCRO2r6_gJjJg",
+                "readCount": null
+        },
+        {
+                "id": 111,
+                "account": "xmol",
+                "title": "【有机】铑催化从头合成异喹啉构建平面手性大环化合物",
+                "author": "游书力",
+                "journal": "Angew",
+                "journalCategory": "Angew",
+                "publishDate": "2026-02-10",
+                "summary": "中国科学院上海有机化学研究所游书力研究员团队报道了一种通过铑催化分子内[4+2]环化反应，首次实现大环平面手性异喹啉不对称合成的新策略。该研究利用芳基亚胺与炔烃的分子内C−H键活化/环化反应，从头构建了异喹啉结构。实验表明，该催化体系具有良好的底物适用范围和优秀的对映选择性。",
+                "link": "https://mp.weixin.qq.com/s/6NOjnCtfszbDNJo0VK7uDg",
+                "readCount": null
+        },
+        {
+                "id": 112,
+                "account": "xmol",
+                "title": "挑战\"不可能\"| NAT CHEM：键级近1.5的超锥体化烯烃，也是合成砌块",
+                "author": "Neil K. Garg",
+                "journal": "Nature Chemistry",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-02-09",
+                "summary": "美国加州大学洛杉矶分校Neil K. Garg教授课题组在Nature Chemistry上发表了一项关于\"超锥体化烯烃\"的研究。研究发现立方烯（10）和1,7-quadricyclene（11）具有超锥体化的几何结构，导致π键极度削弱，碳-碳键级显著降低，趋近于1.5，且表现出显著的双自由基特性。",
+                "link": "https://mp.weixin.qq.com/s/-9SLiG2lAOxDBhgj5RwRaw",
+                "readCount": null
+        },
+        {
+                "id": 113,
+                "account": "xmol",
+                "title": "暨南大学叶文才/李丹团队JACS：原位乙酰化标记-共结晶策略实现难结晶分子的精准结构鉴定",
+                "author": "叶文才、李丹、王英、陆伟刚",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-02-09",
+                "summary": "暨南大学叶文才/王英团队与李丹/陆伟刚团队合作，针对缺乏显著富电子区域或极度柔性导致难结晶的分子，开发了一种\"原位乙酰化标记-共结晶\"的新策略。该方法结合了离散型结晶伴侣（Ag3Pz3），通过在核磁管内直接对目标分子进行乙酰化修饰，实现了原子尺度的精准结构解析及绝对构型的确定。",
+                "link": "https://mp.weixin.qq.com/s/KqZRDtm3lB3kIBB9Bzr0VA",
+                "readCount": null
+        },
+        {
+                "id": 114,
+                "account": "xmol",
+                "title": "【纳米】复旦大学李晓民教授课题组JACS：二维介孔纳米片的精准调控",
+                "author": "李晓民",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-02-09",
+                "summary": "复旦大学李晓民教授课题组与卡塔尔大学Mohamed F. Mady合作，开发了一种界面限制各向异性组装策略。该研究首次合成了方形二维介孔纳米片，实现了对组分（如金属离子掺杂介孔聚多巴胺或二氧化硅）、横向尺寸（100~200 nm）、厚度（14~25 nm）及面内介孔孔径（8~20 nm）的精准调控。",
+                "link": "https://mp.weixin.qq.com/s/sGMNZPcNGLZ8pULdkyM1YA",
+                "readCount": null
+        },
+        {
+                "id": 115,
+                "account": "xmol",
+                "title": "LIST组NAT. SYNTH.：双环丁烷的有机催化不对称活化",
+                "author": "Benjamin List",
+                "journal": "Nature Synthesis",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-02-08",
+                "summary": "诺贝尔奖得主Benjamin List教授团队利用受限亚氨基亚胺二磷酸（iIDP）类催化剂，成功实现了醇与双环丁烷（BCBs）的不对称加氢烷氧基化反应。该研究通过催化剂的布朗斯特酸性、空间位阻与路易斯碱性之间的协同作用，在无金属和导向基团的情况下，高对映选择性地（高达98:2 e.r.）获得了叔环丙基甲基醚。",
+                "link": "https://mp.weixin.qq.com/s/ZDPD3PC8mTgiP-Wc9P8ETQ",
+                "readCount": null
+        },
+        {
+                "id": 116,
+                "account": "xmol",
+                "title": "【纳米】上海交大麦亦勇教授团队JACS：卟啉功能化石墨烯纳米带，溶液中单根分散、高载流子迁移率以及快速能量转移",
+                "author": "麦亦勇",
+                "journal": "JACS",
+                "journalCategory": "JACS",
+                "publishDate": "2026-02-08",
+                "summary": "上海交大麦亦勇教授团队在溶液相合成了卟啉基团锚定在边缘的石墨烯纳米带（GNR-Por）。体积庞大的卟啉侧基通过位阻效应诱导纳米带形成周期性\"波浪形\"结构，有效削弱了π–π堆叠，实现了在溶液（如THF）中的单根分散。测得该材料的本征载流子迁移率可达~460 cm² V⁻¹ s⁻¹。",
+                "link": "https://mp.weixin.qq.com/s/a22QFhi6WgiXs857d6A4WQ",
+                "readCount": null
+        },
+        {
+                "id": 117,
+                "account": "xmol",
+                "title": "NAT. CATAL.：硝基芳烃作为能量转移催化剂",
+                "author": "Daniele Leonori",
+                "journal": "Nature Catalysis",
+                "journalCategory": "Nature Series",
+                "publishDate": "2026-02-07",
+                "summary": "德国亚琛工业大学Daniele Leonori教授课题组在《Nature Catalysis》上发表研究，成功利用廉价易得的硝基芳烃作为光催化剂，实现了烯烃的E→Z异构化和[2+2]环加成反应。研究发现，催化效率取决于激发态的定位而非三重态能量（ET）值。3π,π*型催化剂具有更长的激发态寿命和更低的反应能垒。",
+                "link": "https://mp.weixin.qq.com/s/IKKa9Joq03kE2b3duV2GRA",
+                "readCount": null
+        },
+        {
+                "id": 118,
+                "account": "xmol",
+                "title": "电子转移介质实现卟啉超分子框架中¹O₂与O₂˙⁻生成的模块化调控用于选择性光催化",
+                "author": "邢令宝",
+                "journal": "Angew",
+                "journalCategory": "Angew",
+                "publishDate": "2026-02-06",
+                "summary": "山东理工大学邢令宝团队针对传统卟啉光敏剂难以精准调控Ⅰ型超氧自由基（O₂•⁻）路径的难题，开发了一种基于主-客体相互作用的卟啉超分子有机框架（SOF）。研究创新性地引入了小分子电子转移介质（ETMs），首次实现了在同一超分子框架内对单线态氧（¹O₂）与超氧自由基（O₂•⁻）两条活性氧生成路径的模块化、可切换调控。",
+                "link": "https://mp.weixin.qq.com/s/4do5YAMnNBGPmAc0uA-ksw",
+                "readCount": null
         }
+]
+};
 
-        // 状态管理
-        let currentView = 'home';
-        let selectedAccountId = null;
-        let activeCategory = 'all';
-        let homeJournalCategory = 'all'; // 新增:首页期刊分类选择
-        let searchQuery = '';
-        let globalSearchQuery = '';
-        let lastUpdateTime = null;
-        let isUpdating = false;
-        let updateInterval = null;
-        let journalCategories = [];
+// 加载文章数据
+async function loadArticles() {
+    try {
+        const data = embeddedData;
+        allAccounts = data.accounts;
+        allArticles = data.articles;
+        
+        // 更新公众号卡片信息
+        updateAccountCards();
+        
+        updateJournalCounts();
+        
+        // 按发布日期降序排列
+        allArticles.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
+        
+        displayArticles(allArticles);
+    } catch (error) {
+        console.error('加载文章数据失败:', error);
+        document.getElementById('articlesList').innerHTML = '<p class="error">加载文章数据失败</p>';
+    }
+}
 
-        // 初始化
-        document.addEventListener('DOMContentLoaded', () => {
-            render();
-            startAutoUpdate();
-            document.addEventListener('visibilitychange', handleVisibilityChange);
+// 初始化事件监听器
+function initializeEventListeners() {
+    // 搜索功能
+    document.getElementById('searchBtn').addEventListener('click', performSearch);
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            performSearch();
+        }
+    });
+
+    // 期刊分类点击事件
+    document.querySelectorAll('.journal-category').forEach(category => {
+        category.addEventListener('click', function() {
+            const journal = this.getAttribute('data-journal');
+            filterByJournal(journal);
         });
+    });
+}
 
-        // 渲染函数
-        function render() {
-            const app = document.getElementById('app');
-            if (currentView === 'home') {
-                app.innerHTML = renderHome();
+// 更新公众号卡片信息
+function updateAccountCards() {
+    allAccounts.forEach(account => {
+        const card = document.querySelector(`.account-card[data-account="${account.id}"]`);
+        if (card) {
+            card.querySelector('h3').textContent = account.name;
+            card.querySelector('p').textContent = account.description;
+            const btn = card.querySelector('.view-btn');
+            btn.href = account.website;
+            btn.textContent = '访问官网';
+            btn.target = '_blank';
+        }
+    });
+}
+
+// 加载特定公众号内容
+function loadAccountContent(accountId) {
+    currentAccount = accountId;
+    const account = allAccounts.find(a => a.id === accountId);
+    const accountName = account ? account.name : accountId;
+    document.getElementById('sectionTitle').innerHTML = `${accountName} 的文章 <span class="tip-hint">💡 点击"搜索相关文章"可查找该公众号的推文</span>`;
+    
+    const filteredArticles = allArticles.filter(article => article.account === accountId);
+    displayArticles(filteredArticles);
+    
+    // 滚动到文章区域
+    document.getElementById('articlesSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+// 获取公众号信息
+function getAccountInfo(accountId) {
+    return allAccounts.find(account => account.id === accountId);
+}
+
+// 按期刊筛选
+function filterByJournal(journal) {
+    currentFilter = journal;
+    
+    // 更新UI高亮
+    document.querySelectorAll('.journal-category').forEach(category => {
+        category.classList.remove('active');
+        if (category.getAttribute('data-journal') === journal) {
+            category.classList.add('active');
+        }
+    });
+
+    // 筛选文章
+    let filteredArticles = allArticles;
+    
+    if (journal !== 'all') {
+        filteredArticles = filteredArticles.filter(article => {
+            if (journal === 'Nature Series') {
+                return article.journalCategory === 'Nature Series';
+            } else if (journal === 'Cell Series') {
+                return article.journalCategory === 'Cell Series';
             } else {
-                app.innerHTML = renderArticles();
-            }
-        }
-
-        // 渲染首页
-        function renderHome() {
-            const journalCategories = getHomeJournalCategories();
-
-            return `
-                <div class="home-title">
-                    <h1>学术公众号导航</h1>
-                    <p>探索前沿科研资讯，助力学术研究</p>
-                </div>
-
-                <div class="search-bar">
-                    <div class="search-input-wrapper">
-                        <span class="search-icon">🔍</span>
-                        <input
-                            type="text"
-                            class="search-input"
-                            id="globalSearchInput"
-                            placeholder="搜索所有文章标题、作者、期刊名称或摘要..."
-                            value="${globalSearchQuery}"
-                            onkeydown="handleGlobalSearchKeydown(event)"
-                        >
-                        <button class="search-btn" onclick="handleGlobalSearch(globalSearchQuery)">搜索</button>
-                    </div>
-                </div>
-
-                ${globalSearchQuery.trim() ? renderGlobalSearchResults() : `
-                <!-- 期刊分类标签栏 -->
-                <div style="margin: 30px 0;">
-                    <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 16px; color: #2d3748; padding-bottom: 10px; border-bottom: 2px solid #667eea;">
-                        按期刊浏览
-                    </h2>
-                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                        ${journalCategories.map(cat => `
-                            <button
-                                class="nav-btn"
-                                style="background: ${homeJournalCategory === cat.id ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : 'white'}; color: ${homeJournalCategory === cat.id ? 'white' : '#4a5568'}; border: 2px solid ${homeJournalCategory === cat.id ? 'transparent' : '#e2e8f0'};"
-                                onclick="selectHomeJournalCategory('${cat.id}')"
-                            >
-                                ${cat.name}
-                                <span style="background: ${homeJournalCategory === cat.id ? 'rgba(255,255,255,0.2)' : '#e2e8f0'}; color: ${homeJournalCategory === cat.id ? 'white' : '#718096'}; padding: 2px 8px; border-radius: 10px; font-size: 12px; margin-left: 6px;">
-                                    ${cat.count}
-                                </span>
-                            </button>
-                        `).join('')}
-                    </div>
-                    ${homeJournalCategory !== 'all' ? renderHomeJournalArticles() : ''}
-                </div>
-
-                ${homeJournalCategory === 'all' ? `
-                <div style="margin-top: 40px;">
-                    <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 16px; color: #2d3748; padding-bottom: 10px; border-bottom: 2px solid #667eea;">
-                        按公众号浏览
-                    </h2>
-                </div>
-                <div class="cards-grid">
-                    ${officialAccounts.map(account => `
-                        <div class="card">
-                            <div class="card-icon" style="background: ${account.color}">
-                                ${account.icon}
-                            </div>
-                            <h3 class="card-title">${account.name}</h3>
-                            <p class="card-desc">${account.description}</p>
-                            <button class="card-btn" onclick="viewContent(${account.id})">查看内容</button>
-                        </div>
-                    `).join('')}
-                </div>
-                ` : ''}
-                `}
-            `;
-        }
-
-        // 渲染全局搜索结果
-        function renderGlobalSearchResults() {
-            const query = globalSearchQuery.toLowerCase().trim();
-            if (!query) return '';
-
-            // 搜索并添加匹配分数
-            const results = articles.map(article => {
-                let score = 0;
-                let matchFields = [];
-
-                // 标题匹配（权重最高）
-                if (article.title.toLowerCase().includes(query)) {
-                    score += 100;
-                    matchFields.push('标题');
-                }
-
-                // 期刊匹配（权重次高）
-                if (article.journal.toLowerCase().includes(query)) {
-                    score += 50;
-                    matchFields.push('期刊');
-                }
-
-                // 作者匹配（权重中等）
-                if (article.author.toLowerCase().includes(query)) {
-                    score += 30;
-                    matchFields.push('作者');
-                }
-
-                // 摘要匹配（权重最低）
-                if (article.abstract.toLowerCase().includes(query)) {
-                    score += 10;
-                    matchFields.push('摘要');
-                }
-
-                return { article, score, matchFields };
-            }).filter(item => item.score > 0); // 只保留有匹配的结果
-
-            if (results.length === 0) {
-                return `
-                    <div class="empty-state">
-                        <div class="empty-icon">📄</div>
-                        <p>未找到匹配的文章</p>
-                        <button class="nav-btn" onclick="clearGlobalSearch()" style="margin-top: 20px;">清除搜索</button>
-                    </div>
-                `;
-            }
-
-            // 按分数降序排序
-            results.sort((a, b) => b.score - a.score);
-
-            return `
-                <div style="margin-top: 20px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h2 style="color: #2d3748;">搜索结果：找到 ${results.length} 篇文章</h2>
-                        <button class="nav-btn" onclick="clearGlobalSearch()">清除搜索</button>
-                    </div>
-                    <div class="article-list">
-                        ${results.map(item => {
-                            const article = item.article;
-                            const account = officialAccounts.find(a => a.id === article.accountId);
-                            const matchFields = item.matchFields;
-
-                            return `
-                            <div class="article-card">
-                                <div class="article-header">
-                                    <h3 class="article-title">${article.title}</h3>
-                                    <span class="journal-badge ${getJournalBadgeClass(article.journal)}">${article.journal}</span>
-                                </div>
-                                <div class="article-meta">
-                                    <span>👤 ${article.author}</span>
-                                    <span>📅 ${article.publishDate}</span>
-                                    <span>📰 ${account ? account.name : '未知'}</span>
-                                </div>
-                                <p class="article-abstract">${article.abstract}</p>
-                                <div class="article-tags">
-                                    ${article.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                                </div>
-                                <div class="search-match-indicator" style="margin-top: 12px; padding: 8px 12px; background: #f7fafc; border-radius: 6px; font-size: 13px; color: #718096;">
-                                    <span style="color: #667eea;">🎯 匹配字段：</span>
-                                    ${matchFields.join('、')}
-                                </div>
-                                <div style="display: flex; gap: 10px; margin-top: 12px;">
-                                    <a href="${article.url}" target="_blank" class="read-more-btn">阅读全文 →</a>
-                                    <button class="nav-btn" onclick="viewContent(${article.accountId})" style="padding: 8px 16px;">查看更多</button>
-                                </div>
-                            </div>
-                            `;
-                        }).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        // 渲染首页期刊分类下的文章
-        function renderHomeJournalArticles() {
-            const filteredArticles = filterHomeJournalArticles();
-
-            if (filteredArticles.length === 0) {
-                return `
-                    <div style="margin-top: 20px; padding: 40px; text-align: center; background: white; border-radius: 12px; color: #a0aec0;">
-                        <div style="font-size: 48px; margin-bottom: 16px;">📄</div>
-                        <p>暂无相关文章</p>
-                    </div>
-                `;
-            }
-
-            return `
-                <div style="margin-top: 20px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h2 style="color: #2d3748;">${homeJournalCategory} - 共 ${filteredArticles.length} 篇文章</h2>
-                        <button class="nav-btn" onclick="selectHomeJournalCategory('all')">查看全部</button>
-                    </div>
-                    <div class="article-list">
-                        ${filteredArticles.map(article => {
-                            const account = officialAccounts.find(a => a.id === article.accountId);
-                            return `
-                                <div class="article-card">
-                                    <div class="article-header">
-                                        <h3 class="article-title">${article.title}</h3>
-                                        <span class="journal-badge ${getJournalBadgeClass(article.journal)}">${article.journal}</span>
-                                    </div>
-                                    <div class="article-meta">
-                                        <span>👤 ${article.author}</span>
-                                        <span>📅 ${article.publishDate}</span>
-                                        <span>📰 ${account ? account.name : '未知'}</span>
-                                    </div>
-                                    <p class="article-abstract">${article.abstract}</p>
-                                    <div class="article-tags">
-                                        ${article.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                                    </div>
-                                    <div style="display: flex; gap: 10px; margin-top: 12px;">
-                                        <a href="${article.url}" target="_blank" class="read-more-btn">阅读全文 →</a>
-                                        <button class="nav-btn" onclick="viewContent(${article.accountId})" style="padding: 8px 16px;">查看更多</button>
-                                    </div>
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        // 过滤首页期刊分类文章
-        function filterHomeJournalArticles() {
-            if (homeJournalCategory === 'all') {
-                return articles;
-            }
-
-            let result = [];
-
-            switch (homeJournalCategory) {
-                case 'JACS':
-                    result = articles.filter(a => a.journal === 'JACS');
-                    break;
-                case 'Angew':
-                    result = articles.filter(a => a.journal === 'Angew');
-                    break;
-                case 'Advanced Materials':
-                    result = articles.filter(a => a.journal === 'Advanced Materials' || a.journal === 'Adv. Materials');
-                    break;
-                case 'Nature系列':
-                    result = articles.filter(a => a.journal.includes('Nature'));
-                    break;
-                case 'Cell系列':
-                    result = articles.filter(a => ['Cell', 'Chem', 'Joule', 'Matter'].includes(a.journal));
-                    break;
-                case 'Science系列':
-                    result = articles.filter(a => a.journal.includes('Science'));
-                    break;
-                default:
-                    result = articles;
-            }
-
-            return result;
-        }
-
-        // 渲染文章列表
-        function renderArticles() {
-            const filteredArticles = filterArticles();
-            const account = officialAccounts.find(a => a.id === selectedAccountId);
-            
-            // 动态生成期刊分类
-            const accountArticles = articles.filter(a => a.accountId === selectedAccountId);
-            journalCategories = getJournalCategories(accountArticles);
-
-            return `
-                <button class="back-btn" onclick="goHome()">
-                    ← 返回首页
-                </button>
-
-                <div class="search-bar">
-                    <div class="search-input-wrapper">
-                        <span class="search-icon">🔍</span>
-                        <input 
-                            type="text" 
-                            class="search-input" 
-                            id="articleSearchInput"
-                            placeholder="搜索文章标题、作者、期刊名称或摘要..."
-                            value="${searchQuery}"
-                            onkeydown="handleSearchKeydown(event)"
-                        >
-                        <button class="search-btn" onclick="handleSearch(searchQuery)">搜索</button>
-                    </div>
-                </div>
-
-                <div class="content-layout">
-                    <div class="sidebar">
-                        <h2 class="sidebar-title">期刊分类</h2>
-                        <ul class="category-list">
-                            ${journalCategories.map(cat => `
-                                <li class="category-item">
-                                    <button 
-                                        class="category-btn ${activeCategory === cat.id ? 'active' : ''}"
-                                        onclick="selectCategory('${cat.id}')"
-                                    >
-                                        <span>${cat.name}</span>
-                                        <span class="category-count">${cat.count}</span>
-                                    </button>
-                                </li>
-                            `).join('')}
-                        </ul>
-                    </div>
-
-                    <div class="article-list">
-                        ${filteredArticles.length === 0 ? `
-                            <div class="empty-state">
-                                <div class="empty-icon">📄</div>
-                                <p>暂无相关文章</p>
-                            </div>
-                        ` : filteredArticles.map(article => `
-                            <div class="article-card">
-                                <div class="article-header">
-                                    <h3 class="article-title">${article.title}</h3>
-                                    <span class="journal-badge ${getJournalBadgeClass(article.journal)}">${article.journal}</span>
-                                </div>
-                                <div class="article-meta">
-                                    <span>👤 ${article.author}</span>
-                                    <span>📅 ${article.publishDate}</span>
-                                </div>
-                                <p class="article-abstract">${article.abstract}</p>
-                                <div class="article-tags">
-                                    ${article.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                                </div>
-                                <a href="${article.url}" target="_blank" class="read-more-btn">阅读全文 →</a>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        // 获取期刊徽章样式
-        function getJournalBadgeClass(journal) {
-            if (journal.includes('Nature')) return 'journal-nature';
-            if (journal.includes('Cell')) return 'journal-cell';
-            if (journal === 'Science') return 'journal-science';
-            return 'journal-default';
-        }
-
-        // 过滤文章
-        function filterArticles() {
-            let result = articles;
-
-            // 按公众号过滤
-            if (selectedAccountId) {
-                result = result.filter(a => a.accountId === selectedAccountId);
-            }
-
-            // 按分类过滤
-            if (activeCategory !== 'all') {
-                if (activeCategory === 'Nature Series') {
-                    result = result.filter(a => a.journal.includes('Nature'));
-                } else if (activeCategory === 'Cell Series') {
-                    result = result.filter(a => a.journal.includes('Cell'));
-                } else {
-                    result = result.filter(a => a.journal === activeCategory);
-                }
-            }
-
-            // 搜索过滤（带优先级）
-            if (searchQuery.trim()) {
-                const query = searchQuery.toLowerCase();
-                result = result.map(article => {
-                    let score = 0;
-
-                    // 标题匹配（权重最高）
-                    if (article.title.toLowerCase().includes(query)) {
-                        score += 100;
-                    }
-
-                    // 期刊匹配（权重次高）
-                    if (article.journal.toLowerCase().includes(query)) {
-                        score += 50;
-                    }
-
-                    // 作者匹配（权重中等）
-                    if (article.author.toLowerCase().includes(query)) {
-                        score += 30;
-                    }
-
-                    // 摘要匹配（权重最低）
-                    if (article.abstract.toLowerCase().includes(query)) {
-                        score += 10;
-                    }
-
-                    return { article, score };
-                }).filter(item => item.score > 0) // 只保留有匹配的结果
-                  .sort((a, b) => b.score - a.score) // 按分数降序排序
-                  .map(item => item.article); // 返回文章对象
-            }
-
-            return result;
-        }
-
-        // 事件处理
-        function viewContent(accountId) {
-            selectedAccountId = accountId;
-            activeCategory = 'all';
-            searchQuery = '';
-            globalSearchQuery = '';
-            currentView = 'articles';
-            render();
-        }
-
-        function goHome() {
-            selectedAccountId = null;
-            activeCategory = 'all';
-            homeJournalCategory = 'all';
-            searchQuery = '';
-            globalSearchQuery = '';
-            currentView = 'home';
-            render();
-        }
-
-        function clearGlobalSearch() {
-            globalSearchQuery = '';
-            render();
-        }
-
-        function selectHomeJournalCategory(categoryId) {
-            homeJournalCategory = categoryId;
-            render();
-        }
-
-        function handleGlobalSearch(query) {
-            globalSearchQuery = query;
-            render();
-        }
-
-        function handleGlobalSearchKeydown(event) {
-            if (event.key === 'Enter') {
-                const input = document.getElementById('globalSearchInput');
-                handleGlobalSearch(input.value);
-            }
-        }
-
-        function selectCategory(categoryId) {
-            activeCategory = categoryId;
-            render();
-        }
-
-        function handleSearch(query) {
-            searchQuery = query;
-            render();
-        }
-
-        function handleSearchKeydown(event) {
-            if (event.key === 'Enter') {
-                const input = document.getElementById('articleSearchInput');
-                handleSearch(input.value);
-            }
-        }
-
-        // 自动更新功能
-        function startAutoUpdate() {
-            updateData();
-            updateInterval = setInterval(updateData, 5 * 60 * 1000); // 5分钟
-        }
-
-        function updateData() {
-            if (isUpdating) return;
-
-            isUpdating = true;
-            updateStatusDisplay(true);
-
-            // 模拟API请求延迟
-            setTimeout(() => {
-                isUpdating = false;
-                lastUpdateTime = new Date();
-                updateStatusDisplay(false);
-                
-                // 如果在文章列表页面，刷新显示
-                if (currentView === 'articles') {
-                    render();
-                }
-            }, 1000);
-        }
-
-        function forceUpdate() {
-            updateData();
-        }
-
-        function handleVisibilityChange() {
-            if (document.visibilityState === 'visible') {
-                updateData();
-            }
-        }
-
-        function updateStatusDisplay(updating) {
-            const dot = document.getElementById('statusDot');
-            const status = document.getElementById('updateStatus');
-            
-            if (updating) {
-                dot.classList.add('updating');
-                status.textContent = '正在更新数据...';
-            } else {
-                dot.classList.remove('updating');
-                if (lastUpdateTime) {
-                    const diff = Math.floor((new Date() - lastUpdateTime) / 1000);
-                    if (diff < 60) {
-                        status.textContent = '刚刚更新';
-                    } else if (diff < 3600) {
-                        status.textContent = `${Math.floor(diff / 60)}分钟前更新`;
-                    } else if (diff < 86400) {
-                        status.textContent = `${Math.floor(diff / 3600)}小时前更新`;
-                    } else {
-                        status.textContent = `${Math.floor(diff / 86400)}天前更新`;
-                    }
-                } else {
-                    status.textContent = '未更新';
-                }
-            }
-        }
-
-        // 清理定时器
-        window.addEventListener('beforeunload', () => {
-            if (updateInterval) {
-                clearInterval(updateInterval);
+                return article.journal === journal || article.journalCategory === journal;
             }
         });
+    }
+
+    // 如果有搜索关键词，进一步筛选
+    if (searchKeyword) {
+        filteredArticles = filterByKeyword(filteredArticles, searchKeyword);
+    }
+
+    // 如果选择了特定公众号，进一步筛选
+    if (currentAccount) {
+        filteredArticles = filteredArticles.filter(article => article.account === currentAccount);
+    }
+
+    // 更新标题
+    updateSectionTitle(journal);
+    
+    displayArticles(filteredArticles);
+    
+    // 滚动到文章区域
+    document.getElementById('articlesSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+// 查看公众号主页
+function viewAccountHomepage(accountId) {
+    const account = getAccountInfo(accountId);
+    if (account) {
+        window.open(account.mpUrl, '_blank');
+    }
+}
+
+// 更新文章区域标题
+function updateSectionTitle(journal) {
+    let title = '最新文章';
+    if (journal !== 'all') {
+        title = `${journal} 相关文章`;
+    }
+    if (currentAccount) {
+        const account = getAccountInfo(currentAccount);
+        const accountName = account ? account.name : currentAccount;
+        title = `${accountName} - ${journal !== 'all' ? journal + ' ' : ''}文章`;
+    }
+    document.getElementById('sectionTitle').textContent = title;
+}
+
+// 执行搜索
+function performSearch() {
+    searchKeyword = document.getElementById('searchInput').value.trim();
+    
+    if (!searchKeyword) {
+        // 如果搜索框为空，显示当前筛选的所有文章
+        filterByJournal(currentFilter);
+        return;
+    }
+
+    let filteredArticles = allArticles;
+    
+    // 按期刊筛选
+    if (currentFilter !== 'all') {
+        filteredArticles = filteredArticles.filter(article => {
+            if (currentFilter === 'Nature Series') {
+                return article.journalCategory === 'Nature Series';
+            } else if (currentFilter === 'Cell Series') {
+                return article.journalCategory === 'Cell Series';
+            } else {
+                return article.journal === currentFilter || article.journalCategory === currentFilter;
+            }
+        });
+    }
+
+    // 按关键词筛选
+    filteredArticles = filterByKeyword(filteredArticles, searchKeyword);
+
+    // 如果选择了特定公众号，进一步筛选
+    if (currentAccount) {
+        filteredArticles = filteredArticles.filter(article => article.account === currentAccount);
+    }
+
+    document.getElementById('sectionTitle').textContent = `"${searchKeyword}" 的搜索结果`;
+    displayArticles(filteredArticles);
+    
+    // 滚动到文章区域
+    document.getElementById('articlesSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+// 按关键词筛选
+function filterByKeyword(articles, keyword) {
+    const lowerKeyword = keyword.toLowerCase();
+    return articles.filter(article => {
+        const account = getAccountInfo(article.account);
+        const accountName = account ? account.name.toLowerCase() : '';
+        
+        return article.title.toLowerCase().includes(lowerKeyword) ||
+               article.author.toLowerCase().includes(lowerKeyword) ||
+               article.journal.toLowerCase().includes(lowerKeyword) ||
+               article.summary.toLowerCase().includes(lowerKeyword) ||
+               accountName.includes(lowerKeyword);
+    });
+}
+
+// 显示文章列表
+function displayArticles(articles) {
+    const articlesList = document.getElementById('articlesList');
+    
+    if (articles.length === 0) {
+        articlesList.innerHTML = '<p class="no-articles">暂无相关文章</p>';
+        return;
+    }
+
+    let html = '';
+    articles.forEach(article => {
+        const account = getAccountInfo(article.account);
+        const accountName = account ? account.name : article.account;
+        const accountWebsite = account ? account.website : '';
+        const isRead = readingHistory[article.id];
+        
+        html += `
+            <article class="article-card ${isRead ? 'read' : ''}">
+                <div class="article-header">
+                    <span class="account-badge">${accountName}</span>
+                    <span class="journal-badge">${article.journal}</span>
+                    <span class="read-status" onclick="toggleReadStatus(${article.id})" title="点击切换阅读状态">
+                        ${isRead ? '✅ 已读' : '📌 未读'}
+                    </span>
+                </div>
+                <h3 class="article-title">${article.title}</h3>
+                <p class="article-meta">
+                    <span class="author">作者: ${article.author}</span>
+                    <span class="date">${article.publishDate}</span>
+                    ${article.readCount ? `<span class="read-count">👁 ${formatNumber(article.readCount)}</span>` : ''}
+                </p>
+                <p class="article-summary">${article.summary}</p>
+                <div class="article-actions">
+                    <a href="${article.link}" class="article-link" target="_blank">📄 阅读全文</a>
+                    ${accountWebsite ? `<a href="${accountWebsite}" class="article-link website-link" target="_blank">🔗 访问官网</a>` : ''}
+                </div>
+            </article>
+        `;
+    });
+    
+    articlesList.innerHTML = html;
+}
+
+// 格式化数字
+function formatNumber(num) {
+    if (num >= 10000) {
+        return (num / 10000).toFixed(1) + '万';
+    } else if (num >= 1000) {
+        return (num / 1000).toFixed(1) + 'k';
+    }
+    return num.toString();
+}
+
+// 切换阅读状态
+function toggleReadStatus(articleId) {
+    if (readingHistory[articleId]) {
+        delete readingHistory[articleId];
+    } else {
+        readingHistory[articleId] = new Date().toISOString();
+    }
+    localStorage.setItem('readingHistory', JSON.stringify(readingHistory));
+    
+    // 重新显示文章
+    if (currentAccount) {
+        const filteredArticles = allArticles.filter(article => article.account === currentAccount);
+        displayArticles(filteredArticles);
+    } else {
+        performSearch();
+    }
+}
+
+// 导出阅读历史
+function exportReadingHistory() {
+    const historyData = {
+        exportDate: new Date().toISOString(),
+        totalArticles: allArticles.length,
+        readArticles: Object.keys(readingHistory).length,
+        readingHistory: readingHistory
+    };
+    
+    const jsonStr = JSON.stringify(historyData, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'reading-history.json';
+    a.click();
+    
+    URL.revokeObjectURL(url);
+    alert('阅读历史已导出！');
+}
+
+// 更新期刊计数
+function updateJournalCounts() {
+    const journalCounts = {
+        'all': allArticles.length,
+        'JACS': 0,
+        'Angew': 0,
+        'Advanced Materials': 0,
+        'Nature': 0,
+        'Science': 0,
+        'Cell': 0,
+        'Nature Series': 0,
+        'Cell Series': 0
+    };
+
+    allArticles.forEach(article => {
+        if (journalCounts.hasOwnProperty(article.journalCategory)) {
+            journalCounts[article.journalCategory]++;
+        } else if (journalCounts.hasOwnProperty(article.journal)) {
+            journalCounts[article.journal]++;
+        }
+    });
+
+    // 更新UI
+    document.querySelectorAll('.journal-category').forEach(category => {
+        const journal = category.getAttribute('data-journal');
+        const countSpan = category.querySelector('.journal-count');
+        if (countSpan) {
+            countSpan.textContent = journalCounts[journal] || 0;
+        }
+    });
+}
+
+// 自动更新功能 - 已内嵌数据，无需远程获取
+async function autoUpdate() {
+    try {
+        const data = embeddedData;
+        
+        // 检查是否有新文章
+        if (data.articles.length !== allArticles.length || 
+            JSON.stringify(data.articles) !== JSON.stringify(allArticles)) {
+            allAccounts = data.accounts;
+            allArticles = data.articles;
+            
+            // 更新公众号卡片
+            updateAccountCards();
+            updateJournalCounts();
+            
+            // 重新应用当前筛选
+            if (searchKeyword) {
+                performSearch();
+            } else {
+                filterByJournal(currentFilter);
+            }
+            
+            console.log('文章已自动更新');
+        }
+    } catch (error) {
+        console.error('自动更新失败:', error);
+    }
+}
+
+// 每5分钟自动更新一次数据
+setInterval(autoUpdate, 300000);
+
+// 页面可见性变化时尝试更新
+document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+        autoUpdate();
+    }
+});
+
     </script>
 </body>
 </html>
